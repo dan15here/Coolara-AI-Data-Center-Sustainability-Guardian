@@ -7,6 +7,7 @@ import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown, Bot, FlaskConical,
 import { useState } from 'react'
 import { Hero } from '@/components/ui/animated-hero'
 import AnimatedContent from '@/components/ui/animated-content'
+import LandingScrollTabs from '@/components/landing-scroll-tabs'
 
 const faqs = [
   {
@@ -77,17 +78,9 @@ export default function LandingPage() {
             <Image src="/logos/coolara-app-icon.svg" alt="Coolara Logo" width={32} height={32} />
             <strong className="text-[18px] font-bold tracking-wide">Coolara</strong>
           </div>
-          <nav aria-label="Quick access" className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-[26px]">
-            <Link href="#top" className="text-[13px] font-medium text-[#91a0a3] hover:text-teal-300 transition-colors">
-              Home
-            </Link>
-            <Link href="#features" className="text-[13px] font-medium text-[#91a0a3] hover:text-teal-300 transition-colors">
-              Features
-            </Link>
-            <Link href="#how-it-works" className="text-[13px] font-medium text-[#91a0a3] hover:text-teal-300 transition-colors">
-              How it works
-            </Link>
-          </nav>
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <LandingScrollTabs />
+          </div>
           <Link 
             href="/dashboard"
             className="flex items-center gap-[8px] bg-[#171d21] border border-[#2b363c] hover:bg-[#20292d] text-white px-[16px] py-[8px] rounded-full text-[13px] font-medium transition-colors"
