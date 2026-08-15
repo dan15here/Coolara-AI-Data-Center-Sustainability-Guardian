@@ -4,6 +4,7 @@ import { GitCompare } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { EmptyState, HelpTooltip, Pill } from '@/components/ui'
 import { formatJakartaDateTime } from '@/lib/format/time'
+import { formatSignedIdr } from '@/lib/format/currency'
 import type { StoredSimulation } from '@/types'
 
 type Row = {
@@ -11,13 +12,14 @@ type Row = {
   unit: string
   digits: number
   read: (sim: StoredSimulation) => number
+  format?: (value: number) => string
 }
 
 const ROWS: Row[] = [
   { label: 'Predicted server temperature', unit: '°C', digits: 1, read: (s) => s.predictedServerTempC },
   { label: 'Energy delta', unit: ' MWh', digits: 2, read: (s) => s.estimatedEnergyDeltaMwh },
   { label: 'Water delta', unit: ' L', digits: 0, read: (s) => s.estimatedWaterDeltaLiters },
-  { label: 'Cost delta', unit: ' IDR', digits: 0, read: (s) => s.estimatedCostDeltaIdr },
+  { label: 'Cost delta', unit: '', digits: 0, read: (s) => s.estimatedCostDeltaIdr, format: formatSignedIdr },
   { label: 'PUE', unit: '', digits: 2, read: (s) => s.pue },
   { label: 'WUE', unit: ' L/MW', digits: 2, read: (s) => s.wue },
 ]
@@ -139,17 +141,15 @@ export function SimulationComparisonPanel({ simulations }: Readonly<{ simulation
                   >
                     <span>{row.label}</span>
                     <strong className="text-[13px]">
-                      {a.toFixed(row.digits)}
-                      {row.unit}
+                      {row.format ? row.format(a) : `${a.toFixed(row.digits)}${row.unit}`}
                     </strong>
                     <strong className="text-[13px]">
-                      {b.toFixed(row.digits)}
-                      {row.unit}
+                      {row.format ? row.format(b) : `${b.toFixed(row.digits)}${row.unit}`}
                     </strong>
                     <strong className="text-[13px]">
-                      {delta >= 0 ? '+' : ''}
-                      {delta.toFixed(row.digits)}
-                      {row.unit}
+                      {row.format
+                        ? formatSignedIdr(delta)
+                        : `${delta >= 0 ? '+' : ''}${delta.toFixed(row.digits)}${row.unit}`}
                     </strong>
                   </div>
                 )

@@ -14,6 +14,7 @@ import {
 import { computeCostDeltaAsPercentOfDaily } from '@/lib/calculations/cost'
 import { METRIC_LABELS } from '@/lib/format/finding'
 import { formatJakartaTime } from '@/lib/format/time'
+import { formatSignedIdr } from '@/lib/format/currency'
 import type { DashboardMetrics, Finding, SimulationInput, SimulationResult } from '@/types'
 import { AiOptimizePanel } from './AiOptimizePanel'
 
@@ -245,10 +246,9 @@ export function SimulatorView({
                   </strong>
           </div>
           <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
-            <span className="block text-content-muted text-[11px]">Estimated cost</span>
+                  <span className="block text-content-muted text-[11px]">Estimated cost</span>
                   <strong className="block mt-[5px] text-[14px]">
-                    {state.result.estimatedCostDeltaIdr >= 0 ? '+' : '-'}Rp{' '}
-                    {Math.abs(state.result.estimatedCostDeltaIdr).toLocaleString('id-ID')}
+                    {formatSignedIdr(state.result.estimatedCostDeltaIdr)}
                   </strong>
           </div>
           <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">

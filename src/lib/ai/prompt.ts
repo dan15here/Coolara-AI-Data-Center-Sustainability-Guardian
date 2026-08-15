@@ -1,5 +1,6 @@
 import type { ExplainFindingRequest, OptimizeSimulationRequest } from './types';
 import type { FindingMetric, FindingSeverity } from '@/types';
+import { formatSignedIdr } from '@/lib/format/currency';
 import { formatJakartaDateTime } from '@/lib/format/time';
 
 const METRIC_LABELS: Record<FindingMetric, string> = {
@@ -94,7 +95,7 @@ export function buildOptimizationPrompt(req: OptimizeSimulationRequest): string 
     `Predicted server temperature: ${result.predictedServerTempC.toFixed(1)} C`,
     `Energy delta: ${result.estimatedEnergyDeltaMwh.toFixed(2)} MWh`,
     `Water delta: ${result.estimatedWaterDeltaLiters.toFixed(0)} L`,
-    `Cost delta: ${result.estimatedCostDeltaIdr.toFixed(0)} IDR`,
+    `Cost delta: ${formatSignedIdr(result.estimatedCostDeltaIdr)}`,
     `Projected PUE: ${result.pue.toFixed(2)}`,
     `Projected WUE: ${result.wue.toFixed(2)}`,
   ].join('\n');
