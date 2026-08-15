@@ -41,30 +41,14 @@ There is no test framework configured and no test script.
 
 The `@/` alias is **not** configured in `tsconfig.json` (`baseUrl`/`paths` are absent). Do not assume `@/` imports resolve; use relative imports until an alias is actually added. If you add one, wire it in `tsconfig.json`.
 
-## Environment variables
+## Testing Guidelines
 
-From `.env.example`:
+No automated test framework is configured yet. At minimum, run `npm run lint` and `npm run build`, then manually verify affected routes with `npm run dev`. When introducing tests, colocate them with the code or under `src/**/__tests__/`, name files `*.test.ts` or `*.test.tsx`, and add the test command to `package.json`.
 
-- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` — browser-safe (only when RLS is configured).
-- `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`, `GEMINI_MODEL` — server-only.
+## Commit & Pull Request Guidelines
 
-Never commit real credentials (`.env.local` and `.env.*.local` are gitignored). `GEMINI_API_KEY` must stay server-side only.
+Git history is not present in this checkout, so no repository-specific commit convention can be inferred. Use concise imperative messages, for example `Add Supabase session helper`. Keep commits focused. Pull requests should explain the change, link the relevant task or issue, list validation commands, and include screenshots for visual changes.
 
-## Conventions
+## Security & Event Boundaries
 
-- TypeScript, strict mode on. Two-space indent, semicolons, single quotes.
-- Components `PascalCase`; functions/vars `camelCase`; lowercase route folders; descriptive filenames (`client.ts`).
-- Route-specific components live beside their route; broadly reused helpers in `src/lib/`.
-- No comments unless asked.
-- Before handing off: `npm run lint` and `npm run build`.
-</parameter>
-
-<!-- BEGIN:nextjs-agent-rules -->
-
-# This is NOT the Next.js you know
-
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
-
-<!-- END:nextjs-agent-rules -->
+Keep secrets only in local environment variables. The starter intentionally excludes product-specific AI calls, database schema, data, and integrations; follow the rules in `README.md` and complete `PRE_EXISTING_DISCLOSURE.md` accurately before submission.
