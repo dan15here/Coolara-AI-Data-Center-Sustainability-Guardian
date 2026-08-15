@@ -91,7 +91,7 @@ export function DashboardView({
               <span 
                 className="w-[43px] h-[43px] grid place-items-center rounded-full text-[10px] font-bold mx-auto"
                 style={{ 
-                  background: `radial-gradient(circle,#192326 59%,transparent 61%),conic-gradient(${colorStr} ${value}%,#344045 0)`
+                  background: `radial-gradient(circle,var(--color-gauge-inner) 59%,transparent 61%),conic-gradient(${colorStr} ${value}%,var(--color-gauge-track) 0)`
                 }}
               >
                 {value}%

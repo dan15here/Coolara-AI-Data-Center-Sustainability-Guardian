@@ -31,7 +31,7 @@ const FIELDS: { key: keyof SimulationInput; label: string; unit: string; min: nu
 const SECONDARY_BUTTON =
   'border-0 rounded-[6px] bg-slate-100 dark:bg-[#273237] text-slate-700 dark:text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-slate-200 dark:hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-slate-100 dark:disabled:hover:bg-[#273237]'
 const PRIMARY_BUTTON =
-  'border-0 rounded-[6px] bg-status-teal text-white dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg'
+  'border-0 rounded-[6px] bg-status-teal text-slate-50 dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg'
 
 type Status = { status: 'idle' } | { status: 'loading' } | { status: 'error' } | { status: 'done'; result: SimulationResult }
 

@@ -11,6 +11,8 @@
   --color-status-teal: #0d9488;
   --color-status-amber: #d97706;
   --color-status-red: #e11d48;
+  --color-gauge-inner: #f8fafc;
+  --color-gauge-track: #e2e8f0;
 }
 
 .dark {
@@ -22,6 +24,8 @@
   --color-status-teal: #42c5b5;
   --color-status-amber: #f0b65a;
   --color-status-red: #ee7168;
+  --color-gauge-inner: #192326;
+  --color-gauge-track: #344045;
 }
 
 * { box-sizing: border-box; }

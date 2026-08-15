@@ -67,7 +67,7 @@ export function AppShell({
           {navigation.map(({ href, label, icon: Icon, badge }) => (
             <Link 
               onClick={() => setOpen(false)} 
-              className={`h-[44px] px-[11px] flex items-center gap-[12px] rounded-[7px] relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal ${pathname === href ? 'text-white bg-slate-900 dark:bg-[#20292d]' : 'text-slate-500 dark:text-[#aeb9bc] hover:bg-slate-200 dark:hover:bg-[#1a2226] hover:text-slate-900 dark:hover:text-white'}`} 
+              className={`h-[44px] px-[11px] flex items-center gap-[12px] rounded-[7px] relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal ${pathname === href ? 'text-slate-50 bg-slate-900 dark:bg-[#20292d]' : 'text-slate-500 dark:text-[#aeb9bc] hover:bg-slate-200 dark:hover:bg-[#1a2226] hover:text-slate-900 dark:hover:text-slate-50'}`} 
               href={href} 
               key={href}
             >
@@ -93,7 +93,7 @@ export function AppShell({
              Synthetic data
           </div>
           <div className="p-[18px_4px_5px] flex items-center gap-[9px] text-content-muted">
-            <div className="w-[29px] h-[29px] grid place-items-center rounded-full text-white dark:text-[#182023] bg-slate-900 dark:bg-[#cbd7d5] text-[10px] font-bold">
+            <div className="w-[29px] h-[29px] grid place-items-center rounded-full text-slate-50 dark:text-[#182023] bg-slate-900 dark:bg-[#cbd7d5] text-[10px] font-bold">
               MD
             </div>
             <div>
