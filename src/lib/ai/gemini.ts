@@ -2,7 +2,7 @@ import 'server-only';
 import { buildExplanationPrompt } from './prompt';
 import type { ExplainFindingRequest, ExplainFindingResponse } from './types';
 
-const DEFAULT_MODEL = 'gemini-2.5-flash';
+const DEFAULT_MODEL = 'gemini-3.6-flash';
 
 export function isGeminiConfigured(): boolean {
   return Boolean(process.env.GEMINI_API_KEY);
