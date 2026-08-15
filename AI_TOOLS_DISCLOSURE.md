@@ -9,7 +9,7 @@ hackathon prototype during the official build window.
 | --- | --- | --- |
 | OpenAI Codex | Used | Assisted with implementation, debugging, refactoring, code review, and verification. Team members reviewed the resulting code and decisions. |
 | Google Gemini API | Used | Provides qualitative explanations of structured anomaly findings and qualitative perspectives on safety-gated simulations. |
-| `gemini-3.6-flash` | Used | Gemini model configured through the server-side `GEMINI_MODEL` environment variable. |
+| `gemini-3.5-flash-lite` | Used | Gemini model configured through the server-side `GEMINI_MODEL` environment variable. |
 | Supabase PostgreSQL | Used | Stores synthetic telemetry, detected alert episodes, and simulation records. |
 | Vercel | Used | Hosts and deploys the web application. |
 | Next.js, TypeScript, Tailwind CSS, Recharts | Used | Application framework, type-safe code, UI styling, and data visualisation. |
@@ -43,7 +43,7 @@ safety approvals.
 ## Final verification before submission
 
 - [x] Replace every `Planned / confirm` status above with the actual final status.
-- [x] Record the exact deployed Gemini model name: `gemini-3.6-flash`.
+- [x] Record the exact deployed Gemini model name: `gemini-3.5-flash-lite`.
 - [x] Confirm the UI identifies AI-generated text as an explanation or perspective.
 - [x] Confirm all numerical outputs come from deterministic application logic.
 - [x] Confirm the README includes this disclosure and data-source disclosure.
