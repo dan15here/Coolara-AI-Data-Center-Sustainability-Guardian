@@ -1,11 +1,41 @@
 import type { ExplainFindingRequest, OptimizeSimulationRequest } from './types';
 import type { FindingMetric, FindingSeverity } from '@/types';
+import { formatJakartaDateTime } from '@/lib/format/time';
 
 const METRIC_LABELS: Record<FindingMetric, string> = {
   coolingPower: 'Cooling power (MW)',
   waterUsage: 'Water usage (liters)',
-  serverTemperature: 'Server temperature (C)',
+  serverTemperature: 'Server temperature (°C)',
 };
+
+function formatFindingMeasurement(metric: FindingMetric, value: number): string {
+  if (metric === 'coolingPower') return `${value.toFixed(2)} MW`;
+  if (metric === 'waterUsage') return `${Math.round(value).toLocaleString('en-US')} L`;
+  return `${value.toFixed(1)} °C`;
+}
+
+function formatExplanationContext(key: string, value: number | string, metric: FindingMetric): string | null {
+  switch (key) {
+    case 'dataCenterId':
+      return `Data center: ${String(value).toUpperCase()}`;
+    case 'ambientTempC':
+      return `Ambient temperature: ${Number(value).toFixed(1)} °C`;
+    case 'itLoadMw':
+      return `IT load: ${Number(value).toFixed(2)} MW`;
+    case 'actual':
+      return `Actual reading: ${formatFindingMeasurement(metric, Number(value))}`;
+    case 'expected':
+      return `Expected baseline: ${formatFindingMeasurement(metric, Number(value))}`;
+    case 'deviationPercent':
+      return `Deviation: ${Number(value).toFixed(1)}%`;
+    case 'timestamp':
+      return `Reading time: ${formatJakartaDateTime(String(value))}`;
+    case 'metric':
+      return `Measured signal: ${METRIC_LABELS[metric]}`;
+    default:
+      return null;
+  }
+}
 
 const GUARDRAIL_PREAMBLE = `You are assisting a data-centre operator by explaining an anomaly finding that was already detected by deterministic application logic.
 
@@ -13,6 +43,7 @@ Rules you must follow:
 - Use only the numeric values provided below. Do not introduce new measurements, temperatures, costs, PUE/WUE figures, or savings estimates.
 - Do not claim any action is safe or approved. Safety is determined separately by a deterministic safety gate, not by you.
 - Explain qualitatively why this finding matters and what an operator should investigate or consider next.
+- Use the human-readable labels supplied below. Do not expose internal field names, ISO timestamps, or unformatted IDs in the operator brief.
 - Respond in Markdown as an operator brief of about 140-200 words: a bold one-line summary, then exactly 4 bullet points of 1-2 sentences each. Cover the operational significance, how the deterministic factors may connect, what contextual evidence is useful to inspect, and how to frame the next review. No headings or code blocks. Format every bullet as a line starting with "- " (a hyphen followed by a space) — do not use "*" or "•".`;
 
 export function buildExplanationPrompt(req: ExplainFindingRequest): string {
@@ -21,15 +52,16 @@ export function buildExplanationPrompt(req: ExplainFindingRequest): string {
   const findingLines = [
     `Metric: ${METRIC_LABELS[finding.metric]}`,
     `Severity: ${finding.severity}`,
-    `Actual value: ${finding.actual}`,
-    `Expected value: ${finding.expected}`,
+    `Actual value: ${formatFindingMeasurement(finding.metric, finding.actual)}`,
+    `Expected value: ${formatFindingMeasurement(finding.metric, finding.expected)}`,
     `Deviation: ${finding.deviationPercent.toFixed(1)}%`,
-    `Detected at: ${finding.detectedAt}`,
+    `Detected at: ${formatJakartaDateTime(finding.detectedAt)}`,
     `Likely contributing factors (deterministic candidates): ${finding.likelyFactors.join(', ')}`,
   ].join('\n');
 
   const contextLines = Object.entries(finding.explanationInput)
-    .map(([key, value]) => `${key}: ${value}`)
+    .map(([key, value]) => formatExplanationContext(key, value, finding.metric))
+    .filter((line): line is string => line !== null)
     .join('\n');
 
   return `${GUARDRAIL_PREAMBLE}

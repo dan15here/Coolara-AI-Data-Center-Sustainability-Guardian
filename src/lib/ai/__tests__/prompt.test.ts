@@ -40,10 +40,14 @@ describe('buildExplanationPrompt', () => {
     expect(prompt).toContain(request.finding.likelyFactors[0]);
   });
 
-  it('includes the structured explanation input context', () => {
+  it('humanises structured explanation context for operator-facing output', () => {
     const prompt = buildExplanationPrompt(request);
-    expect(prompt).toContain('ambientTempC');
-    expect(prompt).toContain('34.2');
+    expect(prompt).toContain('Ambient temperature: 34.2 °C');
+    expect(prompt).toContain('Data center: DC-01');
+    expect(prompt).toContain('Reading time: 01/01/2026 07:00 WIB');
+    expect(prompt).not.toContain('ambientTempC');
+    expect(prompt).not.toContain('2026-01-01T00:00:00.000Z');
+    expect(prompt).not.toContain('dc-01');
   });
 
   it('makes no network call (pure string building)', () => {
