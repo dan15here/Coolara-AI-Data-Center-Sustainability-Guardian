@@ -4,14 +4,6 @@ import { Activity, BarChart3, ChevronRight, FlaskConical, LayoutDashboard, Menu,
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
-const navigation = [
-  { href: '/dashboard', label: 'Command Center', icon: LayoutDashboard },
-  { href: '/telemetry', label: 'Telemetry', icon: Activity },
-  { href: '/anomalies', label: 'Anomalies', icon: ShieldAlert, badge: '1' },
-  { href: '/simulator', label: 'Simulator', icon: SlidersHorizontal },
-  { href: '/reports', label: 'Reports', icon: BarChart3 }
-]
-
 const titles: Record<string, string> = {
   '/dashboard': 'Command Center',
   '/telemetry': 'Telemetry',
@@ -20,9 +12,20 @@ const titles: Record<string, string> = {
   '/reports': 'Reports'
 }
 
-export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) {
+export function AppShell({
+  children,
+  anomaliesCount = 0,
+}: Readonly<{ children: React.ReactNode; anomaliesCount?: number }>) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  const navigation = [
+    { href: '/dashboard', label: 'Command Center', icon: LayoutDashboard },
+    { href: '/telemetry', label: 'Telemetry', icon: Activity },
+    { href: '/anomalies', label: 'Anomalies', icon: ShieldAlert, badge: anomaliesCount > 0 ? String(anomaliesCount) : undefined },
+    { href: '/simulator', label: 'Simulator', icon: SlidersHorizontal },
+    { href: '/reports', label: 'Reports', icon: BarChart3 },
+  ]
 
   return (
     <div className="min-h-screen flex">
@@ -66,7 +69,10 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
               <Icon size={18} />
               <span>{label}</span>
               {badge && (
-                <em className="ml-auto not-italic text-surface-bg bg-status-red min-w-[20px] text-center leading-[20px] rounded-[10px] text-[11px] font-bold">
+                <em
+                  className="ml-auto not-italic text-surface-bg bg-status-red min-w-[20px] text-center leading-[20px] rounded-[10px] text-[11px] font-bold"
+                  aria-label={`${badge} recent finding${badge === '1' ? '' : 's'}`}
+                >
                   {badge}
                 </em>
               )}

@@ -144,6 +144,27 @@ export async function fetchRecentActivity(dataCenterId: string, limit: number): 
   }
 }
 
+/** Returns 0 when Supabase is unconfigured, never throws. Cheap count-only query, no rows pulled. */
+export async function countRecentAlerts(dataCenterId: string, sinceHours: number): Promise<number> {
+  const client = getSupabaseServerClient();
+  if (!client) return 0;
+
+  try {
+    const since = new Date(Date.now() - sinceHours * 60 * 60 * 1000).toISOString();
+    const { count, error } = await client
+      .from('alerts')
+      .select('id', { count: 'exact', head: true })
+      .eq('data_center_id', dataCenterId)
+      .gte('detected_at', since);
+
+    if (error) return 0;
+    return count ?? 0;
+  } catch (error) {
+    console.warn('countRecentAlerts: best-effort read failed', error);
+    return 0;
+  }
+}
+
 /** Returns { alerts: [], simulations: [] } when Supabase is unconfigured, never throws. */
 export async function fetchReports(
   dataCenterId: string,
