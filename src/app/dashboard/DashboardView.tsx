@@ -8,14 +8,23 @@ import { highestSeverityFinding } from '@/lib/anomaly/rules'
 import { METRIC_LABELS, severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
 import { formatJakartaTime } from '@/lib/format/time'
 import type { ScenarioId } from '@/lib/telemetry/generator'
-import type { ActivityEvent, DashboardMetrics, Finding, TelemetryPoint } from '@/types'
+import type { ActivityEvent, DashboardMetrics, Finding, FindingSeverity, TelemetryPoint } from '@/types'
 
 const TARGET_PUE = 1.3
-const TARGET_WUE = 1.45
+// calculateWue() returns liters per MW of IT power (hundreds, not the L/kWh
+// convention its name suggests), so the target must be calibrated to that
+// same scale — ~900 is the nominal-scenario baseline center, not a
+// dimensionless industry figure.
+const TARGET_WUE = 900
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value))
 }
+
+// Bounded, severity-driven reliability score. Deliberately not "100 - deviationPercent":
+// that formula has no floor and collapses to a flat, meaningless-looking 0% for any
+// finding past 100% deviation (easily reached, e.g. by the water-stress scenario).
+const RELIABILITY_BY_SEVERITY: Record<FindingSeverity, number> = { low: 85, medium: 65, high: 40, critical: 15 }
 
 const METRIC_ICONS = { coolingPower: Gauge, waterUsage: Droplets, serverTemperature: Thermometer }
 
@@ -46,7 +55,7 @@ export function DashboardView({
   const activeFinding = highestSeverityFinding(data.findings)
   const latest = data.point
 
-  const reliability = Math.round(clamp(100 - (activeFinding?.deviationPercent ?? 0), 0, 100))
+  const reliability = activeFinding ? RELIABILITY_BY_SEVERITY[activeFinding.severity] : 100
   const energy = Math.round(clamp((TARGET_PUE / data.latestMetrics.pue) * 100, 0, 100))
   const water = Math.round(clamp((TARGET_WUE / data.latestMetrics.wue) * 100, 0, 100))
 
@@ -106,8 +115,8 @@ export function DashboardView({
         />
         <MetricCard
           label="WUE"
-          value={`${data.latestMetrics.wue.toFixed(2)} L/kWh`}
-          note={`Target ≤ ${TARGET_WUE.toFixed(2)}`}
+          value={`${data.latestMetrics.wue.toFixed(2)} L/MW`}
+          note={`Target ≤ ${TARGET_WUE.toFixed(0)}`}
           icon={Droplets}
         />
         <MetricCard label="Peak server temperature" value={`${data.latestMetrics.peakServerTempC.toFixed(1)}°C`} icon={Thermometer} />
