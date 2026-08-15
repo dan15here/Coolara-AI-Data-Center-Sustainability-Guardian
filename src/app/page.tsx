@@ -144,8 +144,8 @@ export default function LandingPage() {
           >
             <div className="absolute inset-0 bg-gradient-to-t from-[#101517] via-transparent to-transparent z-10 pointer-events-none rounded-[16px]"></div>
             <Image 
-              src="/dashboard-preview.png" 
-              alt="Dashboard Preview" 
+              src="/dashboard-preview-v2.png" 
+              alt="Coolara Command Center Preview" 
               width={1000} 
               height={600} 
               className="rounded-[10px] w-full h-auto object-cover border border-[#2b363c]"
