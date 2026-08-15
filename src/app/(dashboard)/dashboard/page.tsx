@@ -4,7 +4,7 @@ import { PageIntro } from '@/components/ui'
 import { DashboardView } from './DashboardView'
 
 export default async function DashboardPage() {
-  const { point, metrics, findings, activity } = await getDashboardSnapshot(DEMO_DATA_CENTER_ID)
+  const { point, metrics, findings, activity } = await getDashboardSnapshot(DEMO_DATA_CENTER_ID, 'nominal')
 
   return (
     <>

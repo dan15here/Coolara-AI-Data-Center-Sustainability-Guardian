@@ -1,5 +1,6 @@
 import 'server-only';
 import { getCurrentTelemetryPoint } from '@/lib/telemetry/current';
+import { generateTelemetryPoint, type ScenarioId } from '@/lib/telemetry/generator';
 import { deriveDashboardMetrics } from '@/lib/calculations/metrics';
 import { detectFindings } from '@/lib/anomaly/rules';
 import { fetchRecentActivity, saveAlerts, saveTelemetryPoint } from '@/lib/supabase/repository';
@@ -18,8 +19,13 @@ export interface DashboardSnapshot {
  * prefer the latest persisted telemetry point, falling back to a fresh
  * synthetic nominal reading only when nothing has been persisted yet.
  */
-export async function getDashboardSnapshot(dataCenterId: string): Promise<DashboardSnapshot> {
-  const point = await getCurrentTelemetryPoint(dataCenterId);
+export async function getDashboardSnapshot(dataCenterId: string, scenario?: ScenarioId): Promise<DashboardSnapshot> {
+  // The Command Center scenario tabs describe the data currently on screen.
+  // When a caller requests one, generate that scenario directly instead of
+  // reusing a historic Supabase row from a potentially different scenario.
+  const point = scenario
+    ? generateTelemetryPoint(scenario, { seed: Date.now() })
+    : await getCurrentTelemetryPoint(dataCenterId);
   const metrics = deriveDashboardMetrics(point);
   const findings = detectFindings(point);
 
