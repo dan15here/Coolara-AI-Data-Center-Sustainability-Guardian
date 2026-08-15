@@ -43,7 +43,7 @@ function Hero({ isHeaderBrandVisible }: { isHeaderBrandVisible: boolean }) {
           </motion.div>
           <div className="flex gap-4 flex-col">
             <h1 className="text-5xl md:text-6xl lg:text-7xl max-w-5xl tracking-tighter text-center font-extrabold text-white">
-              <div className="mx-auto mb-2 h-[58px] md:mb-3 md:h-[73px]">
+              <div className="mx-auto mb-2 flex h-[58px] justify-center md:mb-3 md:h-[73px]">
                 {!isHeaderBrandVisible && (
                   <motion.div
                     layoutId="coolara-brand"
