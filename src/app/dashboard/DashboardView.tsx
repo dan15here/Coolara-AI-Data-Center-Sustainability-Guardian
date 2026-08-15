@@ -56,31 +56,38 @@ export function DashboardView({
     <>
       <ScenarioControl scenario={data.scenario} onChange={loadScenario} />
 
-      <section className="posture">
+      <section className="border border-[#394348] bg-[#192426] rounded-[9px] p-[16px_19px] flex flex-col sm:flex-row sm:items-center justify-between gap-[20px] items-start">
         <div>
           <Pill tone={activeFinding ? severityTone(activeFinding.severity) : 'healthy'}>
             {activeFinding ? 'Attention required' : 'Nominal'}
           </Pill>
-          <strong>
+          <strong className="block my-[9px] mb-[3px] text-[15px]">
             {activeFinding
               ? `${METRIC_LABELS[activeFinding.metric]} is above the expected operating baseline.`
               : 'All systems are operating within the expected baseline.'}
           </strong>
-          <p>
+          <p className="text-content-muted m-0 text-[12px]">
             {activeFinding
               ? `One ${severityLabel(activeFinding.severity).toLowerCase()} condition needs a review before an operational response.`
               : 'No anomalies detected for the current scenario.'}
           </p>
         </div>
-        <div className="health-list">
+        <div className="flex gap-[22px] self-stretch justify-around sm:self-auto">
           {[
-            ['Reliability', reliability],
-            ['Energy', energy],
-            ['Water', water],
-          ].map(([name, value]) => (
-            <div className="health" key={name as string}>
-              <span style={{ '--progress': `${value}%` } as React.CSSProperties}>{value}%</span>
-              <small>{name}</small>
+            ['Reliability', reliability, 'var(--color-status-teal)'],
+            ['Energy', energy, 'var(--color-status-amber)'],
+            ['Water', water, 'var(--color-status-teal)'],
+          ].map(([name, value, colorStr]) => (
+            <div className="text-center" key={name as string}>
+              <span 
+                className="w-[43px] h-[43px] grid place-items-center rounded-full text-[10px] font-bold mx-auto"
+                style={{ 
+                  background: `radial-gradient(circle,#192326 59%,transparent 61%),conic-gradient(${colorStr} ${value}%,#344045 0)`
+                }}
+              >
+                {value}%
+              </span>
+              <small className="text-content-muted block text-[10px] mt-[5px]">{name}</small>
             </div>
           ))}
         </div>
@@ -89,7 +96,7 @@ export function DashboardView({
       {state.status === 'loading' && <LoadingState label="Loading scenario…" />}
       {state.status === 'error' && <ErrorState label="Could not load telemetry." onRetry={() => loadScenario(data.scenario)} />}
 
-      <section className="metrics-grid">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[12px] mt-6">
         <MetricCard label="Total power" value={`${data.latestMetrics.totalPowerMw.toFixed(2)} MW`} icon={Zap} />
         <MetricCard
           label="PUE"
@@ -106,48 +113,48 @@ export function DashboardView({
         <MetricCard label="Peak server temperature" value={`${data.latestMetrics.peakServerTempC.toFixed(1)}°C`} icon={Thermometer} />
       </section>
 
-      <section className="section-head">
+      <section className="mt-[38px] mb-[13px] flex items-end justify-between">
         <div>
-          <p className="eyebrow">ACTIVE PRIORITY FINDING</p>
-          <h2>Decision-ready anomaly</h2>
+          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">ACTIVE PRIORITY FINDING</p>
+          <h2 className="m-0 text-[18px]">Decision-ready anomaly</h2>
         </div>
         {activeFinding && <Pill tone={severityTone(activeFinding.severity)}>{severityLabel(activeFinding.severity)}</Pill>}
       </section>
 
       {activeFinding ? (
-        <section className="finding-card">
-          <div className="finding-main">
-            <div className="finding-icon">
+        <section className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] border border-[#4c3b3a] rounded-[9px] bg-surface-panel overflow-hidden">
+          <div className="flex gap-[15px] p-[22px] flex-col sm:flex-row sm:items-start">
+            <div className="min-w-[40px] h-[40px] grid place-items-center rounded-[9px] bg-status-red/20 text-status-red shrink-0">
               <FindingIcon size={22} />
             </div>
             <div>
-              <h3>{METRIC_LABELS[activeFinding.metric]} exceeds expected demand</h3>
-              <p>{summarizeFinding(activeFinding)}</p>
-              <div className="chips">
+              <h3 className="m-[1px_0_7px] text-[16px]">{METRIC_LABELS[activeFinding.metric]} exceeds expected demand</h3>
+              <p className="text-content-muted leading-[1.45] m-0 text-[12px]">{summarizeFinding(activeFinding)}</p>
+              <div className="flex flex-wrap gap-[6px] mt-[15px]">
                 {activeFinding.likelyFactors.slice(0, 3).map((factor) => (
-                  <span key={factor}>{factor}</span>
+                  <span className="text-[#bbcac8] bg-[#242d31] p-[5px_8px] text-[11px] rounded-[4px]" key={factor}>{factor}</span>
                 ))}
               </div>
             </div>
           </div>
-          <div className="comparison">
+          <div className="border-t lg:border-t-0 lg:border-l border-surface-line grid grid-cols-3 items-center p-[16px] lg:p-[0_17px] gap-[10px]">
             <div>
-              <span>Actual</span>
-              <strong>{activeFinding.actual.toFixed(2)}</strong>
+              <span className="block text-content-muted text-[11px]">Actual</span>
+              <strong className="block mt-[5px] text-[15px]">{activeFinding.actual.toFixed(2)}</strong>
             </div>
             <div>
-              <span>Expected</span>
-              <strong>{activeFinding.expected.toFixed(2)}</strong>
+              <span className="block text-content-muted text-[11px]">Expected</span>
+              <strong className="block mt-[5px] text-[15px]">{activeFinding.expected.toFixed(2)}</strong>
             </div>
             <div>
-              <span>Deviation</span>
-              <strong className="critical-text">
+              <span className="block text-content-muted text-[11px]">Deviation</span>
+              <strong className="block mt-[5px] text-[15px] text-[#ff9b93]">
                 {activeFinding.deviationPercent >= 0 ? '+' : ''}
                 {activeFinding.deviationPercent.toFixed(1)}%
               </strong>
             </div>
           </div>
-          <div className="finding-actions">
+          <div className="col-span-full p-[12px_22px] bg-[#141a1d] border-t border-surface-line flex flex-wrap gap-[25px]">
             <TextLink href="/anomalies">View anomaly details</TextLink>
             <TextLink href="/simulator">Simulate response</TextLink>
           </div>
@@ -156,33 +163,35 @@ export function DashboardView({
         <EmptyState message="No findings detected for this scenario — cooling, water, and thermal signals are within baseline." />
       )}
 
-      <section className="support-banner">
-        <div className="support-icon">
+      <section className="mt-[18px] p-[20px] border border-[#2e5552] bg-[#162423] rounded-[8px] flex flex-col sm:flex-row items-start sm:items-center gap-[14px]">
+        <div className="w-[44px] h-[44px] grid place-items-center rounded-[9px] bg-status-teal/20 text-status-teal shrink-0">
           <ShieldCheck size={23} />
         </div>
         <div>
-          <p className="eyebrow">DECISION SUPPORT</p>
-          <h2>Simulate before recommending action</h2>
-          <p>Evaluate energy, water, and thermal trade-offs with a deterministic safety gate.</p>
+          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DECISION SUPPORT</p>
+          <h2 className="m-0 text-[18px] mb-2 sm:mb-0">Simulate before recommending action</h2>
+          <p className="text-content-muted leading-[1.45] m-0 text-[12px]">Evaluate energy, water, and thermal trade-offs with a deterministic safety gate.</p>
         </div>
-        <TextLink href="/simulator">Open What-if Simulator</TextLink>
+        <div className="sm:ml-auto shrink-0 mt-2 sm:mt-0">
+          <TextLink href="/simulator">Open What-if Simulator</TextLink>
+        </div>
       </section>
 
-      <section className="section-head">
+      <section className="mt-[38px] mb-[13px] flex items-end justify-between">
         <div>
-          <p className="eyebrow">RECENT OPERATIONAL EVENTS</p>
-          <h2>Activity at a glance</h2>
+          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">RECENT OPERATIONAL EVENTS</p>
+          <h2 className="m-0 text-[18px]">Activity at a glance</h2>
         </div>
         <TextLink href="/reports">View activity log</TextLink>
       </section>
 
       {activity.length > 0 ? (
-        <section className="events-grid">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-[12px]">
           {activity.map((event) => (
-            <article className="event" key={event.id}>
-              <time>{formatJakartaTime(event.occurredAt)} WIB</time>
-              <strong>{event.summary}</strong>
-              <span className={event.type === 'alert' ? 'critical-text' : ''}>
+            <article className="border-t border-surface-line py-[13px] grid gap-[6px]" key={event.id}>
+              <time className="text-content-muted text-[11px]">{formatJakartaTime(event.occurredAt)} WIB</time>
+              <strong className="text-[13px]">{event.summary}</strong>
+              <span className={`text-[11px] flex items-center gap-[4px] ${event.type === 'alert' ? 'text-[#ff9b93]' : 'text-content-muted'}`}>
                 {event.type === 'alert' ? 'Alert' : 'Simulation'} <ArrowUpRight size={13} />
               </span>
             </article>
@@ -192,7 +201,7 @@ export function DashboardView({
         <EmptyState message="No recent activity recorded yet. Activity requires Supabase persistence — configure it to retain history across sessions." />
       )}
 
-      <p className="synthetic-inline" style={{ marginTop: 8 }}>
+      <p className="text-[#a6d6cb] text-[12px]" style={{ marginTop: 8 }}>
         Latest reading: {latest.itLoadMw.toFixed(2)} MW IT load · {latest.ambientTempC.toFixed(1)}°C ambient
       </p>
     </>

@@ -1,7 +1,0 @@
-.filters select { border: 1px solid var(--line); border-radius: 4px; background: #20292d; color: #d9e2e0; padding: 6px 8px; font-size: 11px; }
-.empty-state, .loading-state, .error-state { border: 1px dashed #425157; border-radius: 8px; color: var(--muted); padding: 28px; text-align: center; }
-.loading-state { margin: 28px 0; }
-.loading-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--teal); margin-right: 8px; }
-.error-state { max-width: 520px; margin: 70px auto; }
-.error-state h1 { color: var(--text); margin: 0 0 8px; font-size: 24px; }
-.error-state p:not(.eyebrow) { line-height: 1.5; margin: 0 0 20px; }

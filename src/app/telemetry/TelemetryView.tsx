@@ -50,21 +50,21 @@ export function TelemetryView({
         <ErrorState label="Could not load telemetry." onRetry={() => load(data.scenario, data.range)} />
       )}
 
-      <div className="chart-grid">
-        <section className="chart-card">
-          <div className="chart-heading">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-[14px]">
+        <section className="p-[20px_17px_12px] min-w-0 border border-surface-line bg-surface-panel rounded-lg">
+          <div className="flex justify-between gap-[15px] items-start">
             <div>
-              <h2>Energy & cooling demand</h2>
-              <p>Megawatts · last {data.range}</p>
+              <h2 className="m-0 text-[18px]">Energy & cooling demand</h2>
+              <p className="text-content-muted m-[5px_0_10px] text-[11px]">Megawatts · last {data.range}</p>
             </div>
-            <div className="range-control">
+            <div className="flex border border-surface-line rounded-[5px] overflow-hidden">
               {RANGES.map((range) => (
                 <button
                   key={range}
                   type="button"
                   title={RANGE_TITLE[range]}
                   aria-pressed={data.range === range}
-                  className={data.range === range ? 'selected' : ''}
+                  className={`border-0 text-[11px] p-[6px_8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${data.range === range ? 'text-content-base bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-white/5 hover:text-white'}`}
                   onClick={() => load(data.scenario, range)}
                 >
                   {range}
@@ -74,38 +74,43 @@ export function TelemetryView({
           </div>
           <EnergyChart points={data.points} />
         </section>
-        <section className="chart-card">
-          <div className="chart-heading">
+        
+        <section className="p-[20px_17px_12px] min-w-0 border border-surface-line bg-surface-panel rounded-lg flex flex-col">
+          <div className="flex justify-between gap-[15px] items-start">
             <div>
-              <h2>Temperature conditions</h2>
-              <p>Degrees Celsius · last {data.range}</p>
+              <h2 className="m-0 text-[18px]">Temperature conditions</h2>
+              <p className="text-content-muted m-[5px_0_10px] text-[11px]">Degrees Celsius · last {data.range}</p>
             </div>
             <Pill tone={overThreshold ? 'critical' : 'healthy'}>{latest.serverTempC.toFixed(1)}°C current</Pill>
           </div>
           <ThermalChart points={data.points} />
-          <div className="threshold">
-            <Thermometer size={15} /> Thermal reliability threshold <strong>{MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C</strong>
+          <div className="mt-auto p-[9px_2px_0] border-t border-surface-line text-content-muted flex gap-[6px] items-center text-[11px]">
+            <Thermometer size={15} /> Thermal reliability threshold <strong className="ml-auto text-[#f2c97c]">{MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C</strong>
           </div>
         </section>
       </div>
 
-      <section className="latest-card">
+      <section className="mt-[14px] p-[18px] flex flex-col sm:flex-row sm:items-center justify-between border border-surface-line bg-surface-panel rounded-lg items-start">
         <div>
-          <p className="eyebrow">LATEST READING</p>
-          <h2>DC-01 · Hall A</h2>
+          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">LATEST READING</p>
+          <h2 className="m-0 text-[18px]">DC-01 · Hall A</h2>
         </div>
-        <div className="reading-grid">
+        <div className="grid grid-cols-2 sm:flex gap-[16px] sm:gap-[28px] mt-4 sm:mt-0">
           <span>
-            IT Load <strong>{latest.itLoadMw.toFixed(2)} MW</strong>
+            <span className="text-content-muted text-[11px]">IT Load</span>
+            <strong className="block text-content-base mt-[5px] text-[14px]">{latest.itLoadMw.toFixed(2)} MW</strong>
           </span>
           <span>
-            Cooling <strong>{latest.coolingPowerMw.toFixed(2)} MW</strong>
+            <span className="text-content-muted text-[11px]">Cooling</span>
+            <strong className="block text-content-base mt-[5px] text-[14px]">{latest.coolingPowerMw.toFixed(2)} MW</strong>
           </span>
           <span>
-            Water <strong>{(latest.waterLiters / 1000).toFixed(1)} kL/h</strong>
+            <span className="text-content-muted text-[11px]">Water</span>
+            <strong className="block text-content-base mt-[5px] text-[14px]">{(latest.waterLiters / 1000).toFixed(1)} kL/h</strong>
           </span>
           <span>
-            Ambient <strong>{latest.ambientTempC.toFixed(1)}°C</strong>
+            <span className="text-content-muted text-[11px]">Ambient</span>
+            <strong className="block text-content-base mt-[5px] text-[14px]">{latest.ambientTempC.toFixed(1)}°C</strong>
           </span>
         </div>
       </section>

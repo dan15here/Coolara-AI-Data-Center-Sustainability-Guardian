@@ -48,48 +48,52 @@ export function AnomaliesView({
       {data.findings.map((finding) => {
         const Icon = METRIC_ICONS[finding.metric]
         return (
-          <div key={finding.id} className="anomaly-group">
-            <section className="anomaly-detail">
-              <div className="anomaly-top">
+          <div key={finding.id} className="flex flex-col gap-[16px] mb-[24px]">
+            <section className="p-[22px] border border-surface-line bg-surface-panel rounded-lg">
+              <div className="flex justify-between text-content-muted text-[11px]">
                 <Pill tone={severityTone(finding.severity)}>{severityLabel(finding.severity)} severity</Pill>
                 <span>Detected {formatJakartaTime(finding.detectedAt)} WIB</span>
               </div>
-              <div className="anomaly-title">
-                <div className="finding-icon">
+              
+              <div className="flex gap-[13px] my-[20px]">
+                <div className="min-w-[40px] h-[40px] grid place-items-center rounded-[9px] bg-status-red/20 text-status-red shrink-0">
                   <Icon size={23} />
                 </div>
                 <div>
-                  <h2>{METRIC_LABELS[finding.metric]} exceeds expected demand</h2>
-                  <p>{summarizeFinding(finding)}</p>
+                  <h2 className="m-0 text-[18px]">{METRIC_LABELS[finding.metric]} exceeds expected demand</h2>
+                  <p className="text-content-muted leading-[1.45] m-0 text-[12px] mt-1">{summarizeFinding(finding)}</p>
                 </div>
               </div>
-              <div className="anomaly-numbers">
-                <div>
-                  <span>Actual</span>
-                  <strong>{finding.actual.toFixed(2)}</strong>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 bg-[#121719] border border-surface-line rounded-[7px] overflow-hidden">
+                <div className="p-[16px] border-b sm:border-b-0 sm:border-r border-surface-line">
+                  <span className="block text-content-muted text-[11px]">Actual</span>
+                  <strong className="block mt-[8px] text-[20px]">{finding.actual.toFixed(2)}</strong>
                 </div>
-                <div>
-                  <span>Expected</span>
-                  <strong>{finding.expected.toFixed(2)}</strong>
+                <div className="p-[16px] border-b sm:border-b-0 sm:border-r border-surface-line">
+                  <span className="block text-content-muted text-[11px]">Expected</span>
+                  <strong className="block mt-[8px] text-[20px]">{finding.expected.toFixed(2)}</strong>
                 </div>
-                <div>
-                  <span>Deviation</span>
-                  <strong className="critical-text">
+                <div className="p-[16px]">
+                  <span className="block text-content-muted text-[11px]">Deviation</span>
+                  <strong className="block mt-[8px] text-[20px] text-[#ff9b93]">
                     {finding.deviationPercent >= 0 ? '+' : ''}
                     {finding.deviationPercent.toFixed(1)}%
                   </strong>
                 </div>
               </div>
-              <div className="chips">
+              
+              <div className="flex flex-wrap gap-[6px] mt-[15px]">
                 {finding.likelyFactors.map((factor) => (
-                  <span key={factor}>{factor}</span>
+                  <span className="text-[#bbcac8] bg-[#242d31] p-[5px_8px] text-[11px] rounded-[4px]" key={factor}>{factor}</span>
                 ))}
               </div>
-              <div className="detail-actions">
-                <Link href="/telemetry">
+              
+              <div className="flex gap-[20px] mt-[20px]">
+                <Link className="text-[#9be0d6] font-bold text-[12px] flex items-center gap-[6px] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded" href="/telemetry">
                   <ExternalLink size={15} /> View source telemetry
                 </Link>
-                <Link href="/simulator">
+                <Link className="text-[#9be0d6] font-bold text-[12px] flex items-center gap-[6px] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded" href="/simulator">
                   <Play size={15} /> Simulate response
                 </Link>
               </div>

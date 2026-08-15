@@ -57,43 +57,55 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
   }
 
   return (
-    <section className="simulator-grid">
-      <div className="control-panel">
-        <h2>Operating assumptions</h2>
-        <p>Adjust the conditions to evaluate the trade-off.</p>
-        <div className="control-actions">
-          <button className="button secondary" type="button" onClick={() => applyPreset(SAFE_PRESET)}>
+    <section className="grid grid-cols-1 md:grid-cols-[1fr_1.05fr] gap-[14px]">
+      <div className="p-[23px] border border-surface-line bg-surface-panel rounded-lg">
+        <h2 className="m-0 text-[18px]">Operating assumptions</h2>
+        <p className="text-content-muted leading-[1.45] m-0 text-[12px] mt-1 mb-[18px]">Adjust the conditions to evaluate the trade-off.</p>
+        
+        <div className="flex gap-[10px] mb-[24px]">
+          <button 
+            className="border-0 rounded-[6px] bg-[#273237] text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
+            type="button" 
+            onClick={() => applyPreset(SAFE_PRESET)}
+          >
             Try a safe scenario
           </button>
-          <button className="button secondary" type="button" onClick={() => applyPreset(UNSAFE_PRESET)}>
+          <button 
+            className="border-0 rounded-[6px] bg-[#273237] text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
+            type="button" 
+            onClick={() => applyPreset(UNSAFE_PRESET)}
+          >
             Try an unsafe scenario
           </button>
         </div>
+        
         {FIELDS.map(({ key, label, unit, min, max }) => (
-          <label className="slider-field" key={key}>
-            <span>
+          <label className="block my-[26px]" key={key}>
+            <span className="flex justify-between text-[12px]">
               <strong>{label}</strong>
-              <output>
+              <output className="text-[#a7e2d8] font-bold">
                 {input[key]} {unit}
               </output>
             </span>
             <input
+              className="block w-full accent-status-teal my-[14px] mb-[6px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-panel rounded-full"
               type="range"
               min={min}
               max={max}
               value={input[key]}
               onChange={(event) => change(key, Number(event.target.value))}
             />
-            <small>
+            <small className="flex justify-between text-content-muted text-[10px]">
               {min} {unit}
-              <i />
+              <i className="h-[1px] flex-1 bg-[#394348] m-[7px_8px]" />
               {max} {unit}
             </small>
           </label>
         ))}
-        <div className="control-actions">
+        
+        <div className="flex gap-[10px] mt-[32px]">
           <button
-            className="button secondary"
+            className="border-0 rounded-[6px] bg-[#273237] text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg"
             type="button"
             onClick={() => {
               setInput(initialInput)
@@ -102,17 +114,21 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
           >
             <RotateCcw size={15} /> Reset
           </button>
-          <button className="button" type="button" onClick={() => runSimulation()}>
+          <button 
+            className="border-0 rounded-[6px] bg-status-teal text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
+            type="button" 
+            onClick={() => runSimulation()}
+          >
             Run simulation
           </button>
         </div>
       </div>
 
-      <div className={`result-panel ${state.status === 'done' ? (state.result.safe ? 'safe' : 'unsafe') : ''}`}>
-        <div className="result-top">
+      <div className={`p-[23px] border bg-surface-panel rounded-lg transition-colors duration-300 ${state.status === 'done' ? (state.result.safe ? 'border-[#36746c]' : 'border-[#833f3b]') : 'border-surface-line'}`}>
+        <div className="flex justify-between gap-[15px] items-start">
           <div>
-            <p className="eyebrow">DETERMINISTIC RESULT</p>
-            <h2>
+            <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DETERMINISTIC RESULT</p>
+            <h2 className="m-0 text-[18px]">
               {state.status === 'done'
                 ? state.result.safe
                   ? 'Safe to review'
@@ -135,40 +151,41 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
 
         {state.status === 'done' && (
           <>
-            <div className="temperature-result">
-              <Thermometer size={23} />
+            <div className="flex gap-[11px] items-center my-[32px] mb-[15px]">
+              <Thermometer size={23} className="text-status-amber" />
               <div>
-                <span>Predicted server temperature</span>
-                <strong>{state.result.predictedServerTempC.toFixed(1)}°C</strong>
-                <small>Safety threshold: {MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C</small>
+                <span className="block text-content-muted text-[11px]">Predicted server temperature</span>
+                <strong className="block text-[34px] m-[4px_0]">{state.result.predictedServerTempC.toFixed(1)}°C</strong>
+                <small className="text-content-muted text-[11px]">Safety threshold: {MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C</small>
               </div>
             </div>
-            <p className="safety-reason">{state.result.reason}</p>
-            <div className="impact-grid">
-              <div>
-                <span>Energy delta</span>
-                <strong>
+            <p className="text-[#b9c5c3] leading-[1.5] text-[12px]">{state.result.reason}</p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-[1px] mt-[20px] bg-surface-line border border-surface-line rounded-md overflow-hidden">
+              <div className="bg-[#141a1d] p-[13px]">
+                <span className="block text-content-muted text-[11px]">Energy delta</span>
+                <strong className="block mt-[5px] text-[14px]">
                   {state.result.estimatedEnergyDeltaMwh >= 0 ? '+' : ''}
                   {state.result.estimatedEnergyDeltaMwh.toFixed(2)} MWh
                 </strong>
               </div>
-              <div>
-                <span>Water delta</span>
-                <strong>
+              <div className="bg-[#141a1d] p-[13px]">
+                <span className="block text-content-muted text-[11px]">Water delta</span>
+                <strong className="block mt-[5px] text-[14px]">
                   {state.result.estimatedWaterDeltaLiters >= 0 ? '+' : ''}
                   {state.result.estimatedWaterDeltaLiters.toFixed(0)} L
                 </strong>
               </div>
-              <div>
-                <span>Estimated cost</span>
-                <strong>
+              <div className="bg-[#141a1d] p-[13px]">
+                <span className="block text-content-muted text-[11px]">Estimated cost</span>
+                <strong className="block mt-[5px] text-[14px]">
                   {state.result.estimatedCostDeltaIdr >= 0 ? '+' : '-'}Rp{' '}
                   {Math.abs(state.result.estimatedCostDeltaIdr).toLocaleString('id-ID')}
                 </strong>
               </div>
-              <div>
-                <span>PUE / WUE</span>
-                <strong>
+              <div className="bg-[#141a1d] p-[13px]">
+                <span className="block text-content-muted text-[11px]">PUE / WUE</span>
+                <strong className="block mt-[5px] text-[14px]">
                   {state.result.pue.toFixed(2)} / {state.result.wue.toFixed(2)}
                 </strong>
               </div>
@@ -177,9 +194,9 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
         )}
 
         {state.status === 'idle' && (
-          <div className="empty-result">
-            <ShieldCheck size={30} />
-            <p>Choose assumptions, then run the simulation to see a safety-gated outcome.</p>
+          <div className="min-h-[255px] grid place-content-center justify-items-center text-center text-content-muted gap-[12px]">
+            <ShieldCheck className="text-status-teal" size={30} />
+            <p className="max-w-[250px] text-[12px] leading-[1.45] m-0">Choose assumptions, then run the simulation to see a safety-gated outcome.</p>
           </div>
         )}
       </div>

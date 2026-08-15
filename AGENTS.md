@@ -61,7 +61,7 @@ Server-only values (never commit real values; never expose to browser):
 - `GEMINI_API_KEY`
 - `GEMINI_MODEL` (default `gemini-3.6-flash` in docs; code fallback default is `gemini-2.5-flash`)
 
-The Supabase browser client reads `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` and is `null` when unconfigured. Backend persists best-effort and falls back to synthetic data when Supabase is unconfigured.
+All Supabase access is server-side via the service-role key. Backend persists best-effort and falls back to synthetic data when Supabase is unconfigured.
 
 ## Security & Event Boundaries
 
