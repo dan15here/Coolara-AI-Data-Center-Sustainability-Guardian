@@ -1,38 +1,70 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+## What this is
 
-This is a Next.js 16 starter using the App Router, React, TypeScript, and Tailwind CSS.
+Coolara is a sustainability decision-support MVP for data-centre operators, built as a Next.js 16 App Router app (React 19, TypeScript, Tailwind CSS v4). The product flow is **Monitor → Detect → Explain → Simulate → Optimize**. It is a pre-event starter: no product-specific functionality exists yet (`src/app/page.tsx` is a placeholder).
 
-- `src/app/` contains routes and global UI: `page.tsx` is the home route, `layout.tsx` defines shared document structure, and `globals.css` holds global styles.
-- `src/lib/` contains reusable integrations. Keep Supabase browser-client code in `src/lib/supabase/` and AI-related helpers in `src/lib/ai/`.
-- Root documents define the project constraints: read `PRD.md`, `TECH.md`, `TASKLIST.md`, and the disclosure files before adding feature work.
-- `.env.example` lists required configuration; never commit real credentials.
+## Read before adding feature work
 
-Place route-specific components beside their route when they are not reused. Put broadly reusable helpers in `src/lib/` and use descriptive, narrowly scoped modules such as `src/lib/supabase/client.ts`.
+These root docs define hard product constraints — read them before implementing anything:
 
-## Build, Test, and Development Commands
+- `PRD.md` — MVP scope, features, non-goals.
+- `TECH.md` — stack, architecture, env vars, security limits.
+- `COOLARA_UI_SPECIFICATION.md` — exact page layouts and the "one page = one primary job" rule. Follow this for any UI work.
+- `COOLARA_IMPLEMENTATION_PLAN.md` — build phases, team split, API contract, shared TypeScript types.
+- `TASKLIST.md` — build-window checklist.
+- `PRE_EXISTING_DISCLOSURE.md`, `AI_TOOLS_DISCLOSURE.md` — completion rules (update these before submission).
 
-Run commands from the repository root:
+## Non-negotiable architecture rule
 
-- `npm install` installs dependencies.
-- `npm run dev` starts the local Next.js development server.
-- `npm run lint` runs ESLint using the Next.js configuration.
-- `npm run build` creates a production build and performs framework type checks.
-- `npm run start` serves a completed production build.
+**Numbers come from deterministic TypeScript logic only. Never from the LLM.** Gemini receives structured findings and returns qualitative explanation/recommendations only. It must never invent measurements, PUE/WUE values, savings, costs, or safety approvals. A configurable thermal/reliability gate rejects unsafe simulated scenarios. This is repeated across every doc and is the single most important constraint.
 
-## Coding Style & Naming Conventions
+## Commands
 
-Use TypeScript for application code and follow the existing two-space indentation, semicolons, and single-quote import style. Name React components in `PascalCase`; name functions, variables, and utilities in `camelCase`. Use lowercase route folder names and descriptive filenames such as `client.ts`. Prefer small components, strict TypeScript types, and imports through the existing `@/` alias when applicable. Run `npm run lint` before handing off changes.
+Run from the repo root:
 
-## Testing Guidelines
+- `npm install` — install deps.
+- `npm run dev` — local dev server.
+- `npm run lint` — ESLint (Next config).
+- `npm run build` — production build. Note: there is no separate `typecheck` script; `next build` and `tsc` are not wired as standalone npm scripts.
+- `npm run start` — serve a production build.
 
-No automated test framework is configured yet. At minimum, run `npm run lint` and `npm run build`, then manually verify affected routes with `npm run dev`. When introducing tests, colocate them with the code or under `src/**/__tests__/`, name files `*.test.ts` or `*.test.tsx`, and add the test command to `package.json`.
+There is no test framework configured and no test script.
 
-## Commit & Pull Request Guidelines
+## Structure
 
-Git history is not present in this checkout, so no repository-specific commit convention can be inferred. Use concise imperative messages, for example `Add Supabase session helper`. Keep commits focused. Pull requests should explain the change, link the relevant task or issue, list validation commands, and include screenshots for visual changes.
+- `src/app/` — routes and global UI (`page.tsx`, `layout.tsx`, `globals.css`). Add API routes under `src/app/api/**`.
+- `src/lib/` — reusable integrations. Existing: `src/lib/supabase/client.ts` (browser client). Planned backend dirs per the implementation plan: `src/lib/calculations/`, `src/lib/anomaly/`, `src/lib/simulator/`, `src/lib/ai/`, `src/lib/supabase/`, plus `src/types/` for shared contracts.
+- Root config: `package.json`, `tsconfig.json`, `postcss.config.mjs`.
 
-## Security & Event Boundaries
+## Path alias
 
-Keep secrets only in local environment variables. The starter intentionally excludes product-specific AI calls, database schema, data, and integrations; follow the rules in `README.md` and complete `PRE_EXISTING_DISCLOSURE.md` accurately before submission.
+The `@/` alias is **not** configured in `tsconfig.json` (`baseUrl`/`paths` are absent). Do not assume `@/` imports resolve; use relative imports until an alias is actually added. If you add one, wire it in `tsconfig.json`.
+
+## Environment variables
+
+From `.env.example`:
+
+- `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` — browser-safe (only when RLS is configured).
+- `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY`, `GEMINI_MODEL` — server-only.
+
+Never commit real credentials (`.env.local` and `.env.*.local` are gitignored). `GEMINI_API_KEY` must stay server-side only.
+
+## Conventions
+
+- TypeScript, strict mode on. Two-space indent, semicolons, single quotes.
+- Components `PascalCase`; functions/vars `camelCase`; lowercase route folders; descriptive filenames (`client.ts`).
+- Route-specific components live beside their route; broadly reused helpers in `src/lib/`.
+- No comments unless asked.
+- Before handing off: `npm run lint` and `npm run build`.
+</parameter>
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
