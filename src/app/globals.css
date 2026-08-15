@@ -38,6 +38,7 @@ body {
   color: var(--color-content-base);
   font-size: 14px;
 }
+.landing-satoshi { font-family: var(--font-satoshi); }
 button, input { font: inherit; }
 button { cursor: pointer; }
 a { text-decoration: none; }

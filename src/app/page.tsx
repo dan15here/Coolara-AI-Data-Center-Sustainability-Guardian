@@ -100,7 +100,7 @@ export default function LandingPage() {
 
   return (
     <LayoutGroup id="landing-brand">
-      <main id="top" className="dark min-h-screen bg-[#101517] text-[#eef3f1] font-sans selection:bg-teal-500/30">
+      <main id="top" className="landing-satoshi dark min-h-screen bg-[#101517] text-[#eef3f1] font-sans selection:bg-teal-500/30">
       
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#2b363c] bg-[#101517]/80 backdrop-blur-md">

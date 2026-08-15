@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -14,6 +15,8 @@ const satoshi = localFont({
   variable: '--font-satoshi',
 })
 
+const inter = Inter({ subsets: ['latin'] })
+
 export const metadata: Metadata = {
   title: 'Coolara | Sustainability Guardian',
   description: 'Synthetic data-center sustainability decision support.',
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={satoshi.className}>
+      <body className={`${inter.className} ${satoshi.variable}`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           {children}
         </ThemeProvider>
