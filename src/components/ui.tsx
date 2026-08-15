@@ -5,7 +5,7 @@ import type { LucideIcon } from 'lucide-react'
 export function PageIntro({ eyebrow, title, children }: Readonly<{ eyebrow: string, title: string, children: React.ReactNode }>) { 
   return (
     <div className="my-[28px] mb-[24px]">
-      <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">{eyebrow}</p>
+      <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">{eyebrow}</p>
       <h1 className="text-[27px] tracking-[-0.7px] m-[0_0_7px]">{title}</h1>
       <p className="m-0 text-content-muted">{children}</p>
     </div>
@@ -51,7 +51,7 @@ export function Pill({ children, tone = 'neutral' }: Readonly<{ children: React.
 
 export function TextLink({ href, children }: Readonly<{ href: string, children: React.ReactNode }>) { 
   return (
-    <Link className="text-[#9be0d6] text-[12px] font-bold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded inline-flex items-center gap-1" href={href}>
+    <Link className="text-teal-700 dark:text-[#9be0d6] text-[12px] font-bold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded inline-flex items-center gap-1" href={href}>
       {children} <span>→</span>
     </Link> 
   )
@@ -69,7 +69,7 @@ export function EmptyState({ title, message }: Readonly<{ title?: string, messag
 
 export function LoadingState({ label = 'Loading…' }: Readonly<{ label?: string }>) {
   return (
-    <div className="my-[28px] border border-dashed border-[#425157] rounded-lg text-content-muted p-[28px] text-center" aria-live="polite">
+    <div className="my-[28px] border border-dashed border-surface-line rounded-lg text-content-muted p-[28px] text-center" aria-live="polite">
       <span className="inline-block w-[8px] h-[8px] rounded-full bg-status-teal mr-[8px] animate-pulse" />
       {label}
     </div>
@@ -78,9 +78,9 @@ export function LoadingState({ label = 'Loading…' }: Readonly<{ label?: string
 
 export function ErrorState({ label = 'Something went wrong.', onRetry }: Readonly<{ label?: string, onRetry?: () => void }>) {
   return (
-    <div className="flex flex-col items-center justify-center max-w-[520px] my-[70px] mx-auto border border-dashed border-[#425157] rounded-lg text-content-muted p-[28px] text-center">
+    <div className="flex flex-col items-center justify-center max-w-[520px] my-[70px] mx-auto border border-dashed border-surface-line rounded-lg text-content-muted p-[28px] text-center">
       <Loader2 className="animate-spin mb-[12px] text-status-teal" size={24} />
-      <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DATA UNAVAILABLE</p>
+      <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DATA UNAVAILABLE</p>
       <h1 className="text-content-base m-[0_0_8px] text-[24px]">{label}</h1>
       {onRetry && (
         <button 

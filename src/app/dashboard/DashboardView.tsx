@@ -124,7 +124,7 @@ export function DashboardView({
 
       <section className="mt-[38px] mb-[13px] flex items-end justify-between">
         <div>
-          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">ACTIVE PRIORITY FINDING</p>
+          <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">ACTIVE PRIORITY FINDING</p>
           <p className="text-content-muted tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">ACTIVE PRIORITY FINDING</p>
           <h2 className="m-0 text-[18px] text-content-base">Decision-ready anomaly</h2>
         </div>
@@ -188,7 +188,7 @@ export function DashboardView({
           <ShieldCheck size={23} />
         </div>
         <div>
-          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DECISION SUPPORT</p>
+          <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DECISION SUPPORT</p>
           <h2 className="m-0 text-[18px] mb-2 sm:mb-0">Simulate before recommending action</h2>
           <p className="text-content-muted leading-[1.45] m-0 text-[12px]">Evaluate energy, water, and thermal trade-offs with a deterministic safety gate.</p>
         </div>
@@ -199,7 +199,7 @@ export function DashboardView({
 
       <section className="mt-[38px] mb-[13px] flex items-end justify-between">
         <div>
-          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">RECENT OPERATIONAL EVENTS</p>
+          <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">RECENT OPERATIONAL EVENTS</p>
           <h2 className="m-0 text-[18px]">Activity at a glance</h2>
         </div>
         <TextLink href="/reports">View activity log</TextLink>
@@ -211,7 +211,7 @@ export function DashboardView({
             <article className="border-t border-surface-line py-[13px] grid gap-[6px]" key={event.id}>
               <time className="text-content-muted text-[11px]">{formatJakartaTime(event.occurredAt)} WIB</time>
               <strong className="text-[13px]">{event.summary}</strong>
-              <span className={`text-[11px] flex items-center gap-[4px] ${event.type === 'alert' ? 'text-[#ff9b93]' : 'text-content-muted'}`}>
+              <span className={`text-[11px] flex items-center gap-[4px] ${event.type === 'alert' ? 'text-red-600 dark:text-[#ff9b93]' : 'text-content-muted'}`}>
                 {event.type === 'alert' ? 'Alert' : 'Simulation'} <ArrowUpRight size={13} />
               </span>
             </article>
@@ -221,7 +221,7 @@ export function DashboardView({
         <EmptyState message="No recent activity recorded yet. Activity requires Supabase persistence — configure it to retain history across sessions." />
       )}
 
-      <p className="text-[#a6d6cb] text-[12px]" style={{ marginTop: 8 }}>
+      <p className="text-teal-700 dark:text-[#a6d6cb] text-[12px]" style={{ marginTop: 8 }}>
         Latest reading: {latest.itLoadMw.toFixed(2)} MW IT load · {latest.ambientTempC.toFixed(1)}°C ambient
       </p>
     </>

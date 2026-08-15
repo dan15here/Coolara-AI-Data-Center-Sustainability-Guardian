@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Activity, BarChart3, ChevronRight, LayoutDashboard, Menu, Moon, Play, ShieldAlert, SlidersHorizontal, Sun, X } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useTheme } from 'next-themes'
 
 const titles: Record<string, string> = {
@@ -20,12 +20,7 @@ export function AppShell({
 }: Readonly<{ children: React.ReactNode; anomaliesCount?: number }>) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { resolvedTheme, setTheme } = useTheme();
 
   const navigation = [
     { href: '/dashboard', label: 'Command Center', icon: LayoutDashboard },
@@ -55,7 +50,7 @@ export function AppShell({
             <span className="block text-content-muted text-[11px] mt-[2px]">Sustainability Guardian</span>
           </div>
           <button 
-            className="ml-auto bg-transparent border-0 text-content-base p-1 lg:hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors hover:text-white" 
+            className="ml-auto bg-transparent border-0 text-content-base p-1 lg:hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors hover:text-content-base"
             aria-label="Close sidebar" 
             onClick={() => setOpen(false)}
           >
@@ -67,7 +62,7 @@ export function AppShell({
           {navigation.map(({ href, label, icon: Icon, badge }) => (
             <Link 
               onClick={() => setOpen(false)} 
-              className={`h-[44px] px-[11px] flex items-center gap-[12px] rounded-[7px] relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal ${pathname === href ? 'text-slate-50 bg-slate-900 dark:bg-[#20292d]' : 'text-slate-500 dark:text-[#aeb9bc] hover:bg-slate-200 dark:hover:bg-[#1a2226] hover:text-slate-900 dark:hover:text-slate-50'}`} 
+              className={`h-[44px] px-[11px] flex items-center gap-[12px] rounded-[7px] relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal ${pathname === href ? 'text-white bg-slate-900 dark:text-content-base dark:bg-[#20292d]' : 'text-slate-500 dark:text-[#aeb9bc] hover:bg-slate-200 dark:hover:bg-[#1a2226] hover:text-slate-900 dark:hover:text-slate-50'}`}
               href={href} 
               key={href}
             >
@@ -108,7 +103,7 @@ export function AppShell({
       <main className="flex-1 min-w-0 lg:ml-[264px] w-full">
         <header className="min-h-[70px] px-4 sm:px-6 lg:px-[42px] border-b border-surface-line flex items-center justify-between gap-5">
           <button 
-            className="bg-transparent border-0 text-content-base p-1 lg:hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors hover:text-white" 
+            className="bg-transparent border-0 text-content-base p-1 lg:hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors hover:text-content-base"
             aria-label="Open sidebar" 
             aria-expanded={open} 
             onClick={() => setOpen(true)}
@@ -121,15 +116,14 @@ export function AppShell({
           </div>
           
           <div className="flex items-center gap-[18px] ml-auto sm:ml-0">
-            {mounted && (
-              <button
-                className="bg-transparent border-0 text-content-muted hover:text-content-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded-full p-2 flex items-center justify-center cursor-pointer"
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                aria-label="Toggle theme"
-              >
-                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-              </button>
-            )}
+            <button
+              suppressHydrationWarning
+              className="bg-transparent border-0 text-content-muted hover:text-content-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded-full p-2 flex items-center justify-center cursor-pointer"
+              onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+              aria-label="Toggle theme"
+            >
+              {resolvedTheme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             <span className="text-[11px] text-slate-500 dark:text-[#b1c1bd] hidden sm:flex items-center gap-[6px]">
               <i className="w-[7px] h-[7px] rounded-full bg-status-teal" /> Stream simulated
             </span>

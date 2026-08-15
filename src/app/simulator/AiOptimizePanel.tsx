@@ -70,7 +70,7 @@ export function AiOptimizePanel({
           <Bot size={22} />
         </div>
         <div className="mr-auto">
-          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">COOLARA AI PERSPECTIVE</p>
+          <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">COOLARA AI PERSPECTIVE</p>
           <h2 className="m-0 text-[18px]">Points for review</h2>
         </div>
         {state.status === 'done' && (

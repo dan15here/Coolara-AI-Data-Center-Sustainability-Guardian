@@ -119,7 +119,7 @@ export function SimulatorView({
   return (
     <>
       {originatingFinding && (
-        <p className="text-[#a6d6cb] text-[12px]">
+        <p className="text-teal-700 dark:text-[#a6d6cb] text-[12px]">
           Testing a response to the {METRIC_LABELS[originatingFinding.metric].toLowerCase()} finding detected at{' '}
           {formatJakartaTime(originatingFinding.detectedAt)} WIB.
         </p>
@@ -144,7 +144,7 @@ export function SimulatorView({
             <label className="block my-[26px]" key={key}>
               <span className="flex justify-between text-[12px]">
                 <strong>{label}</strong>
-                <output className="text-[#a7e2d8] font-bold">
+                <output className="text-teal-700 dark:text-[#a7e2d8] font-bold">
                   {input[key]} {unit}
                 </output>
               </span>
@@ -187,7 +187,7 @@ export function SimulatorView({
         >
           <div className="flex justify-between gap-[15px] items-start">
             <div>
-              <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DETERMINISTIC RESULT</p>
+              <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DETERMINISTIC RESULT</p>
               <h2 className="m-0 text-[18px]">
                 {state.status === 'done'
                   ? state.result.safe
@@ -263,7 +263,7 @@ export function SimulatorView({
               </div>
 
               <div className="mt-[20px] border border-surface-line rounded-[7px] overflow-hidden">
-                <div className="grid grid-cols-2 sm:grid-cols-[1.4fr_1fr_1fr_0.8fr] gap-[10px] p-[11px_14px] border-b border-surface-line items-center text-[10px] uppercase tracking-[0.5px] text-content-muted bg-[#121719]">
+                <div className="grid grid-cols-2 sm:grid-cols-[1.4fr_1fr_1fr_0.8fr] gap-[10px] p-[11px_14px] border-b border-surface-line items-center text-[10px] uppercase tracking-[0.5px] text-content-muted bg-slate-100 dark:bg-[#121719]">
                   <span>Metric</span>
                   <span>Current</span>
                   <span>Simulated</span>

@@ -2,12 +2,15 @@
 
 import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
+import { formatJakartaTime } from '@/lib/format/time'
 import type { TelemetryPoint } from '@/types'
+
+const subscribe = () => () => undefined
 
 function toChartData(points: TelemetryPoint[]) {
   return points.map((p) => ({
-    time: new Date(p.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    time: formatJakartaTime(p.timestamp),
     it: Number(p.itPowerMw.toFixed(2)),
     cooling: Number(p.coolingPowerMw.toFixed(2)),
     ambient: Number(p.ambientTempC.toFixed(1)),
@@ -19,11 +22,7 @@ function Chart({ points, type }: Readonly<{ points: TelemetryPoint[]; type: 'ene
   const energy = type === 'energy'
   const data = toChartData(points)
   const { theme, systemTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const mounted = useSyncExternalStore(subscribe, () => true, () => false)
 
   const currentTheme = mounted ? (theme === 'system' ? systemTheme : theme) : 'dark'
   const isDark = currentTheme === 'dark'

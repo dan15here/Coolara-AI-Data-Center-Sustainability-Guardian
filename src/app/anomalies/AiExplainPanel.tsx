@@ -54,7 +54,7 @@ export function AiExplainPanel({ finding }: Readonly<{ finding: Finding }>) {
           <Bot size={22} />
         </div>
         <div className="mr-auto">
-          <p className="text-slate-500 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">COOLARA AI ANALYSIS</p>
+          <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">COOLARA AI ANALYSIS</p>
           <h2 className="m-0 text-[18px]">Qualitative explanation</h2>
         </div>
         {state.status === 'done' && (
