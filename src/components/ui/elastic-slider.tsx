@@ -153,16 +153,24 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
     return ((value - startingValue) / totalRange) * 100
   }
 
+  const nudgeValue = (direction: -1 | 1) => {
+    const amount = isStepped ? stepSize : (maxValue - startingValue) / 100 || 1
+    commitValue(value + direction * amount)
+  }
+
   return (
     <>
       <div className="flex w-full touch-none items-center gap-[10px] select-none">
-        <motion.div
+        <motion.button
+          type="button"
+          aria-label={`Decrease ${ariaLabel ?? 'value'}`}
+          onClick={() => nudgeValue(-1)}
           animate={{ scale: region === 'left' ? [1, 1.4, 1] : 1, transition: { duration: 0.25 } }}
           style={{ x: useTransform(() => (region === 'left' ? -overflow.get() : 0)) }}
-          className="text-content-muted shrink-0 [&>svg]:h-[18px] [&>svg]:w-[18px]"
+          className="shrink-0 rounded-full p-1 text-content-muted transition-colors hover:bg-surface-subtle hover:text-status-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal [&>svg]:h-[18px] [&>svg]:w-[18px]"
         >
           {leftIcon}
-        </motion.div>
+        </motion.button>
 
         <div
           ref={sliderRef}
@@ -194,21 +202,31 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
                 return clientX.get() < left + width / 2 ? 'right' : 'left'
               }),
             }}
-            className="flex flex-1 h-[8px]"
+            className="relative flex h-[8px] flex-1"
           >
             <div className="relative h-full flex-1 overflow-hidden rounded-full bg-[var(--color-gauge-track)]">
               <div className="bg-status-teal absolute h-full rounded-full" style={{ width: `${getRangePercentage()}%` }} />
             </div>
+            <motion.span
+              aria-hidden="true"
+              className="pointer-events-none absolute top-1/2 size-[18px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-surface-panel bg-status-teal shadow-[0_0_0_2px_rgba(45,212,191,0.32),0_0_14px_rgba(45,212,191,0.55)]"
+              style={{ left: `${getRangePercentage()}%` }}
+              animate={{ scale: region === 'middle' ? 1 : 1.12 }}
+              transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+            />
           </motion.div>
         </div>
 
-        <motion.div
+        <motion.button
+          type="button"
+          aria-label={`Increase ${ariaLabel ?? 'value'}`}
+          onClick={() => nudgeValue(1)}
           animate={{ scale: region === 'right' ? [1, 1.4, 1] : 1, transition: { duration: 0.25 } }}
           style={{ x: useTransform(() => (region === 'right' ? overflow.get() : 0)) }}
-          className="text-content-muted shrink-0 [&>svg]:h-[18px] [&>svg]:w-[18px]"
+          className="shrink-0 rounded-full p-1 text-content-muted transition-colors hover:bg-surface-subtle hover:text-status-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal [&>svg]:h-[18px] [&>svg]:w-[18px]"
         >
           {rightIcon}
-        </motion.div>
+        </motion.button>
       </div>
       {showValue && <p className="text-content-muted text-[12px] font-medium tracking-[0.05em]">{Math.round(value)}</p>}
     </>
