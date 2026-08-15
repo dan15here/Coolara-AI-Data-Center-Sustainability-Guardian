@@ -30,6 +30,20 @@ export function SimulationComparisonPanel({ simulations }: Readonly<{ simulation
   const [idA, setIdA] = useState<string>(simulations[1]?.id ?? '')
   const [idB, setIdB] = useState<string>(simulations[0]?.id ?? '')
 
+  const selectSimulationA = (nextId: string) => {
+    setIdA(nextId)
+    if (nextId === idB) {
+      setIdB(simulations.find((simulation) => simulation.id !== nextId)?.id ?? '')
+    }
+  }
+
+  const selectSimulationB = (nextId: string) => {
+    setIdB(nextId)
+    if (nextId === idA) {
+      setIdA(simulations.find((simulation) => simulation.id !== nextId)?.id ?? '')
+    }
+  }
+
   const simA = useMemo(() => simulations.find((s) => s.id === idA) ?? null, [simulations, idA])
   const simB = useMemo(() => simulations.find((s) => s.id === idB) ?? null, [simulations, idB])
 
@@ -59,13 +73,13 @@ export function SimulationComparisonPanel({ simulations }: Readonly<{ simulation
               <select
                 className="w-full border border-surface-line rounded-[4px] bg-white dark:bg-[#20292d] text-slate-700 dark:text-[#d9e2e0] p-[8px_10px] text-[12px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal cursor-pointer"
                 value={idA}
-                onChange={(event) => setIdA(event.target.value)}
+                onChange={(event) => selectSimulationA(event.target.value)}
               >
                 <option value="" disabled>
                   Select a simulation…
                 </option>
                 {simulations.map((sim) => (
-                  <option key={sim.id} value={sim.id}>
+                  <option key={sim.id} value={sim.id} disabled={sim.id === idB}>
                     {optionLabel(sim)}
                   </option>
                 ))}
@@ -76,13 +90,13 @@ export function SimulationComparisonPanel({ simulations }: Readonly<{ simulation
               <select
                 className="w-full border border-surface-line rounded-[4px] bg-white dark:bg-[#20292d] text-slate-700 dark:text-[#d9e2e0] p-[8px_10px] text-[12px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal cursor-pointer"
                 value={idB}
-                onChange={(event) => setIdB(event.target.value)}
+                onChange={(event) => selectSimulationB(event.target.value)}
               >
                 <option value="" disabled>
                   Select a simulation…
                 </option>
                 {simulations.map((sim) => (
-                  <option key={sim.id} value={sim.id}>
+                  <option key={sim.id} value={sim.id} disabled={sim.id === idA}>
                     {optionLabel(sim)}
                   </option>
                 ))}
