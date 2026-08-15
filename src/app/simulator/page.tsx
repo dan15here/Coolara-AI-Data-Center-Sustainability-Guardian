@@ -1,8 +1,25 @@
-'use client'
+import { getCurrentTelemetryPoint } from '@/lib/telemetry/current'
+import { DEMO_DATA_CENTER_ID } from '@/lib/telemetry/generator'
+import { FACILITY_MAX_IT_LOAD_MW, REFERENCE_SETPOINT_C } from '@/lib/simulator/thresholds'
+import { PageIntro } from '@/components/ui'
+import { SimulatorView } from './SimulatorView'
+import type { SimulationInput } from '@/types'
 
-import { AlertTriangle, RotateCcw, ShieldCheck, Thermometer } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { PageIntro, Pill } from '@/components/ui'
+export default async function SimulatorPage() {
+  const point = await getCurrentTelemetryPoint(DEMO_DATA_CENTER_ID)
 
-const initial = { setpoint: 20, workload: 78, ambient: 29 }
-export default function SimulatorPage() { const [input, setInput] = useState(initial); const [run, setRun] = useState(false); const result = useMemo(() => { const temp = 57 + input.workload * .25 + input.ambient * .31 - input.setpoint * .38; const safe = temp < 82; return { temp, safe, energy: (input.workload - 78) * .018 + (20 - input.setpoint) * .029, water: (input.workload - 78) * 34 + (20 - input.setpoint) * 51 } }, [input]); const change = (key: keyof typeof input, value: number) => { setInput({ ...input, [key]: value }); setRun(false) }; return <><PageIntro eyebrow="DECISION SUPPORT" title="What-if simulator">Test a scenario before recommending an operational change. Estimates are deterministic and synthetic.</PageIntro><section className="simulator-grid"><div className="control-panel"><h2>Operating assumptions</h2><p>Adjust the conditions to evaluate the trade-off.</p>{[['setpoint', 'Cooling setpoint', '°C', 16, 24], ['workload', 'IT workload assumption', '%', 50, 100], ['ambient', 'Ambient temperature', '°C', 22, 38]].map(([key, label, unit, min, max]) => <label className="slider-field" key={key as string}><span><strong>{label}</strong><output>{input[key as keyof typeof input]} {unit}</output></span><input type="range" min={min} max={max} value={input[key as keyof typeof input]} onChange={e => change(key as keyof typeof input, Number(e.target.value))}/><small>{min} {unit}<i />{max} {unit}</small></label>)}<div className="control-actions"><button className="button secondary" onClick={() => { setInput(initial); setRun(false) }}><RotateCcw size={15}/> Reset</button><button className="button" onClick={() => setRun(true)}>Run safe simulation</button></div></div><div className={`result-panel ${run ? (result.safe ? 'safe' : 'unsafe') : ''}`}><div className="result-top"><div><p className="eyebrow">DETERMINISTIC RESULT</p><h2>{run ? (result.safe ? 'Safe to review' : 'Safety gate rejected') : 'Ready to simulate'}</h2></div>{run ? <Pill tone={result.safe ? 'healthy' : 'critical'}>{result.safe ? <ShieldCheck size={14}/> : <AlertTriangle size={14}/>} {result.safe ? 'Safe' : 'Unsafe'}</Pill> : <Pill>Not run</Pill>}</div>{run ? <><div className="temperature-result"><Thermometer size={23}/><div><span>Predicted server temperature</span><strong>{result.temp.toFixed(1)}°C</strong><small>Safety threshold: 82.0°C</small></div></div><p className="safety-reason">{result.safe ? 'Scenario stays inside the configured thermal reliability limit. Review before applying any action.' : 'This scenario exceeds the configured 82.0°C thermal reliability threshold and cannot be recommended.'}</p><div className="impact-grid"><div><span>Energy delta</span><strong>{result.energy >= 0 ? '+' : ''}{result.energy.toFixed(2)} MWh</strong></div><div><span>Water delta</span><strong>{result.water >= 0 ? '+' : ''}{result.water.toFixed(0)} L</strong></div><div><span>Estimated cost</span><strong>Rp {Math.abs(result.energy * 1850000).toLocaleString('id-ID')}</strong></div><div><span>PUE / WUE</span><strong>1.37 / 1.49</strong></div></div></> : <div className="empty-result"><ShieldCheck size={30}/><p>Choose assumptions, then run the simulation to see a safety-gated outcome.</p></div>}</div></section></> }
+  const initialInput: SimulationInput = {
+    coolingSetpointC: REFERENCE_SETPOINT_C,
+    workloadPercent: Math.round((point.itLoadMw / FACILITY_MAX_IT_LOAD_MW) * 100),
+    ambientTempC: Math.round(point.ambientTempC),
+  }
+
+  return (
+    <>
+      <PageIntro eyebrow="DECISION SUPPORT" title="What-if simulator">
+        Test a scenario before recommending an operational change. Estimates are deterministic and synthetic.
+      </PageIntro>
+      <SimulatorView initialInput={initialInput} />
+    </>
+  )
+}

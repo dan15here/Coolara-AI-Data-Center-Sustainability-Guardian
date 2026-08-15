@@ -1,8 +1,18 @@
-'use client'
+import { generateTelemetryPoint } from '@/lib/telemetry/generator'
+import { detectFindings } from '@/lib/anomaly/rules'
+import { PageIntro } from '@/components/ui'
+import { AnomaliesView } from './AnomaliesView'
 
-import { Bot, CheckCircle2, ExternalLink, FlaskConical, Play, Sparkles, Thermometer } from 'lucide-react'
-import Link from 'next/link'
-import { useState } from 'react'
-import { PageIntro, Pill } from '@/components/ui'
+export default function AnomaliesPage() {
+  const point = generateTelemetryPoint('nominal')
+  const findings = detectFindings(point)
 
-export default function AnomaliesPage() { const [analysis, setAnalysis] = useState(false); return <><PageIntro eyebrow="DETECTION & EXPLANATION" title="Anomaly detection">One active finding requires operational review. All measurements are synthetic.</PageIntro><section className="anomaly-detail"><div className="anomaly-top"><Pill tone="critical">Critical severity</Pill><span>Detected today · 09:55 WIB</span></div><div className="anomaly-title"><div className="finding-icon"><Thermometer size={23}/></div><div><h2>Cooling power exceeds expected demand</h2><p>Cooling consumption is elevated beyond the deterministic baseline for the current IT load.</p></div></div><div className="anomaly-numbers"><div><span>Actual cooling power</span><strong>3.17 MW</strong></div><div><span>Expected baseline</span><strong>2.60 MW</strong></div><div><span>Deviation</span><strong className="critical-text">+22.1%</strong></div></div><div className="chips"><span>Ambient temperature +3.4°C</span><span>Cooling loop efficiency drop</span><span>Hall A load increase</span></div><div className="detail-actions"><Link href="/telemetry"><ExternalLink size={15}/> View source telemetry</Link><Link href="/simulator"><Play size={15}/> Simulate response</Link></div></section><section className="ai-panel"><div className="ai-heading"><div className="ai-icon"><Bot size={22}/></div><div><p className="eyebrow">COOLARA AI ANALYSIS</p><h2>Qualitative explanation</h2></div><Pill tone="healthy"><CheckCircle2 size={14}/> Gemini ready</Pill></div>{analysis ? <div className="ai-result"><h3>What this finding suggests</h3><p>The cooling rise aligns with the elevated ambient temperature and higher Hall A workload. Inspect air-side heat rejection and chilled-water flow before changing setpoints.</p><h3>Suggested review order</h3><ul><li>Verify cooling-loop flow and heat-exchanger performance.</li><li>Review workload distribution across Hall A.</li><li>Run the controlled what-if scenario before recommending a change.</li></ul><small><FlaskConical size={14}/> Qualitative AI explanation based only on structured, synthetic findings. Numerical values remain deterministic.</small></div> : <div className="ai-idle"><Sparkles size={22}/><div><strong>Run analysis to ask Gemini for a qualitative explanation.</strong><p>The model receives structured findings only; it cannot approve a safety outcome or create numerical claims.</p></div><button className="button" onClick={() => setAnalysis(true)}><Sparkles size={15}/> Analyze findings</button></div>}</section></> }
+  return (
+    <>
+      <PageIntro eyebrow="DETECTION & EXPLANATION" title="Anomaly detection">
+        Findings requiring operational review. All measurements are synthetic.
+      </PageIntro>
+      <AnomaliesView initialData={{ scenario: 'nominal', findings }} />
+    </>
+  )
+}

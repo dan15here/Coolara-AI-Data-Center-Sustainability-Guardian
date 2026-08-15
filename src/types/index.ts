@@ -69,7 +69,12 @@ export type DashboardResponse = {
   activity: ActivityEvent[];
 };
 
+export type StoredSimulation = SimulationResult & {
+  id: string;
+  createdAt: string;
+};
+
 export type ReportsResponse = {
   alerts: Finding[];
-  simulations: SimulationResult[];
+  simulations: StoredSimulation[];
 };

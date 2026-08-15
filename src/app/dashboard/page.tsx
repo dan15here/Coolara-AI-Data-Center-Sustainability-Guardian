@@ -1,14 +1,26 @@
-import { ArrowUpRight, Droplets, Gauge, ShieldCheck, Thermometer, Zap } from 'lucide-react'
-import { MetricCard, PageIntro, Pill, TextLink } from '@/components/ui'
+import { DEMO_DATA_CENTER_ID, generateTelemetrySeries } from '@/lib/telemetry/generator'
+import { deriveDashboardMetrics } from '@/lib/calculations/metrics'
+import { detectFindings } from '@/lib/anomaly/rules'
+import { fetchRecentActivity } from '@/lib/supabase/repository'
+import { PageIntro } from '@/components/ui'
+import { DashboardView } from './DashboardView'
 
-const events = [['10:42', 'Cooling efficiency alert detected', 'Critical'], ['10:18', 'Synthetic telemetry stream updated', 'Normal'], ['09:56', 'Safe simulation completed', 'Approved']]
-export default function DashboardPage() { return <>
-  <section className="posture"><div><Pill tone="warning">Attention required</Pill><strong>Cooling energy is above the expected operating baseline.</strong><p>One critical condition needs a review before an operational response.</p></div><div className="health-list">{[['Reliability', '92'], ['Energy', '68'], ['Water', '81']].map(([name, value]) => <div className="health" key={name}><span style={{ '--progress': `${value}%` } as React.CSSProperties}>{value}%</span><small>{name}</small></div>)}</div></section>
-  <PageIntro eyebrow="FACILITY SNAPSHOT" title="Executive operations overview">DC-01 Jakarta · <span className="synthetic-inline">● Synthetic demo telemetry</span></PageIntro>
-  <section className="metrics-grid"><MetricCard label="Total power" value="8.42 MW" note="↑ 0.31 MW vs baseline" icon={Zap} /><MetricCard label="PUE" value="1.42" note="Target ≤ 1.30" icon={Gauge} /><MetricCard label="WUE" value="1.58 L/kWh" note="Target ≤ 1.45" icon={Droplets} /><MetricCard label="Peak server temperature" value="78.6°C" note="Threshold 82.0°C" icon={Thermometer} /></section>
-  <section className="section-head"><div><p className="eyebrow">ACTIVE PRIORITY FINDING</p><h2>Decision-ready anomaly</h2></div><Pill tone="critical">Critical</Pill></section>
-  <section className="finding-card"><div className="finding-main"><div className="finding-icon"><Thermometer size={22} /></div><div><h3>Cooling power exceeds expected demand</h3><p>Cooling demand has remained elevated for 47 minutes while ambient temperature is above the planned operating range.</p><div className="chips"><span>Ambient +3.4°C</span><span>Cooling +22.1%</span><span>DC-01 · Hall A</span></div></div></div><div className="comparison"><div><span>Actual</span><strong>3.17 MW</strong></div><div><span>Expected</span><strong>2.60 MW</strong></div><div><span>Deviation</span><strong className="critical-text">+22.1%</strong></div></div><div className="finding-actions"><TextLink href="/anomalies">View anomaly details</TextLink><TextLink href="/simulator">Simulate response</TextLink></div></section>
-  <section className="support-banner"><div className="support-icon"><ShieldCheck size={23} /></div><div><p className="eyebrow">DECISION SUPPORT</p><h2>Simulate before recommending action</h2><p>Evaluate energy, water, and thermal trade-offs with a deterministic safety gate.</p></div><TextLink href="/simulator">Open What-if Simulator</TextLink></section>
-  <section className="section-head"><div><p className="eyebrow">RECENT OPERATIONAL EVENTS</p><h2>Activity at a glance</h2></div><TextLink href="/reports">View activity log</TextLink></section>
-  <section className="events-grid">{events.map(([time, event, state]) => <article className="event" key={time}><time>{time} WIB</time><strong>{event}</strong><span className={state === 'Critical' ? 'critical-text' : ''}>{state} <ArrowUpRight size={13} /></span></article>)}</section>
-</> }
+export default async function DashboardPage() {
+  const points = generateTelemetrySeries('nominal', 24)
+  const latest = points[points.length - 1]
+  const latestMetrics = deriveDashboardMetrics(latest)
+  const findings = detectFindings(latest)
+  const activity = await fetchRecentActivity(DEMO_DATA_CENTER_ID, 3)
+
+  return (
+    <>
+      <PageIntro eyebrow="FACILITY SNAPSHOT" title="Executive operations overview">
+        DC-01 Jakarta · <span className="synthetic-inline">● Synthetic demo telemetry</span>
+      </PageIntro>
+      <DashboardView
+        initialData={{ scenario: 'nominal', points, latestMetrics, findings }}
+        activity={activity}
+      />
+    </>
+  )
+}

@@ -1,6 +1,6 @@
 import 'server-only';
 import { getSupabaseServerClient } from './serverClient';
-import type { ActivityEvent, Finding, SimulationInput, SimulationResult, TelemetryPoint } from '@/types';
+import type { ActivityEvent, Finding, SimulationInput, SimulationResult, StoredSimulation, TelemetryPoint } from '@/types';
 
 export async function saveTelemetryPoint(point: TelemetryPoint): Promise<void> {
   const client = getSupabaseServerClient();
@@ -148,7 +148,7 @@ export async function fetchRecentActivity(dataCenterId: string, limit: number): 
 export async function fetchReports(
   dataCenterId: string,
   limit: number,
-): Promise<{ alerts: Finding[]; simulations: SimulationResult[] }> {
+): Promise<{ alerts: Finding[]; simulations: StoredSimulation[] }> {
   const client = getSupabaseServerClient();
   if (!client) return { alerts: [], simulations: [] };
 
@@ -162,7 +162,7 @@ export async function fetchReports(
         .limit(limit),
       client
         .from('simulations')
-        .select('result')
+        .select('id, result, created_at')
         .eq('data_center_id', dataCenterId)
         .order('created_at', { ascending: false })
         .limit(limit),
@@ -180,7 +180,11 @@ export async function fetchReports(
       explanationInput: row.explanation_input ?? {},
     }));
 
-    const simulations: SimulationResult[] = (simulationsRes.data ?? []).map((row) => row.result);
+    const simulations: StoredSimulation[] = (simulationsRes.data ?? []).map((row) => ({
+      id: row.id,
+      createdAt: row.created_at,
+      ...(row.result as SimulationResult),
+    }));
 
     return { alerts, simulations };
   } catch (error) {
