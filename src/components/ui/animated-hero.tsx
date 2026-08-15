@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { MoveRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -38,27 +38,18 @@ function Hero() {
               <span className="text-white">This data center is</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-300">
                 &nbsp;
-                {titles.map((title, index) => (
+                <AnimatePresence mode="popLayout">
                   <motion.span
-                    key={index}
-                    className="absolute font-bold"
-                    initial={{ opacity: 0, y: "-100" }}
+                    key={titleNumber}
+                    className="absolute font-bold left-0 right-0 mx-auto w-full text-center"
+                    initial={{ opacity: 0, y: 150 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -150 }}
                     transition={{ type: "spring", stiffness: 50 }}
-                    animate={
-                      titleNumber === index
-                        ? {
-                            y: 0,
-                            opacity: 1,
-                          }
-                        : {
-                            y: titleNumber > index ? -150 : 150,
-                            opacity: 0,
-                          }
-                    }
                   >
-                    {title}
+                    {titles[titleNumber]}
                   </motion.span>
-                ))}
+                </AnimatePresence>
               </span>
             </h1>
 
