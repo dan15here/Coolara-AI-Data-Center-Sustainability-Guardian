@@ -67,15 +67,26 @@ function FAQItem({ question, answer }: { question: string, answer: string }) {
 
 export default function LandingPage() {
   return (
-    <main className="dark min-h-screen bg-[#101517] text-[#eef3f1] font-sans selection:bg-teal-500/30">
+    <main id="top" className="dark min-h-screen bg-[#101517] text-[#eef3f1] font-sans selection:bg-teal-500/30">
       
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#2b363c] bg-[#101517]/80 backdrop-blur-md">
-        <div className="max-w-[1200px] mx-auto px-[24px] h-[72px] flex items-center justify-between">
+        <div className="max-w-[1200px] mx-auto px-[24px] h-[72px] flex items-center justify-between relative">
           <div className="flex items-center gap-[12px]">
             <Image src="/logos/coolara-app-icon.svg" alt="Coolara Logo" width={32} height={32} />
             <strong className="text-[18px] font-bold tracking-wide">Coolara</strong>
           </div>
+          <nav aria-label="Quick access" className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-[26px]">
+            <Link href="#top" className="text-[13px] font-medium text-[#91a0a3] hover:text-teal-300 transition-colors">
+              Home
+            </Link>
+            <Link href="#features" className="text-[13px] font-medium text-[#91a0a3] hover:text-teal-300 transition-colors">
+              Features
+            </Link>
+            <Link href="#how-it-works" className="text-[13px] font-medium text-[#91a0a3] hover:text-teal-300 transition-colors">
+              How it works
+            </Link>
+          </nav>
           <Link 
             href="/dashboard"
             className="flex items-center gap-[8px] bg-[#171d21] border border-[#2b363c] hover:bg-[#20292d] text-white px-[16px] py-[8px] rounded-full text-[13px] font-medium transition-colors"
@@ -113,7 +124,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-[100px] px-[24px] max-w-[1200px] mx-auto relative z-10">
+      <section id="features" className="scroll-mt-[96px] py-[100px] px-[24px] max-w-[1200px] mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-[24px]">
           {[
             {
@@ -146,6 +157,40 @@ export default function LandingPage() {
               <h3 className="text-[20px] font-bold text-white mb-[12px]">{feature.title}</h3>
               <p className="text-[#91a0a3] leading-relaxed text-[15px]">{feature.description}</p>
             </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section id="how-it-works" className="scroll-mt-[96px] py-[70px] px-[24px] max-w-[1200px] mx-auto relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-[640px] mb-[42px]"
+        >
+          <p className="text-teal-400 text-[12px] uppercase tracking-[0.16em] font-bold mb-[12px]">Monitor → Detect → Explain → Simulate → Optimize</p>
+          <h2 className="text-[36px] font-bold text-white mb-[14px]">A clearer path from signal to response.</h2>
+          <p className="text-[#91a0a3] text-[16px] leading-relaxed">Coolara keeps the operator in control: the application calculates the numbers and safety outcome, while AI adds concise qualitative context.</p>
+        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px]">
+          {[
+            { number: '01', title: 'See the operating picture', description: 'Review synthetic power, water, cooling, and thermal signals in one command centre.' },
+            { number: '02', title: 'Understand what changed', description: 'Compare actual values with deterministic baselines, severity, and likely contributing factors.' },
+            { number: '03', title: 'Test the safer response', description: 'Run a what-if simulation before acting; the thermal gate rejects scenarios outside safe thresholds.' },
+          ].map((step, i) => (
+            <motion.article
+              key={step.number}
+              initial={{ opacity: 0, y: 22 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: i * 0.1 }}
+              className="p-[28px] rounded-[16px] border border-[#2b363c] bg-[#171d21]"
+            >
+              <span className="text-teal-400 font-bold text-[13px] tracking-[0.14em]">{step.number}</span>
+              <h3 className="text-[19px] font-bold text-white mt-[22px] mb-[10px]">{step.title}</h3>
+              <p className="text-[#91a0a3] text-[15px] leading-relaxed">{step.description}</p>
+            </motion.article>
           ))}
         </div>
       </section>
