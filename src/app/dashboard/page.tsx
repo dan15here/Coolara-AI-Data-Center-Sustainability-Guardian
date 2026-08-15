@@ -9,7 +9,7 @@ export default async function DashboardPage() {
   return (
     <>
       <PageIntro eyebrow="FACILITY SNAPSHOT" title="Executive operations overview">
-        DC-01 Jakarta · <span className="synthetic-inline">● Synthetic demo telemetry</span>
+        DC-01 Nongsa, Batam · <span className="synthetic-inline">● Synthetic demo telemetry</span>
       </PageIntro>
       <DashboardView
         initialData={{ scenario: 'nominal', point, latestMetrics: metrics, findings }}
