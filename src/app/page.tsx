@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown } from 'lucide-react'
+import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown, Bot, FlaskConical, ScanSearch } from 'lucide-react'
 import { useState } from 'react'
 import { Hero } from '@/components/ui/animated-hero'
 import AnimatedContent from '@/components/ui/animated-content'
@@ -167,22 +167,26 @@ export default function LandingPage() {
       </section>
 
       {/* How it works */}
-      <section id="how-it-works" className="scroll-mt-[96px] py-[70px] px-[24px] max-w-[1200px] mx-auto relative z-10">
+      <section id="how-it-works" className="scroll-mt-[96px] py-[90px] px-[24px] max-w-[1440px] mx-auto relative z-10 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="max-w-[640px] mb-[42px]"
+          className="max-w-[640px] mx-auto mb-[56px]"
         >
           <p className="text-teal-400 text-[12px] uppercase tracking-[0.16em] font-bold mb-[12px]">Monitor → Detect → Explain → Simulate → Optimize</p>
-          <h2 className="text-[36px] font-bold text-white mb-[14px]">A clearer path from signal to response.</h2>
-          <p className="text-[#91a0a3] text-[16px] leading-relaxed">Coolara keeps the operator in control: the application calculates the numbers and safety outcome, while AI adds concise qualitative context.</p>
+          <h2 className="text-[36px] md:text-[44px] font-bold text-white mb-[14px]">How Coolara works</h2>
+          <p className="text-[#91a0a3] text-[16px] leading-relaxed">Four deliberate steps from synthetic telemetry to a safer, decision-ready response.</p>
         </motion.div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-[20px]">
+
+        <div className="relative">
+          <div className="hidden md:block absolute h-px bg-[#2b363c] left-[12.5%] right-[12.5%] top-[70px]" aria-hidden="true" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-[40px] gap-x-[24px] relative">
           {[
-            { number: '01', title: 'See the operating picture', description: 'Review synthetic power, water, cooling, and thermal signals in one command centre.' },
-            { number: '02', title: 'Understand what changed', description: 'Compare actual values with deterministic baselines, severity, and likely contributing factors.' },
-            { number: '03', title: 'Test the safer response', description: 'Run a what-if simulation before acting; the thermal gate rejects scenarios outside safe thresholds.' },
+            { number: '01', icon: Activity, title: 'Monitor signals', description: 'See synthetic energy, water, cooling, and thermal telemetry in one command centre.' },
+            { number: '02', icon: ScanSearch, title: 'Detect deviations', description: 'Compare actual conditions against deterministic expected baselines and severity.' },
+            { number: '03', icon: Bot, title: 'Explain context', description: 'Use Gemini for qualitative context while all measurements stay deterministic.' },
+            { number: '04', icon: FlaskConical, title: 'Simulate safely', description: 'Test a response before acting; the thermal gate rejects unsafe scenarios.' },
           ].map((step, i) => (
             <motion.article
               key={step.number}
@@ -190,13 +194,17 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.45, delay: i * 0.1 }}
-              className="p-[28px] rounded-[16px] border border-[#2b363c] bg-[#171d21]"
+              className="relative px-[18px]"
             >
-              <span className="text-teal-400 font-bold text-[13px] tracking-[0.14em]">{step.number}</span>
-              <h3 className="text-[19px] font-bold text-white mt-[22px] mb-[10px]">{step.title}</h3>
-              <p className="text-[#91a0a3] text-[15px] leading-relaxed">{step.description}</p>
+              <div className="relative mx-auto w-[112px] h-[112px] rounded-[28px] border border-[#344045] bg-[#192326] grid place-items-center shadow-[0_12px_32px_rgba(0,0,0,0.16)]">
+                <step.icon size={39} strokeWidth={1.8} className="text-teal-300" />
+                <span className="absolute -bottom-[15px] w-[32px] h-[32px] rounded-full bg-teal-500 text-[#042f2b] text-[12px] font-bold grid place-items-center border-4 border-[#101517]">{step.number}</span>
+              </div>
+              <h3 className="text-[19px] font-bold text-white mt-[34px] mb-[10px]">{step.title}</h3>
+              <p className="max-w-[250px] mx-auto text-[#91a0a3] text-[15px] leading-relaxed">{step.description}</p>
             </motion.article>
           ))}
+          </div>
         </div>
       </section>
 
