@@ -19,21 +19,38 @@ export default function LandingScrollTabs() {
       .map(({ id }) => document.getElementById(id))
       .filter((section): section is HTMLElement => section !== null)
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const mostVisible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+    let frameId = 0
 
-        if (mostVisible?.target.id) {
-          setActiveId(mostVisible.target.id as (typeof tabs)[number]['id'])
+    const updateActiveTab = () => {
+      const marker = window.scrollY + window.innerHeight * 0.32
+      let nextId: (typeof tabs)[number]['id'] = 'top'
+
+      for (const section of sections) {
+        if (section.offsetTop <= marker) {
+          nextId = section.id as (typeof tabs)[number]['id']
         }
-      },
-      { rootMargin: '-18% 0px -60% 0px', threshold: [0.1, 0.35, 0.65] },
-    )
+      }
 
-    sections.forEach((section) => observer.observe(section))
-    return () => observer.disconnect()
+      setActiveId((currentId) => (currentId === nextId ? currentId : nextId))
+    }
+
+    const scheduleUpdate = () => {
+      if (frameId) return
+      frameId = window.requestAnimationFrame(() => {
+        frameId = 0
+        updateActiveTab()
+      })
+    }
+
+    updateActiveTab()
+    window.addEventListener('scroll', scheduleUpdate, { passive: true })
+    window.addEventListener('resize', scheduleUpdate)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      window.removeEventListener('scroll', scheduleUpdate)
+      window.removeEventListener('resize', scheduleUpdate)
+    }
   }, [])
 
   return (
@@ -55,7 +72,7 @@ export default function LandingScrollTabs() {
               <motion.span
                 layoutId="landing-active-tab"
                 className="absolute inset-0 rounded-full bg-teal-400 shadow-[0_0_16px_rgba(45,212,191,0.28)]"
-                transition={{ type: 'spring', stiffness: 420, damping: 30 }}
+                transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
               />
             )}
             <span className="relative z-10">{tab.label}</span>
