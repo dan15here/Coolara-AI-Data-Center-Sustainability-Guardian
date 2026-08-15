@@ -96,7 +96,6 @@ export function ReportsView({
       />
 
       <section className="flex flex-wrap md:flex-nowrap items-center gap-[5px] p-[9px] text-content-muted text-[11px] border border-surface-line bg-surface-panel rounded-lg">
-        <span>Date range</span>
         {DATE_RANGES.map((item) => (
           <button
             key={item}
