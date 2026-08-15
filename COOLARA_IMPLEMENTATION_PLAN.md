@@ -35,8 +35,8 @@ By demo time, an operator must be able to:
 
 | Area | Owner | Main responsibility | Deliverables |
 | --- | --- | --- | --- |
-| Frontend | Team member A | Operator experience and route-level UI | Dashboard, telemetry charts, anomaly view, simulator form/results, reports, responsive styling |
-| Backend / data / AI | Team member B | Reliable data flow and decision logic | Supabase schema/seed, synthetic telemetry, metrics/anomaly rules, simulator calculation, Gemini API route |
+| Frontend | Muhammad Danish | Operator experience and route-level UI | Dashboard, telemetry charts, anomaly view, simulator form/results, reports, responsive styling |
+| Backend / data / AI | Dimas Ardian | Reliable data flow and decision logic | Supabase schema/seed, synthetic telemetry, metrics/anomaly rules, simulator calculation, Gemini API route |
 | Shared integration | Both | Connect and validate the end-to-end demo | Environment variables, integration contract, deployment, demo rehearsal, README/disclosures |
 
 ### Ownership boundaries
