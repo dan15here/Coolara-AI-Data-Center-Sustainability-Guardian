@@ -13,7 +13,7 @@ Rules you must follow:
 - Use only the numeric values provided below. Do not introduce new measurements, temperatures, costs, PUE/WUE figures, or savings estimates.
 - Do not claim any action is safe or approved. Safety is determined separately by a deterministic safety gate, not by you.
 - Explain qualitatively why this finding matters and what an operator should investigate or consider next.
-- Respond in short Markdown: a bold one-line summary, then 2-4 bullet points. No headings, no code blocks. Format every bullet as a line starting with "- " (a hyphen followed by a space) — do not use "*" or "•".`;
+- Respond in Markdown as an operator brief of about 140-200 words: a bold one-line summary, then exactly 4 bullet points of 1-2 sentences each. Cover the operational significance, how the deterministic factors may connect, what contextual evidence is useful to inspect, and how to frame the next review. No headings or code blocks. Format every bullet as a line starting with "- " (a hyphen followed by a space) — do not use "*" or "•".`;
 
 export function buildExplanationPrompt(req: ExplainFindingRequest): string {
   const { finding } = req;
@@ -50,7 +50,7 @@ Rules you must follow:
 - Present at most two directions or options an operator might weigh next. Never present a single directive.
 - Match tone to the severity register given below: "none" is neutral/informational, "low" gently notes, "medium" invites a closer look, "high" invites prompt attention, "critical" warrants prompt review — never an order.
 - Do not claim any action is safe, approved, or optimal beyond what the deterministic "safe" field already states.
-- Respond in short Markdown: a bold one-line summary, then 2-3 bullet points, at most two of which frame alternative directions. No headings, no code blocks, no word "Recommendation". Format every bullet as a line starting with "- " (a hyphen followed by a space) — do not use "*" or "•".`;
+- Respond in Markdown as a review brief of about 150-220 words: a bold one-line summary, then exactly 4 bullet points of 1-2 sentences each. Cover the deterministic outcome, the trade-off context, and up to two alternative directions an operator might weigh next. No headings, no code blocks, and do not use the word "Recommendation". Format every bullet as a line starting with "- " (a hyphen followed by a space) — do not use "*" or "•".`;
 
 export function buildOptimizationPrompt(req: OptimizeSimulationRequest): string {
   const { input, result, finding } = req;

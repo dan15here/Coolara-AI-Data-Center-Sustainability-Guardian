@@ -11,6 +11,7 @@ import type {
 import type { Finding, FindingSeverity } from '@/types';
 
 const DEFAULT_MODEL = 'gemini-3.6-flash';
+const MAX_OUTPUT_TOKENS = 600;
 
 const explanationCache = new TtlCache<ExplainFindingResponse>();
 
@@ -53,6 +54,10 @@ export async function callGemini(prompt: string, model: string): Promise<string>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: {
+        maxOutputTokens: MAX_OUTPUT_TOKENS,
+        temperature: 0.4,
+      },
     }),
   });
 
