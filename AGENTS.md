@@ -2,7 +2,7 @@
 
 ## What this is
 
-Coolara is a sustainability decision-support MVP for data-centre operators, built as a Next.js 16 App Router app (React 19, TypeScript, Tailwind CSS v4). The product flow is **Monitor → Detect → Explain → Simulate → Optimize**. The root route (`src/app/page.tsx`) redirects to `/dashboard`.
+Coolara is a sustainability decision-support MVP for data-centre operators, built as a Next.js 16 App Router app (React 19, TypeScript, Tailwind CSS v4). The product flow is **Monitor → Detect → Explain → Simulate → Optimize**. The root route (`src/app/page.tsx`) is the public landing page; the operator pages live behind the app shell in the `(dashboard)` route group.
 
 ## Read before adding feature work
 
@@ -35,15 +35,19 @@ Tests colocate with source or under `src/**/__tests__/`, named `*.test.ts` / `*.
 
 ## Structure
 
-- `src/app/` — routes and global UI. API routes live under `src/app/api/**`. Route-scoped components under `src/app/_components/**`.
-- `src/components/` — shared visual components.
+- `src/app/` — routes and global UI. `page.tsx` is the landing page; operator pages sit in the `(dashboard)` route group; API routes live under `src/app/api/**`. Route-scoped components are colocated beside the page that uses them.
+- `src/components/` — shared visual components, with primitives under `ui/`.
+- `src/hooks/` — client-side data hooks.
 - `src/lib/` — integrations:
-  - `calculations/` — deterministic metrics and baselines.
+  - `calculations/` — deterministic metrics, baselines, and costs.
   - `anomaly/` — deterministic anomaly rules.
   - `simulator/` — safety-gated scenario engine and thresholds.
   - `ai/` — server-only Gemini adapter and prompt.
   - `telemetry/` — synthetic telemetry generator.
-  - `supabase/` — server/client clients and repository.
+  - `supabase/` — server-only client and persistence repository.
+  - `format/` — finding and Jakarta-time display formatting.
+  - `validation/` — server-side payload guards.
+  - `dashboard.ts` — shared facility-snapshot source of truth.
 - `src/types/index.ts` — shared TypeScript contracts between frontend and backend.
 - `supabase/` — migrations and seed SQL.
 - Root config: `package.json`, `tsconfig.json`, `postcss.config.mjs`, `vitest.config.ts`.
@@ -59,7 +63,7 @@ Server-only values (never commit real values; never expose to browser):
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `GEMINI_API_KEY`
-- `GEMINI_MODEL` (default `gemini-3.6-flash` in docs; code fallback default is `gemini-2.5-flash`)
+- `GEMINI_MODEL` (code fallback default is `gemini-3.6-flash`, set in `src/lib/ai/gemini.ts`; a deployment may pin a different model)
 
 All Supabase access is server-side via the service-role key. Backend persists best-effort and falls back to synthetic data when Supabase is unconfigured.
 

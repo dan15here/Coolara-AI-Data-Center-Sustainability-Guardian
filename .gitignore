@@ -6,3 +6,5 @@ out/
 .env.*.local
 *.log
 coverage/
+summary.md
+tsconfig.tsbuildinfo

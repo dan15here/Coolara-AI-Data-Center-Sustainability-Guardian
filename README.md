@@ -14,7 +14,7 @@ Monitor → Detect → Explain → Simulate → Optimize
 
 | Product | Technical | Submission |
 | --- | --- | --- |
-| [PRD](./PRD.md) · [UI specification](./COOLARA_UI_SPECIFICATION.md) · [Implementation plan](./COOLARA_IMPLEMENTATION_PLAN.md) | [Technical plan](./TECH.md) · [API specification](./API_SPEC.md) | [AI tools disclosure](./AI_TOOLS_DISCLOSURE.md) · [Pre-existing materials](./PRE_EXISTING_DISCLOSURE.md) |
+| [PRD](./PRD.md) · [UI specification](./COOLARA_UI_SPECIFICATION.md) · [Implementation plan](./COOLARA_IMPLEMENTATION_PLAN.md) · [Task list](./TASKLIST.md) | [Technical plan](./TECH.md) · [API specification](./API_SPEC.md) | [AI tools disclosure](./AI_TOOLS_DISCLOSURE.md) · [Pre-existing materials](./PRE_EXISTING_DISCLOSURE.md) |
 
 ## Problem
 
@@ -202,14 +202,6 @@ Never commit real values. Server-only keys must never reach the browser.
 - **Decision support, not control.** Coolara does not control physical equipment; simulation outputs are estimates, not guarantees.
 - **Graceful fallback.** Without Supabase or Gemini the app degrades to synthetic generation and rule-based explanations rather than failing.
 
-## Three-minute demo runbook
-
-1. **Monitor (0:00–0:30)** — Open the Command Center; show facility health, PUE/WUE, and synthetic telemetry.
-2. **Detect (0:30–1:05)** — Follow "View anomaly details" through to the Cooling inefficiency tab; compare actual vs expected values.
-3. **Explain (1:05–1:35)** — Run the AI analysis; emphasise that metrics/rules are deterministic and Gemini is qualitative only.
-4. **Simulate (1:35–2:30)** — Adjust workload/cooling/ambient. Show a safe scenario, then an unsafe rejection.
-5. **Optimize (2:30–3:00)** — Summarise the recommended review action and the safety guardrail.
-
 ## Database
 
 Migrations and seed data live under `supabase/`:
@@ -224,13 +216,6 @@ Apply them manually via the Supabase SQL editor or CLI. Tables are accessed only
 
 Live on Vercel: `https://coolara-ai-data-center-sustainabili.vercel.app`
 
-## Success criteria for judges
-
-- Follow the complete demo path in under five minutes.
-- One anomaly explained using structured input only.
-- One safe and one unsafe simulation demonstrated.
-- All assumptions and limitations disclosed honestly.
-
 ## Related docs
 
 - `PRD.md` — MVP scope, features, non-goals, success criteria.
@@ -238,5 +223,5 @@ Live on Vercel: `https://coolara-ai-data-center-sustainabili.vercel.app`
 - `API_SPEC.md` — request, response, validation, and error contracts for application endpoints.
 - `COOLARA_UI_SPECIFICATION.md` — exact page layouts and the "one page = one primary job" rule.
 - `COOLARA_IMPLEMENTATION_PLAN.md` — build phases, team split, API contract, shared types.
-- `TASKLIST.md` — build-window checklist.
+- [`TASKLIST.md`](./TASKLIST.md) — build-window checklist.
 - `PRE_EXISTING_DISCLOSURE.md`, `AI_TOOLS_DISCLOSURE.md` — submission disclosures.
