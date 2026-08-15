@@ -1,38 +1,11 @@
 'use client'
 
 import { Bot, CheckCircle2, FlaskConical, Sparkles } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
+import { useState } from 'react'
+import { renderAiMarkdown } from '@/components/ai-markdown'
 import { ErrorState, LoadingState, Pill } from '@/components/ui'
 import type { OptimizeSimulationResponse } from '@/lib/ai/types'
 import type { Finding, SimulationInput, SimulationResult } from '@/types'
-
-/** Minimal renderer for the small Markdown subset the AI layer produces (bold + bullets). */
-function renderInline(line: string): ReactNode {
-  const parts = line.split(/\*\*(.+?)\*\*/g)
-  return parts.map((part, i) => (i % 2 === 1 ? <strong key={i}>{part}</strong> : part))
-}
-
-function renderMarkdown(text: string): ReactNode {
-  const lines = text.split('\n').filter((l) => l.trim().length > 0)
-  return (
-    <>
-      {lines.map((line, i) => {
-        if (line.trim().startsWith('- ')) {
-          return (
-            <li className="mb-[16px] text-[13px]" key={i}>
-              {renderInline(line.trim().slice(2))}
-            </li>
-          )
-        }
-        return (
-          <p className="mb-[16px] text-[13px]" key={i}>
-            {renderInline(line)}
-          </p>
-        )
-      })}
-    </>
-  )
-}
 
 type Status =
   | { status: 'idle' }
@@ -105,7 +78,7 @@ export function AiOptimizePanel({
 
       {state.status === 'done' && (
         <div className="mt-[20px] p-[18px] bg-slate-50 dark:bg-[#121719] rounded-[7px] leading-[1.55] text-slate-700 dark:text-[#ccd5d4]">
-          {renderMarkdown(state.result.narrative)}
+          {renderAiMarkdown(state.result.narrative)}
           <div className="mt-[14px] p-[10px_12px] border border-slate-300 dark:border-[#394348] rounded-[6px] bg-slate-100 dark:bg-[#141a1d] text-slate-500 dark:text-[#98aaa9] text-[11px] flex gap-[6px] items-center">
             <FlaskConical size={14} className="shrink-0" /> Qualitative AI perspective on a deterministic, safety-gated simulation. It
             sets no operating parameters — numeric values here come only from the simulator itself.

@@ -1,30 +1,11 @@
 'use client'
 
 import { Bot, CheckCircle2, Clock3, FlaskConical, Sparkles } from 'lucide-react'
-import { useState, type ReactNode } from 'react'
+import { useState } from 'react'
+import { renderAiMarkdown } from '@/components/ai-markdown'
 import { ErrorState, LoadingState, Pill } from '@/components/ui'
 import type { ExplainFindingResponse } from '@/lib/ai/types'
 import type { Finding } from '@/types'
-
-/** Minimal renderer for the small Markdown subset the AI layer produces (bold + bullets). */
-function renderInline(line: string): ReactNode {
-  const parts = line.split(/\*\*(.+?)\*\*/g)
-  return parts.map((part, i) => (i % 2 === 1 ? <strong key={i}>{part}</strong> : part))
-}
-
-function renderMarkdown(text: string): ReactNode {
-  const lines = text.split('\n').filter((l) => l.trim().length > 0)
-  return (
-    <>
-      {lines.map((line, i) => {
-        if (line.trim().startsWith('- ')) {
-          return <li className="mb-[16px] text-[13px]" key={i}>{renderInline(line.trim().slice(2))}</li>
-        }
-        return <p className="mb-[16px] text-[13px]" key={i}>{renderInline(line)}</p>
-      })}
-    </>
-  )
-}
 
 type Status = { status: 'idle' } | { status: 'loading' } | { status: 'error' } | { status: 'done'; result: ExplainFindingResponse }
 
@@ -89,7 +70,7 @@ export function AiExplainPanel({ finding }: Readonly<{ finding: Finding }>) {
 
       {state.status === 'done' && (
         <div className="mt-[20px] p-[18px] bg-slate-50 dark:bg-[#121719] rounded-[7px] leading-[1.55] text-slate-700 dark:text-[#ccd5d4]">
-          {renderMarkdown(state.result.explanation)}
+          {renderAiMarkdown(state.result.explanation)}
           <small className="flex items-center gap-[5px] pt-[12px] border-t border-surface-line text-slate-500 dark:text-[#98aaa9] text-[11px]">
             <FlaskConical size={14} /> Qualitative AI explanation based only on structured, synthetic findings. Numerical
             values remain deterministic.
