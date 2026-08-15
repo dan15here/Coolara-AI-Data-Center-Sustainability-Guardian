@@ -138,11 +138,11 @@ export function AnomaliesView({
         {sortedFindings.map((finding, index) => {
           const Icon = METRIC_ICONS[finding.metric]
           return (
-            <div key={finding.id} className="flex flex-col gap-[16px] mb-[24px]">
-              <section className="p-[22px] border border-surface-line bg-surface-panel rounded-lg">
+            <div key={finding.id} className="mb-[24px] border border-surface-line bg-surface-panel rounded-lg overflow-hidden">
+              <section className="p-[22px]">
                 <div className="flex justify-between text-content-muted text-[11px]">
                   <div className="flex items-center gap-[8px]">
-                    <span className="inline-flex items-center justify-center w-[20px] h-[20px] rounded-full bg-slate-100 dark:bg-[#20292d] text-slate-600 dark:text-[#b8c4c3] text-[10px] font-bold shrink-0">
+                    <span className="inline-flex items-center justify-center w-[26px] h-[26px] rounded-full bg-slate-200 dark:bg-[#2a3539] text-slate-900 dark:text-content-base text-[13px] font-bold shrink-0">
                       {index + 1}
                     </span>
                     <Pill tone={severityTone(finding.severity)}>{severityLabel(finding.severity)} severity</Pill>

@@ -17,7 +17,7 @@ export function AiExplainPanel({
   onAnalyze,
 }: Readonly<{ geminiConfigured: boolean; state: ExplainStatus; onAnalyze: () => void }>) {
   return (
-    <section className="p-[22px] border border-surface-line bg-surface-panel rounded-lg mt-0">
+    <section className="p-[22px] border-t border-surface-line">
       <div className="flex justify-between gap-[15px] items-center">
         <div className="w-[39px] h-[39px] grid place-items-center rounded-[9px] bg-status-teal/20 text-status-teal shrink-0">
           <Bot size={22} />
