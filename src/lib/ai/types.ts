@@ -1,4 +1,4 @@
-import type { Finding } from '@/types';
+import type { Finding, SimulationInput, SimulationResult } from '@/types';
 
 export interface ExplainFindingRequest {
   finding: Finding;
@@ -6,6 +6,19 @@ export interface ExplainFindingRequest {
 
 export interface ExplainFindingResponse {
   explanation: string;
+  source: 'gemini' | 'fallback';
+  model?: string;
+}
+
+export interface OptimizeSimulationRequest {
+  input: SimulationInput;
+  result: SimulationResult;
+  finding: Finding | null;
+}
+
+/** Deliberately has no numeric fields — the AI layer must never emit a value the UI could apply. */
+export interface OptimizeSimulationResponse {
+  narrative: string;
   source: 'gemini' | 'fallback';
   model?: string;
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { buildExplanationPrompt } from '../prompt';
-import type { ExplainFindingRequest } from '../types';
+import { buildExplanationPrompt, buildOptimizationPrompt } from '../prompt';
+import type { ExplainFindingRequest, OptimizeSimulationRequest } from '../types';
 
 const request: ExplainFindingRequest = {
   finding: {
@@ -48,5 +48,51 @@ describe('buildExplanationPrompt', () => {
 
   it('makes no network call (pure string building)', () => {
     expect(typeof buildExplanationPrompt(request)).toBe('string');
+  });
+});
+
+const optimizeRequest: OptimizeSimulationRequest = {
+  input: { coolingSetpointC: 22, workloadPercent: 30, ambientTempC: 24 },
+  result: {
+    safe: true,
+    reason: 'All parameters are within safe operating thresholds.',
+    predictedServerTempC: 21.35,
+    estimatedEnergyDeltaMwh: -9.69,
+    estimatedWaterDeltaLiters: -6319.34,
+    estimatedCostDeltaIdr: -14660103.06,
+    pue: 1.39,
+    wue: 867.88,
+  },
+  finding: request.finding,
+};
+
+describe('buildOptimizationPrompt', () => {
+  it('includes the no-new-numbers and no-new-setpoint guardrail instructions', () => {
+    const prompt = buildOptimizationPrompt(optimizeRequest);
+    expect(prompt).toContain('Do not introduce new measurements');
+    expect(prompt).toContain('Never propose a specific new numeric setpoint');
+    expect(prompt).toContain('Present at most two directions');
+  });
+
+  it('includes the severity register derived from the originating finding', () => {
+    const prompt = buildOptimizationPrompt(optimizeRequest);
+    expect(prompt).toContain(`Severity register to use: ${optimizeRequest.finding!.severity}`);
+  });
+
+  it('falls back to a "none" severity register when there is no originating finding', () => {
+    const prompt = buildOptimizationPrompt({ ...optimizeRequest, finding: null });
+    expect(prompt).toContain('Severity register to use: none');
+    expect(prompt).toContain('this simulation was run standalone');
+  });
+
+  it('includes the deterministic simulation input and result values', () => {
+    const prompt = buildOptimizationPrompt(optimizeRequest);
+    expect(prompt).toContain(String(optimizeRequest.input.coolingSetpointC));
+    expect(prompt).toContain(optimizeRequest.result.reason);
+    expect(prompt).toContain('21.4'); // predictedServerTempC.toFixed(1)
+  });
+
+  it('makes no network call (pure string building)', () => {
+    expect(typeof buildOptimizationPrompt(optimizeRequest)).toBe('string');
   });
 });

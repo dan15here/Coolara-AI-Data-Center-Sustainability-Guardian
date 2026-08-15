@@ -93,7 +93,10 @@ export function AnomaliesView({
                 <Link className="text-[#9be0d6] font-bold text-[12px] flex items-center gap-[6px] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded" href="/telemetry">
                   <ExternalLink size={15} /> View source telemetry
                 </Link>
-                <Link className="text-[#9be0d6] font-bold text-[12px] flex items-center gap-[6px] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded" href="/simulator">
+                <Link
+                  className="text-[#9be0d6] font-bold text-[12px] flex items-center gap-[6px] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded"
+                  href={`/simulator?finding=${encodeURIComponent(JSON.stringify(finding))}`}
+                >
                   <Play size={15} /> Simulate response
                 </Link>
               </div>

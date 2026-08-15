@@ -1,6 +1,13 @@
 import 'server-only';
-import { buildExplanationPrompt } from './prompt';
-import type { ExplainFindingRequest, ExplainFindingResponse } from './types';
+import { buildExplanationPrompt, buildOptimizationPrompt } from './prompt';
+import { METRIC_LABELS } from '@/lib/format/finding';
+import type {
+  ExplainFindingRequest,
+  ExplainFindingResponse,
+  OptimizeSimulationRequest,
+  OptimizeSimulationResponse,
+} from './types';
+import type { FindingSeverity } from '@/types';
 
 const DEFAULT_MODEL = 'gemini-3.6-flash';
 
@@ -60,5 +67,61 @@ export async function explainFinding(req: ExplainFindingRequest): Promise<Explai
   } catch (error) {
     console.warn('Gemini explanation failed, falling back to rule-based message.', error);
     return buildFallbackExplanation(req);
+  }
+}
+
+const REGISTER_BY_SEVERITY: Record<FindingSeverity | 'none', string> = {
+  none: 'here is a neutral read on this scenario',
+  low: 'this is worth noting',
+  medium: 'this is worth a closer look',
+  high: 'this is worth prompt attention',
+  critical: 'this warrants prompt review',
+};
+
+function buildFallbackOptimization(req: OptimizeSimulationRequest): OptimizeSimulationResponse {
+  const { result, finding } = req;
+  const register = REGISTER_BY_SEVERITY[finding?.severity ?? 'none'];
+
+  const outcomeText = result.safe
+    ? 'the scenario stayed within the deterministic safety thresholds'
+    : 'the deterministic safety gate rejected this scenario';
+  const costDirection = result.estimatedCostDeltaIdr >= 0 ? 'a higher' : 'a lower';
+
+  const summary = `**Based on the deterministic result, ${register}: ${outcomeText}, with ${costDirection} estimated cost than the current baseline.**`;
+
+  const directions = result.safe
+    ? [
+        'One direction worth considering is holding these assumptions and watching whether the energy, water, and cost deltas stay acceptable over time.',
+        'Another is nudging one assumption at a time in a follow-up simulation to see how sensitive the outcome is to that input.',
+      ]
+    : [
+        `One direction worth considering is easing the assumption(s) noted in the safety gate's reason ("${result.reason}") back toward the current baseline.`,
+        'Another is re-running the simulation with a smaller change to isolate which input drove the rejection.',
+      ];
+
+  const findingNote = finding
+    ? `\n\n_This scenario was opened from a ${finding.severity} ${METRIC_LABELS[finding.metric].toLowerCase()} finding — the framing above reflects that severity, not a determination by this tool._`
+    : '';
+
+  return {
+    narrative: `${summary}\n\n${directions.map((d) => `- ${d}`).join('\n')}${findingNote}\n\n_Rule-based summary — enable the Gemini integration for a richer perspective. No new numeric values were introduced._`,
+    source: 'fallback',
+  };
+}
+
+export async function optimizeSimulation(req: OptimizeSimulationRequest): Promise<OptimizeSimulationResponse> {
+  if (!isGeminiConfigured()) {
+    return buildFallbackOptimization(req);
+  }
+
+  const model = process.env.GEMINI_MODEL || DEFAULT_MODEL;
+
+  try {
+    const prompt = buildOptimizationPrompt(req);
+    const narrative = await callGemini(prompt, model);
+    return { narrative, source: 'gemini', model };
+  } catch (error) {
+    console.warn('Gemini optimization narrative failed, falling back to rule-based message.', error);
+    return buildFallbackOptimization(req);
   }
 }
