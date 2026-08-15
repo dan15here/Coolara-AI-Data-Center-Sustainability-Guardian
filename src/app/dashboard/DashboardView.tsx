@@ -18,7 +18,7 @@ function clamp(value: number, min: number, max: number): number {
 
 const METRIC_ICONS = { coolingPower: Gauge, waterUsage: Droplets, serverTemperature: Thermometer }
 
-type DashboardData = { scenario: ScenarioId; points: TelemetryPoint[]; latestMetrics: DashboardMetrics; findings: Finding[] }
+type DashboardData = { scenario: ScenarioId; point: TelemetryPoint; latestMetrics: DashboardMetrics; findings: Finding[] }
 type Status = { status: 'idle' } | { status: 'loading' } | { status: 'error' }
 
 export function DashboardView({
@@ -31,10 +31,11 @@ export function DashboardView({
   async function loadScenario(scenario: ScenarioId) {
     setState({ status: 'loading' })
     try {
-      const response = await fetch(`/api/telemetry?scenario=${scenario}&points=24`)
+      const response = await fetch(`/api/telemetry?scenario=${scenario}&points=1`)
       if (!response.ok) throw new Error('Request failed')
       const body: { points: TelemetryPoint[]; latestMetrics: DashboardMetrics; findings: Finding[] } = await response.json()
-      setData({ scenario, points: body.points, latestMetrics: body.latestMetrics, findings: body.findings })
+      const point = body.points[body.points.length - 1]
+      setData({ scenario, point, latestMetrics: body.latestMetrics, findings: body.findings })
       setState({ status: 'idle' })
     } catch {
       setState({ status: 'error' })
@@ -42,7 +43,7 @@ export function DashboardView({
   }
 
   const activeFinding = highestSeverityFinding(data.findings)
-  const latest = data.points[data.points.length - 1]
+  const latest = data.point
 
   const reliability = Math.round(clamp(100 - (activeFinding?.deviationPercent ?? 0), 0, 100))
   const energy = Math.round(clamp((TARGET_PUE / data.latestMetrics.pue) * 100, 0, 100))
