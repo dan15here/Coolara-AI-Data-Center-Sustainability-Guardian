@@ -29,9 +29,9 @@ const FIELDS: { key: keyof SimulationInput; label: string; unit: string; min: nu
 ]
 
 const SECONDARY_BUTTON =
-  'border-0 rounded-[6px] bg-[#273237] text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-[#273237]'
+  'border-0 rounded-[6px] bg-slate-100 dark:bg-[#273237] text-slate-700 dark:text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-slate-200 dark:hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-slate-100 dark:disabled:hover:bg-[#273237]'
 const PRIMARY_BUTTON =
-  'border-0 rounded-[6px] bg-status-teal text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg'
+  'border-0 rounded-[6px] bg-status-teal text-white dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg'
 
 type Status = { status: 'idle' } | { status: 'loading' } | { status: 'error' } | { status: 'done'; result: SimulationResult }
 
@@ -157,10 +157,10 @@ export function SimulatorView({
                 onChange={(event) => change(key, Number(event.target.value))}
               />
               <small className="flex justify-between text-content-muted text-[10px]">
-                {min} {unit}
-                <i className="h-[1px] flex-1 bg-[#394348] m-[7px_8px]" />
-                {max} {unit}
-              </small>
+              {min} {unit}
+              <i className="h-[1px] flex-1 bg-slate-200 dark:bg-[#394348] m-[7px_8px]" />
+              {max} {unit}
+            </small>
             </label>
           ))}
 
@@ -216,40 +216,42 @@ export function SimulatorView({
                 <div>
                   <span className="block text-content-muted text-[11px]">Predicted server temperature</span>
                   <strong className="block text-[34px] m-[4px_0]">{state.result.predictedServerTempC.toFixed(1)}°C</strong>
-                  <small className="text-content-muted text-[11px]">Safety threshold: {MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C</small>
-                </div>
-              </div>
-              <p className="text-[#b9c5c3] leading-[1.5] text-[12px]">{state.result.reason}</p>
+                  <small className="text-content-muted text-[11px]">
+              Safety threshold: {MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C
+            </small>
+          </div>
+        </div>
+        <p className="text-slate-600 dark:text-[#b9c5c3] leading-[1.5] text-[12px] mb-[20px]">{state.result.reason}</p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-[1px] mt-[20px] bg-surface-line border border-surface-line rounded-md overflow-hidden">
-                <div className="bg-[#141a1d] p-[13px]">
-                  <span className="block text-content-muted text-[11px]">Energy delta</span>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-[1px] mt-[20px] bg-surface-line border border-surface-line rounded-md overflow-hidden">
+          <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
+            <span className="block text-content-muted text-[11px]">Energy delta</span>
                   <strong className="block mt-[5px] text-[14px]">
                     {state.result.estimatedEnergyDeltaMwh >= 0 ? '+' : ''}
                     {state.result.estimatedEnergyDeltaMwh.toFixed(2)} MWh
                   </strong>
-                </div>
-                <div className="bg-[#141a1d] p-[13px]">
-                  <span className="block text-content-muted text-[11px]">Water delta</span>
+          </div>
+          <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
+            <span className="block text-content-muted text-[11px]">Water delta</span>
                   <strong className="block mt-[5px] text-[14px]">
                     {state.result.estimatedWaterDeltaLiters >= 0 ? '+' : ''}
                     {state.result.estimatedWaterDeltaLiters.toFixed(0)} L
                   </strong>
-                </div>
-                <div className="bg-[#141a1d] p-[13px]">
-                  <span className="block text-content-muted text-[11px]">Estimated cost</span>
+          </div>
+          <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
+            <span className="block text-content-muted text-[11px]">Estimated cost</span>
                   <strong className="block mt-[5px] text-[14px]">
                     {state.result.estimatedCostDeltaIdr >= 0 ? '+' : '-'}Rp{' '}
                     {Math.abs(state.result.estimatedCostDeltaIdr).toLocaleString('id-ID')}
                   </strong>
-                </div>
-                <div className="bg-[#141a1d] p-[13px]">
-                  <span className="block text-content-muted text-[11px]">PUE / WUE</span>
+          </div>
+          <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
+            <span className="block text-content-muted text-[11px]">PUE / WUE</span>
                   <strong className="block mt-[5px] text-[14px]">
                     {state.result.pue.toFixed(2)} / {state.result.wue.toFixed(2)}
                   </strong>
                 </div>
-                <div className="bg-[#141a1d] p-[13px]">
+                <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
                   <span className="block text-content-muted text-[11px]">Cost delta in context</span>
                   <strong className="block mt-[5px] text-[14px]">
                     {(() => {

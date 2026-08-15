@@ -15,13 +15,13 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const badgeCount = await countRecentAlerts(DEMO_DATA_CENTER_ID, 24)
+  const anomaliesCount = await countRecentAlerts(DEMO_DATA_CENTER_ID, 24)
   
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <AppShell badgeCount={badgeCount}>{children}</AppShell>
+          <AppShell anomaliesCount={anomaliesCount}>{children}</AppShell>
         </ThemeProvider>
       </body>
     </html>

@@ -81,17 +81,16 @@ export function AiOptimizePanel({
       </div>
 
       {state.status === 'idle' && (
-        <div className="mt-[20px] p-[23px] bg-[#121719] border border-dashed border-[#425157] flex flex-col sm:flex-row sm:items-start md:items-center gap-[13px] rounded-lg">
+        <div className="mt-[20px] p-[23px] bg-slate-50 dark:bg-[#121719] border border-dashed border-slate-300 dark:border-[#425157] flex flex-col sm:flex-row sm:items-start md:items-center gap-[13px] rounded-lg">
           <Sparkles className="text-status-teal shrink-0" size={22} />
           <div>
-            <strong className="text-[13px]">Ask Gemini for qualitative context on this simulated scenario.</strong>
+            <strong className="text-[13px]">Run analysis to ask Gemini for a recommendation.</strong>
             <p className="text-content-muted m-[5px_0_0] text-[12px]">
-              It cannot suggest a new setpoint or approve a change — only the simulator&apos;s own numbers are ever used to run or apply a
-              scenario.
+              The model receives the simulated deltas and safety outcomes, but does not invent numbers.
             </p>
           </div>
           <button
-            className="border-0 rounded-[6px] bg-status-teal text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg sm:ml-[35px] md:ml-auto shrink-0"
+            className="border-0 rounded-[6px] bg-status-teal text-white dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg sm:ml-[35px] md:ml-auto shrink-0 cursor-pointer"
             type="button"
             onClick={handleGenerate}
           >
@@ -105,9 +104,9 @@ export function AiOptimizePanel({
       {state.status === 'error' && <ErrorState label="Could not generate a perspective." onRetry={handleGenerate} />}
 
       {state.status === 'done' && (
-        <div className="mt-[20px] p-[18px] bg-[#121719] rounded-[7px] leading-[1.55] text-[#ccd5d4]">
+        <div className="mt-[20px] p-[18px] bg-slate-50 dark:bg-[#121719] rounded-[7px] leading-[1.55] text-slate-700 dark:text-[#ccd5d4]">
           {renderMarkdown(state.result.narrative)}
-          <div className="mt-[14px] p-[10px_12px] border border-[#394348] rounded-[6px] bg-[#141a1d] text-[#98aaa9] text-[11px] flex gap-[6px] items-center">
+          <div className="mt-[14px] p-[10px_12px] border border-slate-300 dark:border-[#394348] rounded-[6px] bg-slate-100 dark:bg-[#141a1d] text-slate-500 dark:text-[#98aaa9] text-[11px] flex gap-[6px] items-center">
             <FlaskConical size={14} className="shrink-0" /> Qualitative AI perspective on a deterministic, safety-gated simulation. It
             sets no operating parameters — numeric values here come only from the simulator itself.
           </div>
