@@ -15,7 +15,7 @@ export interface ScenarioPreset {
 export const scenarioPresets: Record<ScenarioId, ScenarioPreset> = {
   nominal: {
     id: 'nominal',
-    label: 'Nominal operation',
+    label: 'Normal operation',
     description: 'Healthy baseline: cooling, water use, and server temperature track expected conditions.',
   },
   coolingInefficiency: {
