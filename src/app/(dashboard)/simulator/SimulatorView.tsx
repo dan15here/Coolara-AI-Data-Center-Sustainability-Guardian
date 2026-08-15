@@ -128,7 +128,7 @@ export function SimulatorView({
         </p>
       )}
       <section className="grid grid-cols-1 md:grid-cols-[1fr_1.05fr] gap-[14px]">
-        <div className="p-[23px] border border-surface-line bg-surface-panel rounded-lg">
+        <div className="p-[23px] border border-surface-line bg-surface-panel rounded-lg overflow-hidden">
           <h2 className="m-0 text-[18px]">Operating assumptions</h2>
           <p className="text-content-muted leading-[1.45] m-0 text-[12px] mt-1 mb-[18px]">
             Adjust the conditions to evaluate the trade-off. Current state as of page load.
