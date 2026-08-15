@@ -147,7 +147,7 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="p-[32px] rounded-[16px] bg-[#171d21] border border-[#2b363c] hover:border-teal-500/50 transition-colors group"
+              className="flex flex-col items-center p-[32px] text-center rounded-[16px] bg-[#171d21] border border-[#2b363c] hover:border-teal-500/50 transition-colors group"
             >
               <div className="w-[48px] h-[48px] rounded-[12px] bg-teal-500/10 text-teal-400 grid place-items-center mb-[20px] group-hover:scale-110 transition-transform">
                 <feature.icon size={24} />
