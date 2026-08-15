@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { EmptyState, ErrorState, LoadingState, Pill } from '@/components/ui'
 import { ScenarioControl } from '@/components/scenario-control'
-import { METRIC_LABELS, severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
+import { formatFindingValue, METRIC_LABELS, severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
 import { formatJakartaTime } from '@/lib/format/time'
 import type { ScenarioId } from '@/lib/telemetry/generator'
 import type { Finding } from '@/types'
@@ -68,11 +68,11 @@ export function AnomaliesView({
               <div className="grid grid-cols-1 sm:grid-cols-3 bg-slate-50 dark:bg-[#121719] border border-surface-line rounded-[7px] overflow-hidden">
                 <div className="p-[16px] border-b sm:border-b-0 sm:border-r border-surface-line bg-white dark:bg-transparent">
                   <span className="block text-content-muted text-[11px]">Actual</span>
-                  <strong className="block mt-[8px] text-[20px]">{finding.actual.toFixed(2)}</strong>
+                  <strong className="block mt-[8px] text-[20px]">{formatFindingValue(finding.metric, finding.actual)}</strong>
                 </div>
                 <div className="p-[16px] border-b sm:border-b-0 sm:border-r border-surface-line bg-white dark:bg-transparent">
                   <span className="block text-content-muted text-[11px]">Expected</span>
-                  <strong className="block mt-[8px] text-[20px]">{finding.expected.toFixed(2)}</strong>
+                  <strong className="block mt-[8px] text-[20px]">{formatFindingValue(finding.metric, finding.expected)}</strong>
                 </div>
                 <div className="p-[16px]">
                   <span className="block text-content-muted text-[11px]">Deviation</span>
@@ -82,6 +82,10 @@ export function AnomaliesView({
                   </strong>
                 </div>
               </div>
+
+              {finding.metric === 'waterUsage' && (
+                <p className="m-0 mt-[10px] text-[11px] text-content-muted">Water values are litres per synthetic reading.</p>
+              )}
               
               <div className="flex flex-wrap gap-[6px] mt-[15px]">
                 {finding.likelyFactors.map((factor) => (

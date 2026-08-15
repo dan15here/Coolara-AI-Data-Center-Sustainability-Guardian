@@ -6,9 +6,20 @@ export const METRIC_LABELS: Record<FindingMetric, string> = {
   serverTemperature: 'Server temperature',
 };
 
+export function formatFindingValue(metric: FindingMetric, value: number): string {
+  switch (metric) {
+    case 'waterUsage':
+      return `${Math.round(value).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')} L`;
+    case 'coolingPower':
+      return `${value.toFixed(2)} MW`;
+    case 'serverTemperature':
+      return `${value.toFixed(1)}°C`;
+  }
+}
+
 export function summarizeFinding(finding: Finding): string {
   const direction = finding.actual > finding.expected ? 'above' : 'below';
-  return `${METRIC_LABELS[finding.metric]} is ${finding.deviationPercent.toFixed(1)}% ${direction} expected (${finding.actual.toFixed(2)} vs ${finding.expected.toFixed(2)}).`;
+  return `${METRIC_LABELS[finding.metric]} is ${finding.deviationPercent.toFixed(1)}% ${direction} expected (${formatFindingValue(finding.metric, finding.actual)} vs ${formatFindingValue(finding.metric, finding.expected)}).`;
 }
 
 export function severityTone(severity: FindingSeverity): 'neutral' | 'warning' | 'high' | 'critical' {
