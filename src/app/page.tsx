@@ -3,11 +3,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
-import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown, Bot, FlaskConical, ScanSearch, Sparkles } from 'lucide-react'
+import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Hero } from '@/components/ui/animated-hero'
 import AnimatedContent from '@/components/ui/animated-content'
 import LandingScrollTabs from '@/components/landing-scroll-tabs'
+import LandingWorkflow from '@/components/landing-workflow'
 
 const faqs = [
   {
@@ -227,34 +228,7 @@ export default function LandingPage() {
           <p className="text-[#91a0a3] text-[16px] leading-relaxed">Five deliberate steps from synthetic telemetry to a safer, decision-ready response.</p>
         </motion.div>
 
-        <div className="relative">
-          <div className="hidden lg:block absolute h-px bg-[#2b363c] left-[10%] right-[10%] top-[70px]" aria-hidden="true" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-y-[40px] gap-x-[16px] relative">
-          {[
-            { number: '01', icon: Activity, title: 'Monitor signals', description: 'See synthetic energy, water, cooling, and thermal telemetry in one command centre.' },
-            { number: '02', icon: ScanSearch, title: 'Detect deviations', description: 'Compare actual conditions against deterministic expected baselines and severity.' },
-            { number: '03', icon: Bot, title: 'Explain context', description: 'Use Gemini for qualitative context while all measurements stay deterministic.' },
-            { number: '04', icon: FlaskConical, title: 'Simulate safely', description: 'Test a response before acting; the thermal gate rejects unsafe scenarios.' },
-            { number: '05', icon: Sparkles, title: 'Optimize with context', description: 'Weigh safe trade-offs with deterministic results and a qualitative AI perspective.' },
-          ].map((step, i) => (
-            <motion.article
-              key={step.number}
-              initial={{ opacity: 0, y: 22 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.1 }}
-              className="relative px-[18px]"
-            >
-              <div className="relative mx-auto w-[112px] h-[112px] rounded-[28px] border border-[#344045] bg-[#192326] grid place-items-center shadow-[0_12px_32px_rgba(0,0,0,0.16)]">
-                <step.icon size={39} strokeWidth={1.8} className="text-teal-300" />
-                <span className="absolute -bottom-[15px] w-[32px] h-[32px] rounded-full bg-teal-500 text-[#042f2b] text-[12px] font-bold grid place-items-center border-4 border-[#101517]">{step.number}</span>
-              </div>
-              <h3 className="text-[19px] font-bold text-white mt-[34px] mb-[10px]">{step.title}</h3>
-              <p className="max-w-[250px] mx-auto text-[#91a0a3] text-[15px] leading-relaxed">{step.description}</p>
-            </motion.article>
-          ))}
-          </div>
-        </div>
+        <LandingWorkflow />
       </section>
 
       {/* FAQ Section */}
