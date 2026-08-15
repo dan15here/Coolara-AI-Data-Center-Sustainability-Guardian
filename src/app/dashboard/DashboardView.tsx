@@ -6,6 +6,7 @@ import { EmptyState, ErrorState, LoadingState, MetricCard, Pill, TextLink } from
 import { ScenarioControl } from '@/components/scenario-control'
 import { highestSeverityFinding } from '@/lib/anomaly/rules'
 import { METRIC_LABELS, severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
+import { formatJakartaTime } from '@/lib/format/time'
 import type { ScenarioId } from '@/lib/telemetry/generator'
 import type { ActivityEvent, DashboardMetrics, Finding, TelemetryPoint } from '@/types'
 
@@ -179,7 +180,7 @@ export function DashboardView({
         <section className="events-grid">
           {activity.map((event) => (
             <article className="event" key={event.id}>
-              <time>{new Date(event.occurredAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</time>
+              <time>{formatJakartaTime(event.occurredAt)} WIB</time>
               <strong>{event.summary}</strong>
               <span className={event.type === 'alert' ? 'critical-text' : ''}>
                 {event.type === 'alert' ? 'Alert' : 'Simulation'} <ArrowUpRight size={13} />

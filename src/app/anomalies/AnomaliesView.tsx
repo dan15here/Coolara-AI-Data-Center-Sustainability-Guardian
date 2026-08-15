@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { EmptyState, ErrorState, LoadingState, Pill } from '@/components/ui'
 import { ScenarioControl } from '@/components/scenario-control'
 import { METRIC_LABELS, severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
+import { formatJakartaTime } from '@/lib/format/time'
 import type { ScenarioId } from '@/lib/telemetry/generator'
 import type { Finding } from '@/types'
 import { AiExplainPanel } from './AiExplainPanel'
@@ -51,7 +52,7 @@ export function AnomaliesView({
             <section className="anomaly-detail">
               <div className="anomaly-top">
                 <Pill tone={severityTone(finding.severity)}>{severityLabel(finding.severity)} severity</Pill>
-                <span>Detected {new Date(finding.detectedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                <span>Detected {formatJakartaTime(finding.detectedAt)} WIB</span>
               </div>
               <div className="anomaly-title">
                 <div className="finding-icon">

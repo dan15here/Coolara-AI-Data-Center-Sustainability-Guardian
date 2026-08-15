@@ -4,6 +4,7 @@ import { CheckCircle2, ShieldAlert } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { EmptyState, Pill } from '@/components/ui'
 import { severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
+import { formatJakartaDateTime } from '@/lib/format/time'
 import type { Finding, StoredSimulation } from '@/types'
 
 const DATE_RANGES = ['Today', 'Last 7 days'] as const
@@ -92,7 +93,7 @@ export function ReportsView({
                   <ShieldAlert size={18} />
                 </div>
                 <div>
-                  <time>{new Date(entry.timestamp).toLocaleString()}</time>
+                  <time>{formatJakartaDateTime(entry.timestamp)}</time>
                   <h2>{summarizeFinding(entry.finding)}</h2>
                   <p>Deterministic anomaly rule</p>
                 </div>
@@ -104,7 +105,7 @@ export function ReportsView({
                   {entry.simulation.safe ? <CheckCircle2 size={18} /> : <ShieldAlert size={18} />}
                 </div>
                 <div>
-                  <time>{new Date(entry.timestamp).toLocaleString()}</time>
+                  <time>{formatJakartaDateTime(entry.timestamp)}</time>
                   <h2>
                     Simulation {entry.simulation.safe ? 'approved' : 'rejected'}: {entry.simulation.predictedServerTempC.toFixed(1)}°C
                   </h2>
