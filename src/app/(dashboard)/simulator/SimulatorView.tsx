@@ -28,6 +28,15 @@ const FIELDS: { key: keyof SimulationInput; label: string; unit: string; min: nu
   { key: 'ambientTempC', label: 'Ambient temperature', unit: '°C', min: AMBIENT_MIN_C, max: AMBIENT_MAX_C },
 ]
 
+const RANGE_INPUT_CLASS =
+  'block w-full appearance-none cursor-pointer my-[16px] mb-[8px] rounded-full ' +
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-panel ' +
+  '[&::-webkit-slider-runnable-track]:h-[8px] [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent ' +
+  '[&::-moz-range-track]:h-[8px] [&::-moz-range-track]:rounded-full [&::-moz-range-track]:bg-[var(--color-gauge-track)] ' +
+  '[&::-moz-range-progress]:h-[8px] [&::-moz-range-progress]:rounded-full [&::-moz-range-progress]:bg-status-teal ' +
+  '[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:mt-[-6px] [&::-webkit-slider-thumb]:w-[20px] [&::-webkit-slider-thumb]:h-[20px] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-status-teal [&::-webkit-slider-thumb]:border-[3px] [&::-webkit-slider-thumb]:border-white dark:[&::-webkit-slider-thumb]:border-[#10201f] [&::-webkit-slider-thumb]:shadow-[0_1px_5px_rgba(0,0,0,0.4)] [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 ' +
+  '[&::-moz-range-thumb]:w-[20px] [&::-moz-range-thumb]:h-[20px] [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-status-teal [&::-moz-range-thumb]:border-[3px] [&::-moz-range-thumb]:border-white dark:[&::-moz-range-thumb]:border-[#10201f] [&::-moz-range-thumb]:shadow-[0_1px_5px_rgba(0,0,0,0.4)] [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:hover:scale-110'
+
 const SECONDARY_BUTTON =
   'border-0 rounded-[6px] bg-slate-100 dark:bg-[#273237] text-slate-700 dark:text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-slate-200 dark:hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-slate-100 dark:disabled:hover:bg-[#273237]'
 const PRIMARY_BUTTON =
@@ -142,29 +151,33 @@ export function SimulatorView({
             </button>
           </div>
 
-          {FIELDS.map(({ key, label, unit, min, max }) => (
-            <label className="block my-[26px]" key={key}>
-              <span className="flex justify-between text-[12px]">
-                <strong>{label}</strong>
-                <output className="text-teal-700 dark:text-[#a7e2d8] font-bold">
-                  {input[key]} {unit}
-                </output>
-              </span>
-              <input
-                className="block w-full accent-status-teal my-[14px] mb-[6px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-panel rounded-full"
-                type="range"
-                min={min}
-                max={max}
-                value={input[key]}
-                onChange={(event) => change(key, Number(event.target.value))}
-              />
-              <small className="flex justify-between text-content-muted text-[10px]">
-              {min} {unit}
-              <i className="h-[1px] flex-1 bg-slate-200 dark:bg-[#394348] m-[7px_8px]" />
-              {max} {unit}
-            </small>
-            </label>
-          ))}
+          {FIELDS.map(({ key, label, unit, min, max }) => {
+            const percent = ((input[key] - min) / (max - min)) * 100
+            return (
+              <label className="block my-[28px]" key={key}>
+                <span className="flex justify-between items-baseline mb-[10px]">
+                  <strong className="text-[15px] font-bold text-content-base">{label}</strong>
+                  <output className="text-teal-700 dark:text-[#a7e2d8] font-bold text-[14px]">
+                    {input[key]} {unit}
+                  </output>
+                </span>
+                <input
+                  className={RANGE_INPUT_CLASS}
+                  style={{ background: `linear-gradient(to right, var(--color-status-teal) ${percent}%, var(--color-gauge-track) ${percent}%)` }}
+                  type="range"
+                  min={min}
+                  max={max}
+                  value={input[key]}
+                  onChange={(event) => change(key, Number(event.target.value))}
+                />
+                <small className="flex justify-between text-content-muted text-[10px]">
+                  {min} {unit}
+                  <i className="h-[1px] flex-1 bg-slate-200 dark:bg-[#394348] m-[7px_8px]" />
+                  {max} {unit}
+                </small>
+              </label>
+            )
+          })}
 
           <div className="flex gap-[10px] mt-[32px]">
             <button
