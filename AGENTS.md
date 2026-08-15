@@ -2,7 +2,7 @@
 
 ## What this is
 
-Coolara is a sustainability decision-support MVP for data-centre operators, built as a Next.js 16 App Router app (React 19, TypeScript, Tailwind CSS v4). The product flow is **Monitor → Detect → Explain → Simulate → Optimize**. It is a pre-event starter: no product-specific functionality exists yet (`src/app/page.tsx` is a placeholder).
+Coolara is a sustainability decision-support MVP for data-centre operators, built as a Next.js 16 App Router app (React 19, TypeScript, Tailwind CSS v4). The product flow is **Monitor → Detect → Explain → Simulate → Optimize**. The root route (`src/app/page.tsx`) redirects to `/dashboard`.
 
 ## Read before adding feature work
 
@@ -26,32 +26,46 @@ Run from the repo root:
 - `npm install` — install deps.
 - `npm run dev` — local dev server.
 - `npm run lint` — ESLint (Next config).
-- `npm run build` — production build. Note: there is no separate `typecheck` script; `next build` and `tsc` are not wired as standalone npm scripts.
+- `npm run build` — production build (includes typecheck; there is no standalone `typecheck` script).
 - `npm run start` — serve a production build.
+- `npm run test` — run Vitest once.
+- `npm run test:watch` — run Vitest in watch mode.
 
-There is no test framework configured and no test script.
+Tests colocate with source or under `src/**/__tests__/`, named `*.test.ts` / `*.test.tsx`.
 
 ## Structure
 
-- `src/app/` — routes and global UI (`page.tsx`, `layout.tsx`, `globals.css`). Add API routes under `src/app/api/**`.
-- `src/lib/` — reusable integrations. Existing: `src/lib/supabase/client.ts` (browser client). Planned backend dirs per the implementation plan: `src/lib/calculations/`, `src/lib/anomaly/`, `src/lib/simulator/`, `src/lib/ai/`, `src/lib/supabase/`, plus `src/types/` for shared contracts.
-- Root config: `package.json`, `tsconfig.json`, `postcss.config.mjs`.
+- `src/app/` — routes and global UI. API routes live under `src/app/api/**`. Route-scoped components under `src/app/_components/**`.
+- `src/components/` — shared visual components.
+- `src/lib/` — integrations:
+  - `calculations/` — deterministic metrics and baselines.
+  - `anomaly/` — deterministic anomaly rules.
+  - `simulator/` — safety-gated scenario engine and thresholds.
+  - `ai/` — server-only Gemini adapter and prompt.
+  - `telemetry/` — synthetic telemetry generator.
+  - `supabase/` — server/client clients and repository.
+- `src/types/index.ts` — shared TypeScript contracts between frontend and backend.
+- `supabase/` — migrations and seed SQL.
+- Root config: `package.json`, `tsconfig.json`, `postcss.config.mjs`, `vitest.config.ts`.
 
 ## Path alias
 
-The `@/` alias is **not** configured in `tsconfig.json` (`baseUrl`/`paths` are absent). Do not assume `@/` imports resolve; use relative imports until an alias is actually added. If you add one, wire it in `tsconfig.json`.
+The `@/` alias is configured in `tsconfig.json` (`baseUrl` + `paths` → `./src/*`). Use `@/` imports.
 
-## Testing Guidelines
+## Environment variables
 
-No automated test framework is configured yet. At minimum, run `npm run lint` and `npm run build`, then manually verify affected routes with `npm run dev`. When introducing tests, colocate them with the code or under `src/**/__tests__/`, name files `*.test.ts` or `*.test.tsx`, and add the test command to `package.json`.
+Server-only values (never commit real values; never expose to browser):
 
-## Commit & Pull Request Guidelines
+- `SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `GEMINI_API_KEY`
+- `GEMINI_MODEL` (default `gemini-3.6-flash` in docs; code fallback default is `gemini-2.5-flash`)
 
-Git history is not present in this checkout, so no repository-specific commit convention can be inferred. Use concise imperative messages, for example `Add Supabase session helper`. Keep commits focused. Pull requests should explain the change, link the relevant task or issue, list validation commands, and include screenshots for visual changes.
+The Supabase browser client reads `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` and is `null` when unconfigured. Backend persists best-effort and falls back to synthetic data when Supabase is unconfigured.
 
 ## Security & Event Boundaries
 
-Keep secrets only in local environment variables. The starter intentionally excludes product-specific AI calls, database schema, data, and integrations; follow the rules in `README.md` and complete `PRE_EXISTING_DISCLOSURE.md` accurately before submission.
+Keep secrets only in environment variables. Server-only modules import `server-only` (stubbed in tests via `vitest.server-only-stub.ts`). The service-role key must only be used server-side; never ship it to the browser. Follow the rules in `README.md` and complete `PRE_EXISTING_DISCLOSURE.md` accurately before submission.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
