@@ -210,7 +210,7 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
             <motion.span
               aria-hidden="true"
               className="pointer-events-none absolute top-1/2 size-[18px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-surface-panel bg-status-teal shadow-[0_0_0_2px_rgba(45,212,191,0.32),0_0_14px_rgba(45,212,191,0.55)]"
-              style={{ left: `${getRangePercentage()}%` }}
+              style={{ left: `clamp(9px, ${getRangePercentage()}%, calc(100% - 9px))` }}
               animate={{ scale: region === 'middle' ? 1 : 1.12 }}
               transition={{ type: 'spring', stiffness: 380, damping: 26 }}
             />
