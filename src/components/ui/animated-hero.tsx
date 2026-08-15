@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MoveRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import BlurText from "@/components/ui/blur-text";
 import Link from "next/link";
 
 function Hero() {
@@ -40,14 +41,21 @@ function Hero() {
             </Button>
           </motion.div>
           <div className="flex gap-4 flex-col">
-            <motion.h1
-              className="text-5xl md:text-6xl lg:text-7xl max-w-5xl tracking-tighter text-center font-extrabold text-white"
-              initial={{ opacity: 0, y: 28 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
-            >
-              <span className="block text-teal-400 text-[0.42em] tracking-[0.2em] mb-2 md:mb-3">COOLARA</span>
-              <span className="block text-white">makes every response</span>
+            <h1 className="text-5xl md:text-6xl lg:text-7xl max-w-5xl tracking-tighter text-center font-extrabold text-white">
+              <BlurText
+                text="COOLARA"
+                animateBy="letters"
+                delay={70}
+                stepDuration={0.28}
+                className="justify-center text-teal-400 text-[0.42em] tracking-[0.2em] mb-2 md:mb-3"
+              />
+              <BlurText
+                text="makes every response"
+                animateBy="words"
+                delay={100}
+                stepDuration={0.32}
+                className="justify-center text-white"
+              />
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 {/* spacer so the h1 keeps its height */}
                 <span className="invisible">placeholder</span>
@@ -64,16 +72,20 @@ function Hero() {
                   </motion.span>
                 </AnimatePresence>
               </span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
+            <div
               className="text-lg md:text-xl leading-relaxed tracking-tight text-[#91a0a3] max-w-2xl text-center mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.22, ease: 'easeOut' }}
             >
-              See energy, water, cooling, and thermal signals in one place. Coolara detects deviations, explains their context, and lets operators simulate a safety-gated response before they act.
-            </motion.p>
+              <BlurText
+                text="See energy, water, cooling, and thermal signals in one place. Coolara detects deviations, explains their context, and lets operators simulate a safety-gated response before they act."
+                animateBy="words"
+                direction="bottom"
+                delay={18}
+                stepDuration={0.24}
+                className="justify-center"
+              />
+            </div>
           </div>
           <motion.div
             className="flex flex-col sm:flex-row gap-4 mt-3"
