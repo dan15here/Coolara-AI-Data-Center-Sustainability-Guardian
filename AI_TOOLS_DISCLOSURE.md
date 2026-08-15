@@ -8,6 +8,7 @@ hackathon prototype during the official build window.
 | Tool / service | Status | Role in the project |
 | --- | --- | --- |
 | OpenAI Codex | Used | Assisted with implementation, debugging, refactoring, code review, and verification. Team members reviewed the resulting code and decisions. |
+| GPT-5.6 Terra (medium reasoning) | Used | Model used through OpenAI Codex to assist implementation, debugging, refactoring, documentation, and verification. Team members reviewed the resulting code and decisions. |
 | Google Gemini API | Used | Provides qualitative explanations of structured anomaly findings and qualitative perspectives on safety-gated simulations. |
 | `gemini-3.5-flash-lite` | Used | Gemini model configured through the server-side `GEMINI_MODEL` environment variable. |
 | Supabase PostgreSQL | Used | Stores synthetic telemetry, detected alert episodes, and simulation records. |
