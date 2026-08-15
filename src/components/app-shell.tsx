@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
-import { Activity, BarChart3, ChevronRight, FlaskConical, LayoutDashboard, Menu, Moon, Play, ShieldAlert, SlidersHorizontal, Sun, X } from 'lucide-react'
+import Image from 'next/image'
+import { Activity, BarChart3, ChevronRight, LayoutDashboard, Menu, Moon, Play, ShieldAlert, SlidersHorizontal, Sun, X } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useTheme } from 'next-themes'
@@ -46,8 +47,8 @@ export function AppShell({
       
       <aside className={`w-[264px] min-h-screen shrink-0 p-[26px_15px_16px] bg-slate-50 dark:bg-[#12181b] border-r border-surface-line fixed inset-y-0 left-0 flex flex-col z-10 transition-transform duration-200 ${open ? 'translate-x-0 shadow-[8px_0_30px_#0008]' : '-translate-x-full'} lg:translate-x-0 lg:shadow-none`}>
         <div className="flex items-center gap-[11px] px-[10px] pb-[30px]">
-          <div className="w-[35px] h-[35px] grid place-items-center rounded-[9px] bg-status-teal/20 text-status-teal">
-            <FlaskConical size={20} />
+          <div className="w-[35px] h-[35px] shrink-0">
+            <Image src="/logos/coolara-app-icon.svg" alt="Coolara Logo" width={35} height={35} />
           </div>
           <div>
             <strong className="block text-[17px]">Coolara</strong>
@@ -89,7 +90,7 @@ export function AppShell({
         
         <div className="mt-auto">
           <div className="text-slate-500 dark:text-[#bdc7c9] border border-surface-line text-[11px] p-2 rounded-[6px] flex items-center gap-[6px]">
-            <FlaskConical size={14} /> Synthetic data
+             Synthetic data
           </div>
           <div className="p-[18px_4px_5px] flex items-center gap-[9px] text-content-muted">
             <div className="w-[29px] h-[29px] grid place-items-center rounded-full text-white dark:text-[#182023] bg-slate-900 dark:bg-[#cbd7d5] text-[10px] font-bold">
@@ -97,7 +98,7 @@ export function AppShell({
             </div>
             <div>
               <strong className="text-[12px] block text-content-base">Operations team</strong>
-              <span className="block text-[11px] mt-[2px]">DC-01 · Jakarta</span>
+              <span className="block text-[11px] mt-[2px]">DC-01 · Nongsa, Batam</span>
             </div>
             <ChevronRight className="ml-auto" size={16} />
           </div>

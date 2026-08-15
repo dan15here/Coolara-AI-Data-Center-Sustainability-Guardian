@@ -65,7 +65,7 @@ export function DashboardView({
     <>
       <ScenarioControl scenario={data.scenario} onChange={loadScenario} />
 
-      <section className="border border-[#394348] bg-[#192426] rounded-[9px] p-[16px_19px] flex flex-col sm:flex-row sm:items-center justify-between gap-[20px] items-start">
+      <section className="border border-slate-300 dark:border-[#394348] bg-slate-50 dark:bg-[#192426] rounded-[9px] p-[16px_19px] flex flex-col sm:flex-row sm:items-center justify-between gap-[20px] items-start">
         <div>
           <Pill tone={activeFinding ? severityTone(activeFinding.severity) : 'healthy'}>
             {activeFinding ? 'Attention required' : 'Nominal'}
@@ -183,7 +183,7 @@ export function DashboardView({
         <EmptyState message="No findings detected for this scenario — cooling, water, and thermal signals are within baseline." />
       )}
 
-      <section className="mt-[18px] p-[20px] border border-[#2e5552] bg-[#162423] rounded-[8px] flex flex-col sm:flex-row items-start sm:items-center gap-[14px]">
+      <section className="mt-[18px] p-[20px] border border-emerald-500/30 dark:border-[#2e5552] bg-emerald-50/50 dark:bg-[#162423] rounded-[8px] flex flex-col sm:flex-row items-start sm:items-center gap-[14px]">
         <div className="w-[44px] h-[44px] grid place-items-center rounded-[9px] bg-status-teal/20 text-status-teal shrink-0">
           <ShieldCheck size={23} />
         </div>

@@ -26,21 +26,21 @@ export function MetricCard({ label, value, note, icon: Icon }: Readonly<{ label:
 }
 
 const TONES = {
-  neutral: 'text-[#b8c4c3] bg-[#252e32]',
-  critical: 'text-[#ffb7b1] bg-status-red/20',
-  healthy: 'text-[#98e1d6] bg-status-teal/20',
-  warning: 'text-[#f7ce8e] bg-status-amber/20',
-  high: 'text-[#ffd2a8] bg-[#f28840]/20'
+  healthy: 'text-emerald-700 bg-emerald-100 dark:text-[#88dbcd] dark:bg-[#203734]',
+  neutral: 'text-slate-600 bg-slate-200 dark:text-[#b8c4c3] dark:bg-[#252e32]',
+  critical: 'text-red-700 bg-red-100 dark:text-[#ffa7a0] dark:bg-[#251515]',
+  warning: 'text-amber-700 bg-amber-100 dark:text-[#f7ce8e] dark:bg-[#2a2318]',
+  high: 'text-orange-700 bg-orange-100 dark:text-[#ffd2a8] dark:bg-[#3d2414]'
 }
 
 export function Pill({ children, tone = 'neutral' }: Readonly<{ children: React.ReactNode, tone?: keyof typeof TONES }>) { 
   const base = "inline-flex items-center gap-[4px] px-[8px] py-[2px] rounded-full text-[10px] font-bold border"
   const variants = {
-    healthy: "text-status-teal border-teal-500/20 bg-teal-50 dark:border-status-teal/20 dark:bg-status-teal/10",
-    critical: "text-status-red border-red-500/20 bg-red-50 dark:border-status-red/20 dark:bg-status-red/10",
-    warning: "text-status-amber border-amber-500/20 bg-amber-50 dark:border-status-amber/20 dark:bg-status-amber/10",
-    neutral: "text-content-muted border-slate-300 bg-slate-100 dark:border-[#39454a] dark:bg-[#1a2226]",
-    high: 'text-[#ffd2a8] bg-[#f28840]/20'
+    healthy: "text-emerald-700 border-emerald-300 bg-emerald-50 dark:text-[#90e6d8] dark:border-[#274641] dark:bg-[#192b29]",
+    critical: "text-red-700 border-red-300 bg-red-50 dark:text-[#ffa7a0] dark:border-[#582e2c] dark:bg-[#251515]",
+    warning: "text-amber-700 border-amber-300 bg-amber-50 dark:text-[#f7ce8e] dark:border-[#4d3d23] dark:bg-[#2a2318]",
+    neutral: "text-slate-600 border-slate-300 bg-slate-100 dark:text-[#b8c4c3] dark:border-[#39454a] dark:bg-[#1a2226]",
+    high: 'text-orange-700 border-orange-300 bg-orange-50 dark:text-[#ffd2a8] dark:border-[#673b1e] dark:bg-[#f28840]/10'
   }
   return (
     <span className={`${base} ${variants[tone as keyof typeof variants]}`}>
