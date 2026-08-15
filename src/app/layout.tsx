@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { AppShell } from '@/components/app-shell'
 import { ThemeProvider } from '@/components/theme-provider'
-import { countRecentAlerts } from '@/lib/supabase/repository'
+import { countRecentAlerts, fetchLatestTelemetryPoint } from '@/lib/supabase/repository'
 import { DEMO_DATA_CENTER_ID } from '@/lib/telemetry/generator'
 
 export const metadata: Metadata = {
@@ -15,13 +15,18 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const anomaliesCount = await countRecentAlerts(DEMO_DATA_CENTER_ID, 24)
+  const [anomaliesCount, latestTelemetry] = await Promise.all([
+    countRecentAlerts(DEMO_DATA_CENTER_ID, 24),
+    fetchLatestTelemetryPoint(DEMO_DATA_CENTER_ID),
+  ])
   
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <AppShell anomaliesCount={anomaliesCount}>{children}</AppShell>
+          <AppShell anomaliesCount={anomaliesCount} latestTelemetryTimestamp={latestTelemetry?.timestamp}>
+            {children}
+          </AppShell>
         </ThemeProvider>
       </body>
     </html>

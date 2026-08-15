@@ -5,6 +5,7 @@ import { Activity, BarChart3, ChevronRight, LayoutDashboard, Menu, Moon, Play, S
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useTheme } from 'next-themes'
+import { formatJakartaTime } from '@/lib/format/time'
 
 const titles: Record<string, string> = {
   '/dashboard': 'Command Center',
@@ -17,7 +18,8 @@ const titles: Record<string, string> = {
 export function AppShell({
   children,
   anomaliesCount = 0,
-}: Readonly<{ children: React.ReactNode; anomaliesCount?: number }>) {
+  latestTelemetryTimestamp,
+}: Readonly<{ children: React.ReactNode; anomaliesCount?: number; latestTelemetryTimestamp?: string }>) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
@@ -127,7 +129,9 @@ export function AppShell({
             <span className="text-[11px] text-slate-500 dark:text-[#b1c1bd] hidden sm:flex items-center gap-[6px]">
               <i className="w-[7px] h-[7px] rounded-full bg-status-teal" /> Stream simulated
             </span>
-            <span className="text-[11px] text-content-muted hidden sm:block">Updated 10:42 WIB</span>
+            <span className="text-[11px] text-content-muted hidden sm:block">
+              {latestTelemetryTimestamp ? `Updated ${formatJakartaTime(latestTelemetryTimestamp)} WIB` : 'Awaiting telemetry'}
+            </span>
             <Link 
               className="border-0 rounded-[6px] bg-status-teal text-white dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[11px] py-[8px] text-[12px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
               href="/simulator"
