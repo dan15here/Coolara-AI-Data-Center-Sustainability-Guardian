@@ -91,7 +91,7 @@ export function AppShell({
               {badge && (
                 <em
                   className="ml-auto not-italic text-surface-bg bg-status-red min-w-[20px] text-center leading-[20px] rounded-[10px] text-[11px] font-bold"
-                  aria-label={`${badge} recent finding${badge === '1' ? '' : 's'}`}
+                  aria-label={`${badge} active demo finding${badge === '1' ? '' : 's'}`}
                 >
                   {badge}
                 </em>
