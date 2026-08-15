@@ -125,7 +125,6 @@ export function DashboardView({
       <section className="mt-[38px] mb-[13px] flex items-end justify-between">
         <div>
           <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">ACTIVE PRIORITY FINDING</p>
-          <p className="text-content-muted tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">ACTIVE PRIORITY FINDING</p>
           <h2 className="m-0 text-[18px] text-content-base">Decision-ready anomaly</h2>
         </div>
         {activeFinding && <Pill tone={severityTone(activeFinding.severity)}>{severityLabel(activeFinding.severity)}</Pill>}
