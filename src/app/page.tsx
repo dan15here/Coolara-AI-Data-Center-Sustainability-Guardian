@@ -210,7 +210,19 @@ export default function LandingPage() {
           viewport={{ once: true }}
           className="max-w-[640px] mx-auto mb-[56px]"
         >
-          <p className="text-teal-400 text-[12px] uppercase tracking-[0.16em] font-bold mb-[12px]">Monitor → Detect → Explain → Simulate → Optimize</p>
+          <div className="mb-[12px] flex flex-wrap items-center justify-center gap-y-2 text-[12px] font-bold uppercase tracking-[0.16em] text-teal-400">
+            {['Monitor', 'Detect', 'Explain', 'Simulate', 'Optimize'].map((stage, index) => (
+              <span key={stage} className="flex items-center">
+                {stage}
+                {index < 4 && (
+                  <span aria-hidden="true" className="relative mx-2 flex h-3 w-5 items-center">
+                    <span className="absolute left-0 right-1 h-px bg-teal-400/45" />
+                    <span className="absolute right-0 size-1.5 animate-pulse rounded-full border border-teal-200/80 bg-[#101517] shadow-[0_0_8px_rgba(45,212,191,0.9)]" />
+                  </span>
+                )}
+              </span>
+            ))}
+          </div>
           <h2 className="text-[36px] md:text-[44px] font-bold text-white mb-[14px]">How Coolara works</h2>
           <p className="text-[#91a0a3] text-[16px] leading-relaxed">Five deliberate steps from synthetic telemetry to a safer, decision-ready response.</p>
         </motion.div>
