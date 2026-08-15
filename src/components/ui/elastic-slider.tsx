@@ -1,9 +1,6 @@
 'use client'
 
-import { animate, motion, useMotionValue, useMotionValueEvent, useTransform } from 'framer-motion'
 import { useRef, useState } from 'react'
-
-const MAX_OVERFLOW = 50
 
 type ElasticSliderProps = {
   defaultValue?: number
@@ -22,10 +19,8 @@ type ElasticSliderProps = {
 }
 
 /**
- * Ported from React Bits' ElasticSlider (reactbits.dev), recolored to the app's theme tokens
- * and adapted to be usable as a real form control: a `defaultValue` + `onChange` pair (so a
- * parent can drive Reset/preset buttons), plus keyboard and ARIA slider semantics that the
- * original — pointer-only — version didn't have.
+ * A simple accessible slider with a `defaultValue` + `onChange` pair so a parent can drive
+ * Reset/preset buttons, plus keyboard and pointer interactions.
  */
 export default function ElasticSlider({
   defaultValue = 50,
@@ -81,29 +76,6 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
     setValue(defaultValue)
   }
   const sliderRef = useRef<HTMLDivElement>(null)
-  const [region, setRegion] = useState<'left' | 'middle' | 'right'>('middle')
-  const clientX = useMotionValue(0)
-  const overflow = useMotionValue(0)
-
-  useMotionValueEvent(clientX, 'change', (latest) => {
-    if (sliderRef.current) {
-      const { left, right } = sliderRef.current.getBoundingClientRect()
-      let newValue: number
-
-      if (latest < left) {
-        setRegion('left')
-        newValue = left - latest
-      } else if (latest > right) {
-        setRegion('right')
-        newValue = latest - right
-      } else {
-        setRegion('middle')
-        newValue = 0
-      }
-
-      overflow.jump(decay(newValue, MAX_OVERFLOW))
-    }
-  })
 
   function commitValue(rawValue: number) {
     let nextValue = rawValue
@@ -117,17 +89,12 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
     if (e.buttons > 0 && sliderRef.current) {
       const { left, width } = sliderRef.current.getBoundingClientRect()
       commitValue(startingValue + ((e.clientX - left) / width) * (maxValue - startingValue))
-      clientX.jump(e.clientX)
     }
   }
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     handlePointerMove(e)
     e.currentTarget.setPointerCapture(e.pointerId)
-  }
-
-  const handlePointerUp = () => {
-    animate(overflow, 0, { type: 'spring', bounce: 0.5 })
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -161,16 +128,14 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
   return (
     <>
       <div className="flex w-full touch-none items-center gap-[10px] select-none">
-        <motion.button
+        <button
           type="button"
           aria-label={`Decrease ${ariaLabel ?? 'value'}`}
           onClick={() => nudgeValue(-1)}
-          animate={{ scale: region === 'left' ? [1, 1.4, 1] : 1, transition: { duration: 0.25 } }}
-          style={{ x: useTransform(() => (region === 'left' ? -overflow.get() : 0)) }}
           className="shrink-0 rounded-full p-1 text-content-muted transition-colors hover:bg-surface-subtle hover:text-status-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal [&>svg]:h-[18px] [&>svg]:w-[18px]"
         >
           {leftIcon}
-        </motion.button>
+        </button>
 
         <div
           ref={sliderRef}
@@ -183,59 +148,30 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
           className="relative flex w-full flex-1 touch-none items-center rounded-full py-[14px] cursor-grab select-none active:cursor-grabbing focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-panel"
           onPointerMove={handlePointerMove}
           onPointerDown={handlePointerDown}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          onLostPointerCapture={handlePointerUp}
           onKeyDown={handleKeyDown}
         >
-          <motion.div
-            style={{
-              scaleX: useTransform(() => {
-                if (!sliderRef.current) return 1
-                const { width } = sliderRef.current.getBoundingClientRect()
-                return 1 + overflow.get() / width
-              }),
-              scaleY: useTransform(overflow, [0, MAX_OVERFLOW], [1, 0.8]),
-              transformOrigin: useTransform(() => {
-                if (!sliderRef.current) return 'left'
-                const { left, width } = sliderRef.current.getBoundingClientRect()
-                return clientX.get() < left + width / 2 ? 'right' : 'left'
-              }),
-            }}
-            className="relative flex h-[8px] flex-1"
-          >
+          <div className="relative flex h-[8px] flex-1">
             <div className="relative h-full flex-1 overflow-hidden rounded-full bg-[var(--color-gauge-track)]">
               <div className="bg-status-teal absolute h-full rounded-full" style={{ width: `${getRangePercentage()}%` }} />
             </div>
-            <motion.span
+            <span
               aria-hidden="true"
               className="pointer-events-none absolute top-1/2 size-[18px] -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-surface-panel bg-status-teal shadow-[0_0_0_2px_rgba(45,212,191,0.32),0_0_14px_rgba(45,212,191,0.55)]"
               style={{ left: `clamp(9px, ${getRangePercentage()}%, calc(100% - 9px))` }}
-              animate={{ scale: region === 'middle' ? 1 : 1.12 }}
-              transition={{ type: 'spring', stiffness: 380, damping: 26 }}
             />
-          </motion.div>
+          </div>
         </div>
 
-        <motion.button
+        <button
           type="button"
           aria-label={`Increase ${ariaLabel ?? 'value'}`}
           onClick={() => nudgeValue(1)}
-          animate={{ scale: region === 'right' ? [1, 1.4, 1] : 1, transition: { duration: 0.25 } }}
-          style={{ x: useTransform(() => (region === 'right' ? overflow.get() : 0)) }}
           className="shrink-0 rounded-full p-1 text-content-muted transition-colors hover:bg-surface-subtle hover:text-status-teal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal [&>svg]:h-[18px] [&>svg]:w-[18px]"
         >
           {rightIcon}
-        </motion.button>
+        </button>
       </div>
       {showValue && <p className="text-content-muted text-[12px] font-medium tracking-[0.05em]">{Math.round(value)}</p>}
     </>
   )
-}
-
-function decay(value: number, max: number) {
-  if (max === 0) return 0
-  const entry = value / max
-  const sigmoid = 2 * (1 / (1 + Math.exp(-entry)) - 0.5)
-  return sigmoid * max
 }
