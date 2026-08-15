@@ -109,7 +109,6 @@ export function ReportsView({
           </button>
         ))}
         <span className="mx-[5px] hidden h-[20px] w-px bg-surface-line md:block" aria-hidden="true" />
-        <span className="ml-[10px] md:ml-0">Show</span>
         {EVENT_SOURCES.map((item) => (
           <button
             key={item}
