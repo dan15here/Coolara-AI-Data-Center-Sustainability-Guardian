@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
+import { Hero } from '@/components/ui/animated-hero'
 
 const faqs = [
   {
@@ -85,55 +86,12 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-[180px] pb-[100px] px-[24px] overflow-hidden">
+      <section className="relative pt-[100px] pb-[20px] px-[24px] overflow-hidden">
         {/* Glowing background orbs */}
         <div className="absolute top-[20%] left-[50%] -translate-x-1/2 w-[600px] h-[400px] bg-teal-500/20 blur-[120px] rounded-full pointer-events-none" />
         
-        <div className="max-w-[800px] mx-auto text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="inline-block py-[6px] px-[12px] bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-full text-[12px] font-bold uppercase tracking-widest mb-[24px]">
-              Next-Gen Data Center Operations
-            </span>
-          </motion.div>
-          
-          <motion.h1 
-            className="text-[52px] md:text-[68px] font-extrabold leading-[1.1] tracking-tight mb-[24px] text-white"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            Smarter infrastructure.<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-300">
-              Zero compromises.
-            </span>
-          </motion.h1>
-          
-          <motion.p 
-            className="text-[18px] md:text-[20px] text-[#91a0a3] mb-[40px] leading-relaxed max-w-[600px] mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            Coolara is the AI-powered sustainability guardian for your data center. Monitor telemetry, detect anomalies instantly, and simulate disaster scenarios with deterministic confidence.
-          </motion.p>
-          
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-[16px]"
-          >
-            <Link 
-              href="/dashboard"
-              className="flex items-center gap-[10px] bg-teal-500 hover:bg-teal-400 text-[#042f2b] px-[28px] py-[16px] rounded-full text-[15px] font-bold transition-all hover:scale-105 shadow-[0_0_30px_rgba(20,184,166,0.3)]"
-            >
-              Go to Dashboard <ArrowRight size={18} />
-            </Link>
-          </motion.div>
+        <div className="mx-auto text-center relative z-10">
+          <Hero />
 
           {/* App Preview Image */}
           <motion.div
