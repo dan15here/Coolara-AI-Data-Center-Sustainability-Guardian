@@ -1,12 +1,11 @@
-import { generateTelemetryPoint, scenarioPresets, type ScenarioId } from '@/lib/telemetry/generator'
+import { generateTelemetryPoint } from '@/lib/telemetry/generator'
 import { detectFindings } from '@/lib/anomaly/rules'
 import { isGeminiConfigured } from '@/lib/ai/gemini'
 import { isValidFinding } from '@/lib/validation/finding'
 import { PageIntro } from '@/components/ui'
 import { AnomaliesView } from './AnomaliesView'
+import { ANOMALY_SCENARIOS, type AnomalyScenarioFilter } from './scenarios'
 import type { Finding } from '@/types'
-
-const VALID_SCENARIOS = Object.keys(scenarioPresets) as ScenarioId[]
 
 export default async function AnomaliesPage({
   searchParams,
@@ -14,12 +13,14 @@ export default async function AnomaliesPage({
   searchParams: Promise<{ scenario?: string; finding?: string }>
 }) {
   const { scenario: scenarioParam, finding: findingParam } = await searchParams
-  const scenario: ScenarioId = VALID_SCENARIOS.includes(scenarioParam as ScenarioId)
-    ? (scenarioParam as ScenarioId)
-    : 'nominal'
+  const scenario: AnomalyScenarioFilter = (ANOMALY_SCENARIOS as readonly string[]).includes(scenarioParam ?? '')
+    ? (scenarioParam as AnomalyScenarioFilter)
+    : 'all'
 
-  const point = generateTelemetryPoint(scenario)
-  const findings = detectFindings(point)
+  const findings =
+    scenario === 'all'
+      ? ANOMALY_SCENARIOS.flatMap((id) => detectFindings(generateTelemetryPoint(id)))
+      : detectFindings(generateTelemetryPoint(scenario))
 
   // Deep-linked from Dashboard's "View anomaly details" — carries the exact finding
   // that was on screen there, since a fresh scenario draw would otherwise regenerate

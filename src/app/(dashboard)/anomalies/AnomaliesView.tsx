@@ -8,22 +8,30 @@ import { ScenarioControl } from '@/components/scenario-control'
 import { useScenarioFetch } from '@/hooks/useScenarioFetch'
 import { formatFindingValue, METRIC_LABELS, severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
 import { formatJakartaTime } from '@/lib/format/time'
-import type { ScenarioId } from '@/lib/telemetry/generator'
 import type { Finding, FindingSeverity } from '@/types'
 import { AiExplainPanel } from './AiExplainPanel'
+import { ANOMALY_SCENARIO_TABS, ANOMALY_SCENARIOS, type AnomalyScenarioFilter } from './scenarios'
 
 const METRIC_ICONS = { coolingPower: Gauge, waterUsage: Droplets, serverTemperature: Thermometer }
 
 const SEVERITY_FILTERS = ['all', 'critical', 'high', 'medium', 'low'] as const
 type SeverityFilter = (typeof SEVERITY_FILTERS)[number]
 
-type AnomaliesData = { scenario: ScenarioId; findings: Finding[] }
+type AnomaliesData = { scenario: AnomalyScenarioFilter; findings: Finding[] }
 
-async function fetchAnomaliesScenario(scenario: ScenarioId): Promise<AnomaliesData> {
+async function fetchScenarioFindings(scenario: AnomalyScenarioFilter | (typeof ANOMALY_SCENARIOS)[number]): Promise<Finding[]> {
   const response = await fetch(`/api/telemetry?scenario=${scenario}&points=1`)
   if (!response.ok) throw new Error('Request failed')
   const body: { findings: Finding[] } = await response.json()
-  return { scenario, findings: body.findings }
+  return body.findings
+}
+
+async function fetchAnomaliesScenario(scenario: AnomalyScenarioFilter): Promise<AnomaliesData> {
+  if (scenario === 'all') {
+    const results = await Promise.all(ANOMALY_SCENARIOS.map((id) => fetchScenarioFindings(id)))
+    return { scenario, findings: results.flat() }
+  }
+  return { scenario, findings: await fetchScenarioFindings(scenario) }
 }
 
 export function AnomaliesView({
@@ -38,7 +46,7 @@ export function AnomaliesView({
 
   return (
     <>
-      <ScenarioControl scenario={data.scenario} onChange={load} disabled={isLoading} />
+      <ScenarioControl scenario={data.scenario} onChange={load} disabled={isLoading} presets={ANOMALY_SCENARIO_TABS} />
 
       <section className="flex flex-wrap items-center gap-[5px] p-[9px] mt-[14px] text-content-muted text-[11px] border border-surface-line bg-surface-panel rounded-lg">
         <span>Severity</span>

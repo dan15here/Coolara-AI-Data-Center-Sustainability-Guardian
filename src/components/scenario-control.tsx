@@ -2,14 +2,23 @@
 
 import { scenarioPresets, type ScenarioId } from '@/lib/telemetry/generator'
 
-export function ScenarioControl({
+type Preset<T extends string> = { id: T; label: string; description: string }
+
+export function ScenarioControl<T extends string = ScenarioId>({
   scenario,
   onChange,
   disabled = false,
-}: Readonly<{ scenario: ScenarioId; onChange: (scenario: ScenarioId) => void; disabled?: boolean }>) {
+  presets,
+}: Readonly<{
+  scenario: T
+  onChange: (scenario: T) => void
+  disabled?: boolean
+  presets?: Preset<T>[]
+}>) {
+  const items = presets ?? (Object.values(scenarioPresets) as unknown as Preset<T>[])
   return (
     <div className="flex flex-wrap gap-[6px] mb-[18px]">
-      {Object.values(scenarioPresets).map((preset) => (
+      {items.map((preset) => (
         <button
           key={preset.id}
           type="button"
