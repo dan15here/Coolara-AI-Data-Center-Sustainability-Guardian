@@ -15,6 +15,7 @@ export default function Loading() {
           width={270}
           height={72}
           priority
+          className="translate-x-7"
         />
         <div className="flex items-center gap-3 text-sm font-medium">
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-teal-300/35 border-t-teal-300" />
