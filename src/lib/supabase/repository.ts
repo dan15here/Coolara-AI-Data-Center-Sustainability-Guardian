@@ -1,6 +1,13 @@
 import 'server-only';
 import { getSupabaseServerClient } from './serverClient';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import type { ActivityEvent, Finding, SimulationInput, SimulationResult, StoredSimulation, TelemetryPoint } from '@/types';
+
+// An ongoing anomaly re-detects on every telemetry read (every dashboard visit,
+// every /api/telemetry call) while the condition persists. Without this window,
+// one real issue floods `alerts` with a near-duplicate row per detection instead
+// of reading as a single episode. ~2x the 15-minute telemetry interval.
+const ALERT_EPISODE_COOLDOWN_MINUTES = 30;
 
 export async function saveTelemetryPoint(point: TelemetryPoint): Promise<void> {
   const client = getSupabaseServerClient();
@@ -23,26 +30,50 @@ export async function saveTelemetryPoint(point: TelemetryPoint): Promise<void> {
   }
 }
 
+/**
+ * Upserts one finding as either a new alert row or an update to the still-open
+ * episode for the same data center + metric (see ALERT_EPISODE_COOLDOWN_MINUTES).
+ */
+async function upsertAlert(client: SupabaseClient, dataCenterId: string, finding: Finding): Promise<void> {
+  const cooldownStart = new Date(
+    new Date(finding.detectedAt).getTime() - ALERT_EPISODE_COOLDOWN_MINUTES * 60_000,
+  ).toISOString();
+
+  const { data: openEpisode } = await client
+    .from('alerts')
+    .select('id')
+    .eq('data_center_id', dataCenterId)
+    .eq('metric', finding.metric)
+    .gte('detected_at', cooldownStart)
+    .order('detected_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const row = {
+    severity: finding.severity,
+    actual: finding.actual,
+    expected: finding.expected,
+    deviation_percent: finding.deviationPercent,
+    detected_at: finding.detectedAt,
+    likely_factors: finding.likelyFactors,
+    explanation_input: finding.explanationInput,
+  };
+
+  if (openEpisode) {
+    await client.from('alerts').update(row).eq('id', openEpisode.id);
+    return;
+  }
+
+  await client.from('alerts').insert({ id: finding.id, data_center_id: dataCenterId, metric: finding.metric, ...row });
+}
+
 export async function saveAlerts(dataCenterId: string, findings: Finding[]): Promise<void> {
   if (findings.length === 0) return;
   const client = getSupabaseServerClient();
   if (!client) return;
 
   try {
-    await client.from('alerts').insert(
-      findings.map((f) => ({
-        id: f.id,
-        data_center_id: dataCenterId,
-        severity: f.severity,
-        metric: f.metric,
-        actual: f.actual,
-        expected: f.expected,
-        deviation_percent: f.deviationPercent,
-        detected_at: f.detectedAt,
-        likely_factors: f.likelyFactors,
-        explanation_input: f.explanationInput,
-      })),
-    );
+    await Promise.all(findings.map((finding) => upsertAlert(client, dataCenterId, finding)));
   } catch (error) {
     console.warn('saveAlerts: best-effort persistence failed', error);
   }
