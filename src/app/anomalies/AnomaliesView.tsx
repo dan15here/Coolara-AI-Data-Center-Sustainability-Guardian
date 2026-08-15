@@ -65,18 +65,18 @@ export function AnomaliesView({
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-3 bg-[#121719] border border-surface-line rounded-[7px] overflow-hidden">
-                <div className="p-[16px] border-b sm:border-b-0 sm:border-r border-surface-line">
+              <div className="grid grid-cols-1 sm:grid-cols-3 bg-slate-50 dark:bg-[#121719] border border-surface-line rounded-[7px] overflow-hidden">
+                <div className="p-[16px] border-b sm:border-b-0 sm:border-r border-surface-line bg-white dark:bg-transparent">
                   <span className="block text-content-muted text-[11px]">Actual</span>
                   <strong className="block mt-[8px] text-[20px]">{finding.actual.toFixed(2)}</strong>
                 </div>
-                <div className="p-[16px] border-b sm:border-b-0 sm:border-r border-surface-line">
+                <div className="p-[16px] border-b sm:border-b-0 sm:border-r border-surface-line bg-white dark:bg-transparent">
                   <span className="block text-content-muted text-[11px]">Expected</span>
                   <strong className="block mt-[8px] text-[20px]">{finding.expected.toFixed(2)}</strong>
                 </div>
                 <div className="p-[16px]">
                   <span className="block text-content-muted text-[11px]">Deviation</span>
-                  <strong className="block mt-[8px] text-[20px] text-[#ff9b93]">
+                  <strong className="block mt-[8px] text-[20px] text-red-500 dark:text-[#ff9b93]">
                     {finding.deviationPercent >= 0 ? '+' : ''}
                     {finding.deviationPercent.toFixed(1)}%
                   </strong>
@@ -85,15 +85,15 @@ export function AnomaliesView({
               
               <div className="flex flex-wrap gap-[6px] mt-[15px]">
                 {finding.likelyFactors.map((factor) => (
-                  <span className="text-[#bbcac8] bg-[#242d31] p-[5px_8px] text-[11px] rounded-[4px]" key={factor}>{factor}</span>
+                  <span className="text-slate-600 dark:text-[#bbcac8] bg-slate-100 dark:bg-[#242d31] p-[5px_8px] text-[11px] rounded-[4px]" key={factor}>{factor}</span>
                 ))}
               </div>
               
               <div className="flex gap-[20px] mt-[20px]">
-                <Link className="text-[#9be0d6] font-bold text-[12px] flex items-center gap-[6px] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded" href="/telemetry">
+                <Link className="text-teal-600 dark:text-[#9be0d6] font-bold text-[12px] flex items-center gap-[6px] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded" href="/telemetry">
                   <ExternalLink size={15} /> View source telemetry
                 </Link>
-                <Link className="text-[#9be0d6] font-bold text-[12px] flex items-center gap-[6px] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded" href="/simulator">
+                <Link className="text-teal-600 dark:text-[#9be0d6] font-bold text-[12px] flex items-center gap-[6px] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded" href="/simulator">
                   <Play size={15} /> Simulate response
                 </Link>
               </div>

@@ -54,7 +54,7 @@ export function AiExplainPanel({ finding }: Readonly<{ finding: Finding }>) {
           <Bot size={22} />
         </div>
         <div className="mr-auto">
-          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">COOLARA AI ANALYSIS</p>
+          <p className="text-slate-500 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">COOLARA AI ANALYSIS</p>
           <h2 className="m-0 text-[18px]">Qualitative explanation</h2>
         </div>
         {state.status === 'done' && (
@@ -65,14 +65,14 @@ export function AiExplainPanel({ finding }: Readonly<{ finding: Finding }>) {
       </div>
 
       {state.status === 'idle' && (
-        <div className="mt-[20px] p-[23px] bg-[#121719] border border-dashed border-[#425157] flex flex-col sm:flex-row sm:items-start md:items-center gap-[13px] rounded-lg">
+        <div className="mt-[20px] p-[23px] bg-slate-50 dark:bg-[#121719] border border-dashed border-slate-300 dark:border-[#425157] flex flex-col sm:flex-row sm:items-start md:items-center gap-[13px] rounded-lg">
           <Sparkles className="text-status-teal shrink-0" size={22} />
           <div>
             <strong className="text-[13px]">Run analysis to ask Gemini for a qualitative explanation.</strong>
             <p className="text-content-muted m-[5px_0_0] text-[12px]">The model receives structured findings only; it cannot approve a safety outcome or create numerical claims.</p>
           </div>
           <button 
-            className="border-0 rounded-[6px] bg-status-teal text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg sm:ml-[35px] md:ml-auto shrink-0" 
+            className="border-0 rounded-[6px] bg-status-teal text-white dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg sm:ml-[35px] md:ml-auto shrink-0" 
             type="button" 
             onClick={handleExplain}
           >
@@ -86,9 +86,9 @@ export function AiExplainPanel({ finding }: Readonly<{ finding: Finding }>) {
       {state.status === 'error' && <ErrorState label="Could not generate an explanation." onRetry={handleExplain} />}
 
       {state.status === 'done' && (
-        <div className="mt-[20px] p-[18px] bg-[#121719] rounded-[7px] leading-[1.55] text-[#ccd5d4]">
+        <div className="mt-[20px] p-[18px] bg-slate-50 dark:bg-[#121719] rounded-[7px] leading-[1.55] text-slate-700 dark:text-[#ccd5d4]">
           {renderMarkdown(state.result.explanation)}
-          <small className="flex items-center gap-[5px] pt-[12px] border-t border-surface-line text-[#98aaa9] text-[11px]">
+          <small className="flex items-center gap-[5px] pt-[12px] border-t border-surface-line text-slate-500 dark:text-[#98aaa9] text-[11px]">
             <FlaskConical size={14} /> Qualitative AI explanation based only on structured, synthetic findings. Numerical
             values remain deterministic.
           </small>

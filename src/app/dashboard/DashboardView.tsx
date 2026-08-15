@@ -116,49 +116,60 @@ export function DashboardView({
       <section className="mt-[38px] mb-[13px] flex items-end justify-between">
         <div>
           <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">ACTIVE PRIORITY FINDING</p>
-          <h2 className="m-0 text-[18px]">Decision-ready anomaly</h2>
+          <p className="text-content-muted tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">ACTIVE PRIORITY FINDING</p>
+          <h2 className="m-0 text-[18px] text-content-base">Decision-ready anomaly</h2>
         </div>
         {activeFinding && <Pill tone={severityTone(activeFinding.severity)}>{severityLabel(activeFinding.severity)}</Pill>}
       </section>
 
       {activeFinding ? (
-        <section className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] border border-[#4c3b3a] rounded-[9px] bg-surface-panel overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-[14px]">
+        <section className="p-[20px_17px_12px] min-w-0 border border-surface-line bg-surface-panel rounded-lg flex flex-col relative overflow-hidden">
           <div className="flex gap-[15px] p-[22px] flex-col sm:flex-row sm:items-start">
             <div className="min-w-[40px] h-[40px] grid place-items-center rounded-[9px] bg-status-red/20 text-status-red shrink-0">
               <FindingIcon size={22} />
             </div>
             <div>
-              <h3 className="m-[1px_0_7px] text-[16px]">{METRIC_LABELS[activeFinding.metric]} exceeds expected demand</h3>
+              <h3 className="m-[1px_0_7px] text-[16px] text-content-base">{METRIC_LABELS[activeFinding.metric]} exceeds expected demand</h3>
               <p className="text-content-muted leading-[1.45] m-0 text-[12px]">{summarizeFinding(activeFinding)}</p>
               <div className="flex flex-wrap gap-[6px] mt-[15px]">
                 {activeFinding.likelyFactors.slice(0, 3).map((factor) => (
-                  <span className="text-[#bbcac8] bg-[#242d31] p-[5px_8px] text-[11px] rounded-[4px]" key={factor}>{factor}</span>
+                  <span className="text-content-muted bg-surface-subtle p-[5px_8px] text-[11px] rounded-[4px]" key={factor}>{factor}</span>
                 ))}
               </div>
             </div>
           </div>
           <div className="border-t lg:border-t-0 lg:border-l border-surface-line grid grid-cols-3 items-center p-[16px] lg:p-[0_17px] gap-[10px]">
             <div>
-              <span className="block text-content-muted text-[11px]">Actual</span>
-              <strong className="block mt-[5px] text-[15px]">{activeFinding.actual.toFixed(2)}</strong>
+              <span className="block text-content-muted text-[11px] mb-[4px]">Data center</span>
+              <strong className="block text-[28px] text-content-base tracking-tight leading-none mb-[2px]">DC-01</strong>
+              <small className="text-content-muted text-[11px]">Nongsa, Batam</small>
             </div>
-            <div>
-              <span className="block text-content-muted text-[11px]">Expected</span>
-              <strong className="block mt-[5px] text-[15px]">{activeFinding.expected.toFixed(2)}</strong>
+            
+            <div className="grid grid-cols-2 gap-[15px] pt-[15px] sm:pt-0 sm:border-l sm:border-surface-line sm:pl-[20px]">
+              <div>
+                <span className="flex items-center gap-[6px] text-content-muted text-[11px] mb-[4px]"><Thermometer size={14} /> Ambient</span>
+                <strong className="block text-[24px] text-content-base tracking-tight leading-none">{latest.ambientTempC.toFixed(1)}<span className="text-[14px] text-content-muted ml-[2px]">°C</span></strong>
+              </div>
+              <div>
+                <span className="flex items-center gap-[6px] text-content-muted text-[11px] mb-[4px]"><Droplets size={14} /> Humidity</span>
+                <strong className="block text-[24px] text-content-base tracking-tight leading-none">62<span className="text-[14px] text-content-muted ml-[2px]">%</span></strong>
+              </div>
             </div>
             <div>
               <span className="block text-content-muted text-[11px]">Deviation</span>
-              <strong className="block mt-[5px] text-[15px] text-[#ff9b93]">
+              <strong className="block mt-[5px] text-[15px] text-status-red">
                 {activeFinding.deviationPercent >= 0 ? '+' : ''}
                 {activeFinding.deviationPercent.toFixed(1)}%
               </strong>
             </div>
           </div>
-          <div className="col-span-full p-[12px_22px] bg-[#141a1d] border-t border-surface-line flex flex-wrap gap-[25px]">
+          <div className="col-span-full p-[12px_22px] bg-slate-50 dark:bg-surface-subtle border-t border-surface-line flex flex-wrap gap-[25px]">
             <TextLink href="/anomalies">View anomaly details</TextLink>
             <TextLink href="/simulator">Simulate response</TextLink>
           </div>
         </section>
+        </div>
       ) : (
         <EmptyState message="No findings detected for this scenario — cooling, water, and thermal signals are within baseline." />
       )}

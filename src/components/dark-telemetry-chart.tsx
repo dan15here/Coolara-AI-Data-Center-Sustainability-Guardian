@@ -1,6 +1,8 @@
 'use client'
 
 import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { useTheme } from 'next-themes'
+import { useEffect, useState } from 'react'
 import type { TelemetryPoint } from '@/types'
 
 function toChartData(points: TelemetryPoint[]) {
@@ -16,6 +18,22 @@ function toChartData(points: TelemetryPoint[]) {
 function Chart({ points, type }: Readonly<{ points: TelemetryPoint[]; type: 'energy' | 'thermal' }>) {
   const energy = type === 'energy'
   const data = toChartData(points)
+  const { theme, systemTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const currentTheme = mounted ? (theme === 'system' ? systemTheme : theme) : 'dark'
+  const isDark = currentTheme === 'dark'
+
+  const gridColor = isDark ? '#263139' : '#e2e8f0'
+  const axisColor = isDark ? '#7f8b91' : '#64748b'
+  const tooltipBg = isDark ? '#171d21' : '#ffffff'
+  const tooltipBorder = isDark ? '#303c43' : '#cbd5e1'
+  const tooltipText = isDark ? '#eef3f1' : '#0f172a'
+
   return (
     <ResponsiveContainer width="100%" height={280}>
       <AreaChart data={data} margin={{ top: 8, right: 4, left: -18, bottom: 0 }}>
@@ -29,11 +47,11 @@ function Chart({ points, type }: Readonly<{ points: TelemetryPoint[]; type: 'ene
             <stop offset="100%" stopColor="#f0b65a" stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke="#263139" strokeDasharray="3 5" vertical={false} />
-        <XAxis dataKey="time" stroke="#7f8b91" tickLine={false} axisLine={false} />
-        <YAxis stroke="#7f8b91" tickLine={false} axisLine={false} />
-        <Tooltip contentStyle={{ background: '#171d21', border: '1px solid #303c43', borderRadius: 8 }} />
-        <Legend iconType="circle" />
+        <CartesianGrid stroke={gridColor} strokeDasharray="3 5" vertical={false} />
+        <XAxis dataKey="time" stroke={axisColor} tickLine={false} axisLine={false} />
+        <YAxis stroke={axisColor} tickLine={false} axisLine={false} />
+        <Tooltip contentStyle={{ background: tooltipBg, border: `1px solid ${tooltipBorder}`, borderRadius: 8, color: tooltipText }} itemStyle={{ color: tooltipText }} />
+        <Legend iconType="circle" wrapperStyle={{ color: tooltipText }} />
         <Area
           type="monotone"
           dataKey={energy ? 'it' : 'ambient'}

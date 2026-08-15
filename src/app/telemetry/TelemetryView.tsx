@@ -64,7 +64,7 @@ export function TelemetryView({
                   type="button"
                   title={RANGE_TITLE[range]}
                   aria-pressed={data.range === range}
-                  className={`border-0 text-[11px] p-[6px_8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${data.range === range ? 'text-content-base bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-white/5 hover:text-white'}`}
+                  className={`border-0 text-[11px] p-[6px_8px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${data.range === range ? 'text-white bg-slate-900 dark:bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}
                   onClick={() => load(data.scenario, range)}
                 >
                   {range}
@@ -85,14 +85,14 @@ export function TelemetryView({
           </div>
           <ThermalChart points={data.points} />
           <div className="mt-auto p-[9px_2px_0] border-t border-surface-line text-content-muted flex gap-[6px] items-center text-[11px]">
-            <Thermometer size={15} /> Thermal reliability threshold <strong className="ml-auto text-[#f2c97c]">{MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C</strong>
+            <Thermometer size={15} /> Thermal reliability threshold <strong className="ml-auto text-amber-500 dark:text-[#f2c97c]">{MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C</strong>
           </div>
         </section>
       </div>
 
       <section className="mt-[14px] p-[18px] flex flex-col sm:flex-row sm:items-center justify-between border border-surface-line bg-surface-panel rounded-lg items-start">
         <div>
-          <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">LATEST READING</p>
+          <p className="text-slate-500 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">LATEST READING</p>
           <h2 className="m-0 text-[18px]">DC-01 · Hall A</h2>
         </div>
         <div className="grid grid-cols-2 sm:flex gap-[16px] sm:gap-[28px] mt-4 sm:mt-0">

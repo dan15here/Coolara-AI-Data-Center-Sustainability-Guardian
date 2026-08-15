@@ -1,8 +1,9 @@
 'use client'
 import Link from 'next/link'
-import { Activity, BarChart3, ChevronRight, FlaskConical, LayoutDashboard, Menu, Play, ShieldAlert, SlidersHorizontal, X } from 'lucide-react'
+import { Activity, BarChart3, ChevronRight, FlaskConical, LayoutDashboard, Menu, Moon, Play, ShieldAlert, SlidersHorizontal, Sun, X } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useTheme } from 'next-themes'
 
 const navigation = [
   { href: '/dashboard', label: 'Command Center', icon: LayoutDashboard },
@@ -23,6 +24,12 @@ const titles: Record<string, string> = {
 export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="min-h-screen flex">
@@ -34,7 +41,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
         />
       )}
       
-      <aside className={`w-[264px] min-h-screen shrink-0 p-[26px_15px_16px] bg-[#12181b] border-r border-surface-line fixed inset-y-0 left-0 flex flex-col z-10 transition-transform duration-200 ${open ? 'translate-x-0 shadow-[8px_0_30px_#0008]' : '-translate-x-full'} lg:translate-x-0 lg:shadow-none`}>
+      <aside className={`w-[264px] min-h-screen shrink-0 p-[26px_15px_16px] bg-slate-50 dark:bg-[#12181b] border-r border-surface-line fixed inset-y-0 left-0 flex flex-col z-10 transition-transform duration-200 ${open ? 'translate-x-0 shadow-[8px_0_30px_#0008]' : '-translate-x-full'} lg:translate-x-0 lg:shadow-none`}>
         <div className="flex items-center gap-[11px] px-[10px] pb-[30px]">
           <div className="w-[35px] h-[35px] grid place-items-center rounded-[9px] bg-status-teal/20 text-status-teal">
             <FlaskConical size={20} />
@@ -56,7 +63,7 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
           {navigation.map(({ href, label, icon: Icon, badge }) => (
             <Link 
               onClick={() => setOpen(false)} 
-              className={`h-[44px] px-[11px] flex items-center gap-[12px] rounded-[7px] relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal ${pathname === href ? 'text-white bg-[#20292d]' : 'text-[#aeb9bc] hover:bg-[#1a2226] hover:text-white'}`} 
+              className={`h-[44px] px-[11px] flex items-center gap-[12px] rounded-[7px] relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal ${pathname === href ? 'text-white bg-slate-900 dark:bg-[#20292d]' : 'text-slate-500 dark:text-[#aeb9bc] hover:bg-slate-200 dark:hover:bg-[#1a2226] hover:text-slate-900 dark:hover:text-white'}`} 
               href={href} 
               key={href}
             >
@@ -75,11 +82,11 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
         </nav>
         
         <div className="mt-auto">
-          <div className="text-[#bdc7c9] border border-surface-line text-[11px] p-2 rounded-[6px] flex items-center gap-[6px]">
+          <div className="text-slate-500 dark:text-[#bdc7c9] border border-surface-line text-[11px] p-2 rounded-[6px] flex items-center gap-[6px]">
             <FlaskConical size={14} /> Synthetic data
           </div>
           <div className="p-[18px_4px_5px] flex items-center gap-[9px] text-content-muted">
-            <div className="w-[29px] h-[29px] grid place-items-center rounded-full text-[#182023] bg-[#cbd7d5] text-[10px] font-bold">
+            <div className="w-[29px] h-[29px] grid place-items-center rounded-full text-white dark:text-[#182023] bg-slate-900 dark:bg-[#cbd7d5] text-[10px] font-bold">
               MD
             </div>
             <div>
@@ -107,12 +114,21 @@ export function AppShell({ children }: Readonly<{ children: React.ReactNode }>) 
           </div>
           
           <div className="flex items-center gap-[18px] ml-auto sm:ml-0">
-            <span className="text-[11px] text-[#b1c1bd] hidden sm:flex items-center gap-[6px]">
+            {mounted && (
+              <button
+                className="bg-transparent border-0 text-content-muted hover:text-content-base transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal rounded-full p-2 flex items-center justify-center cursor-pointer"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+            )}
+            <span className="text-[11px] text-slate-500 dark:text-[#b1c1bd] hidden sm:flex items-center gap-[6px]">
               <i className="w-[7px] h-[7px] rounded-full bg-status-teal" /> Stream simulated
             </span>
             <span className="text-[11px] text-content-muted hidden sm:block">Updated 10:42 WIB</span>
             <Link 
-              className="border-0 rounded-[6px] bg-status-teal text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[11px] py-[8px] text-[12px] hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
+              className="border-0 rounded-[6px] bg-status-teal text-white dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[11px] py-[8px] text-[12px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
               href="/simulator"
             >
               <Play size={14} fill="currentColor" /> Run simulation

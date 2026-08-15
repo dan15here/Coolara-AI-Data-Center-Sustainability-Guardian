@@ -1,6 +1,19 @@
 @import 'tailwindcss';
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
+  --color-surface-bg: #f8fafc;
+  --color-surface-panel: #ffffff;
+  --color-surface-line: #e2e8f0;
+  --color-content-base: #0f172a;
+  --color-content-muted: #64748b;
+  --color-status-teal: #0d9488;
+  --color-status-amber: #d97706;
+  --color-status-red: #e11d48;
+}
+
+.dark {
   --color-surface-bg: #101517;
   --color-surface-panel: #171d21;
   --color-surface-line: #2b363c;

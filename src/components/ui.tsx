@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { FolderOpen, Loader2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export function PageIntro({ eyebrow, title, children }: Readonly<{ eyebrow: string, title: string, children: React.ReactNode }>) { 
@@ -33,8 +34,16 @@ const TONES = {
 }
 
 export function Pill({ children, tone = 'neutral' }: Readonly<{ children: React.ReactNode, tone?: keyof typeof TONES }>) { 
+  const base = "inline-flex items-center gap-[4px] px-[8px] py-[2px] rounded-full text-[10px] font-bold border"
+  const variants = {
+    healthy: "text-status-teal border-teal-500/20 bg-teal-50 dark:border-status-teal/20 dark:bg-status-teal/10",
+    critical: "text-status-red border-red-500/20 bg-red-50 dark:border-status-red/20 dark:bg-status-red/10",
+    warning: "text-status-amber border-amber-500/20 bg-amber-50 dark:border-status-amber/20 dark:bg-status-amber/10",
+    neutral: "text-content-muted border-slate-300 bg-slate-100 dark:border-[#39454a] dark:bg-[#1a2226]",
+    high: 'text-[#ffd2a8] bg-[#f28840]/20'
+  }
   return (
-    <span className={`inline-flex items-center gap-[5px] px-[8px] py-[4px] rounded-[4px] text-[11px] font-bold ${TONES[tone]}`}>
+    <span className={`${base} ${variants[tone as keyof typeof variants]}`}>
       {children}
     </span>
   )
@@ -50,7 +59,8 @@ export function TextLink({ href, children }: Readonly<{ href: string, children: 
 
 export function EmptyState({ title, message }: Readonly<{ title?: string, message: string }>) {
   return (
-    <div className="border border-dashed border-[#425157] rounded-lg text-content-muted p-[28px] text-center my-4">
+    <div className="flex flex-col items-center justify-center p-[40px] text-content-muted border border-surface-line rounded-lg bg-slate-50 dark:bg-transparent border-dashed my-4">
+      <FolderOpen className="mb-[12px] opacity-50 text-status-teal" size={24} />
       {title && <strong className="block mb-2 text-content-base">{title}</strong>}
       <p className="m-0 text-[13px]">{message}</p>
     </div>
@@ -68,7 +78,8 @@ export function LoadingState({ label = 'Loading…' }: Readonly<{ label?: string
 
 export function ErrorState({ label = 'Something went wrong.', onRetry }: Readonly<{ label?: string, onRetry?: () => void }>) {
   return (
-    <div className="max-w-[520px] my-[70px] mx-auto border border-dashed border-[#425157] rounded-lg text-content-muted p-[28px] text-center">
+    <div className="flex flex-col items-center justify-center max-w-[520px] my-[70px] mx-auto border border-dashed border-[#425157] rounded-lg text-content-muted p-[28px] text-center">
+      <Loader2 className="animate-spin mb-[12px] text-status-teal" size={24} />
       <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DATA UNAVAILABLE</p>
       <h1 className="text-content-base m-[0_0_8px] text-[24px]">{label}</h1>
       {onRetry && (

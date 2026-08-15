@@ -16,8 +16,8 @@ export function ScenarioControl({
           aria-pressed={scenario === preset.id}
           className={`border rounded-full px-[12px] py-[6px] text-[11px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal ${
             scenario === preset.id 
-              ? 'text-content-base bg-[#2a3539] border-[#3a4a50]' 
-              : 'border-surface-line bg-[#20292d] text-content-muted hover:bg-[#253035] hover:text-white'
+              ? 'text-white bg-slate-900 border-slate-700 dark:text-content-base dark:bg-[#2a3539] dark:border-[#3a4a50]' 
+              : 'border-surface-line bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 dark:bg-[#20292d] dark:text-content-muted dark:hover:bg-[#253035] dark:hover:text-white'
           }`}
           onClick={() => onChange(preset.id)}
         >

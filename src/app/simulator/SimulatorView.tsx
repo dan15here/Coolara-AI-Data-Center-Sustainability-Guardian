@@ -64,18 +64,18 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
         
         <div className="flex gap-[10px] mb-[24px]">
           <button 
-            className="border-0 rounded-[6px] bg-[#273237] text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
+            className="border-0 rounded-[6px] bg-slate-100 dark:bg-[#273237] text-slate-700 dark:text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-slate-200 dark:hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
             type="button" 
             onClick={() => applyPreset(SAFE_PRESET)}
           >
-            Try a safe scenario
+            Safe preset
           </button>
           <button 
-            className="border-0 rounded-[6px] bg-[#273237] text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
+            className="border-0 rounded-[6px] bg-slate-100 dark:bg-[#273237] text-slate-700 dark:text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-slate-200 dark:hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
             type="button" 
             onClick={() => applyPreset(UNSAFE_PRESET)}
           >
-            Try an unsafe scenario
+            Unsafe preset
           </button>
         </div>
         
@@ -97,7 +97,7 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
             />
             <small className="flex justify-between text-content-muted text-[10px]">
               {min} {unit}
-              <i className="h-[1px] flex-1 bg-[#394348] m-[7px_8px]" />
+              <i className="h-[1px] flex-1 bg-slate-200 dark:bg-[#394348] m-[7px_8px]" />
               {max} {unit}
             </small>
           </label>
@@ -105,7 +105,7 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
         
         <div className="flex gap-[10px] mt-[32px]">
           <button
-            className="border-0 rounded-[6px] bg-[#273237] text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg"
+            className="border-0 rounded-[6px] bg-slate-100 dark:bg-[#273237] text-slate-700 dark:text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-slate-200 dark:hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg"
             type="button"
             onClick={() => {
               setInput(initialInput)
@@ -115,7 +115,7 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
             <RotateCcw size={15} /> Reset
           </button>
           <button 
-            className="border-0 rounded-[6px] bg-status-teal text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
+            className="border-0 rounded-[6px] bg-status-teal text-white dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg" 
             type="button" 
             onClick={() => runSimulation()}
           >
@@ -124,10 +124,10 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
         </div>
       </div>
 
-      <div className={`p-[23px] border bg-surface-panel rounded-lg transition-colors duration-300 ${state.status === 'done' ? (state.result.safe ? 'border-[#36746c]' : 'border-[#833f3b]') : 'border-surface-line'}`}>
+      <div className={`p-[23px] border bg-surface-panel rounded-lg transition-colors duration-300 ${state.status === 'done' ? (state.result.safe ? 'border-emerald-500 dark:border-[#36746c]' : 'border-rose-500 dark:border-[#833f3b]') : 'border-surface-line'}`}>
         <div className="flex justify-between gap-[15px] items-start">
           <div>
-            <p className="text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DETERMINISTIC RESULT</p>
+            <p className="text-slate-500 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">DETERMINISTIC RESULT</p>
             <h2 className="m-0 text-[18px]">
               {state.status === 'done'
                 ? state.result.safe
@@ -159,31 +159,31 @@ export function SimulatorView({ initialInput }: Readonly<{ initialInput: Simulat
                 <small className="text-content-muted text-[11px]">Safety threshold: {MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C</small>
               </div>
             </div>
-            <p className="text-[#b9c5c3] leading-[1.5] text-[12px]">{state.result.reason}</p>
+            <p className="text-slate-600 dark:text-[#b9c5c3] leading-[1.5] text-[12px]">{state.result.reason}</p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-[1px] mt-[20px] bg-surface-line border border-surface-line rounded-md overflow-hidden">
-              <div className="bg-[#141a1d] p-[13px]">
+              <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
                 <span className="block text-content-muted text-[11px]">Energy delta</span>
                 <strong className="block mt-[5px] text-[14px]">
                   {state.result.estimatedEnergyDeltaMwh >= 0 ? '+' : ''}
                   {state.result.estimatedEnergyDeltaMwh.toFixed(2)} MWh
                 </strong>
               </div>
-              <div className="bg-[#141a1d] p-[13px]">
+              <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
                 <span className="block text-content-muted text-[11px]">Water delta</span>
                 <strong className="block mt-[5px] text-[14px]">
                   {state.result.estimatedWaterDeltaLiters >= 0 ? '+' : ''}
                   {state.result.estimatedWaterDeltaLiters.toFixed(0)} L
                 </strong>
               </div>
-              <div className="bg-[#141a1d] p-[13px]">
+              <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
                 <span className="block text-content-muted text-[11px]">Estimated cost</span>
                 <strong className="block mt-[5px] text-[14px]">
                   {state.result.estimatedCostDeltaIdr >= 0 ? '+' : '-'}Rp{' '}
                   {Math.abs(state.result.estimatedCostDeltaIdr).toLocaleString('id-ID')}
                 </strong>
               </div>
-              <div className="bg-[#141a1d] p-[13px]">
+              <div className="bg-slate-50 dark:bg-[#141a1d] p-[13px]">
                 <span className="block text-content-muted text-[11px]">PUE / WUE</span>
                 <strong className="block mt-[5px] text-[14px]">
                   {state.result.pue.toFixed(2)} / {state.result.wue.toFixed(2)}

@@ -69,7 +69,7 @@ export function ReportsView({
             key={item}
             type="button"
             aria-pressed={range === item}
-            className={`border-0 text-[11px] p-[6px_8px] rounded-[4px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${range === item ? 'text-content-base bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-white/5 hover:text-white'}`}
+            className={`border-0 text-[11px] p-[6px_8px] rounded-[4px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${range === item ? 'text-white bg-slate-900 dark:bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}
             onClick={() => setRange(item)}
           >
             {item}
@@ -78,7 +78,7 @@ export function ReportsView({
         <span className="flex-1 hidden md:block" />
         <span className="ml-[10px] md:ml-0">Event type</span>
         <select 
-          className="border border-surface-line rounded-[4px] bg-[#20292d] text-[#d9e2e0] p-[6px_8px] text-[11px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal cursor-pointer"
+          className="border border-surface-line rounded-[4px] bg-white dark:bg-[#20292d] text-slate-700 dark:text-[#d9e2e0] p-[6px_8px] text-[11px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal cursor-pointer"
           aria-label="Event type" 
           value={eventType} 
           onChange={(event) => setEventType(event.target.value as EventType)}
