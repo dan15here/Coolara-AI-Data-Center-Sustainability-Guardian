@@ -40,11 +40,13 @@ export function SimulatorView({
   currentMetrics,
   typicalDailyOperatingCostIdr,
   originatingFinding,
+  geminiConfigured,
 }: Readonly<{
   initialInput: SimulationInput
   currentMetrics: DashboardMetrics
   typicalDailyOperatingCostIdr: number
   originatingFinding: Finding | null
+  geminiConfigured: boolean
 }>) {
   const [input, setInput] = useState<SimulationInput>(initialInput)
   const [state, setState] = useState<Status>({ status: 'idle' })
@@ -315,7 +317,9 @@ export function SimulatorView({
         </div>
       </section>
 
-      {state.status === 'done' && <AiOptimizePanel input={input} result={state.result} finding={originatingFinding} />}
+      {state.status === 'done' && (
+        <AiOptimizePanel input={input} result={state.result} finding={originatingFinding} geminiConfigured={geminiConfigured} />
+      )}
     </>
   )
 }

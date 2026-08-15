@@ -1,10 +1,14 @@
 'use client'
 
-import { Thermometer } from 'lucide-react'
+import { ExternalLink, Thermometer } from 'lucide-react'
+import Link from 'next/link'
 import { EnergyChart, ThermalChart } from '@/components/dark-telemetry-chart'
 import { ErrorState, LoadingState, Pill } from '@/components/ui'
 import { ScenarioControl } from '@/components/scenario-control'
 import { useScenarioFetch } from '@/hooks/useScenarioFetch'
+import { highestSeverityFinding } from '@/lib/anomaly/rules'
+import { severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
+import { formatJakartaTime } from '@/lib/format/time'
 import { MAX_SAFE_SERVER_TEMP_C } from '@/lib/simulator/thresholds'
 import type { ScenarioId } from '@/lib/telemetry/generator'
 import type { Finding, TelemetryPoint } from '@/types'
@@ -17,13 +21,13 @@ type Range = (typeof RANGES)[number]
 const POINTS_FOR: Record<Range, number> = { '6h': 24, '24h': 96, '7d': 200 }
 const RANGE_TITLE: Partial<Record<Range, string>> = { '7d': 'Last ~50h available (200-point series cap)' }
 
-type TelemetryData = { scenario: ScenarioId; range: Range; points: TelemetryPoint[] }
+type TelemetryData = { scenario: ScenarioId; range: Range; points: TelemetryPoint[]; findings: Finding[] }
 
 async function fetchTelemetryScenario(scenario: ScenarioId, range: Range): Promise<TelemetryData> {
   const response = await fetch(`/api/telemetry?scenario=${scenario}&points=${POINTS_FOR[range]}`)
   if (!response.ok) throw new Error('Request failed')
   const body: { points: TelemetryPoint[]; findings: Finding[] } = await response.json()
-  return { scenario, range, points: body.points }
+  return { scenario, range, points: body.points, findings: body.findings }
 }
 
 export function TelemetryView({
@@ -33,6 +37,14 @@ export function TelemetryView({
 
   const latest = data.points[data.points.length - 1]
   const overThreshold = latest.serverTempC > MAX_SAFE_SERVER_TEMP_C
+
+  // Only the latest reading is deterministically evaluated for findings (see /api/telemetry),
+  // so an annotation can only ever mark that single most-recent point, not historical anomalies.
+  const activeFinding = highestSeverityFinding(data.findings)
+  const anomalyTimeLabel = activeFinding ? formatJakartaTime(latest.timestamp) : null
+  const anomalyHref = activeFinding
+    ? `/anomalies?scenario=${data.scenario}&finding=${encodeURIComponent(JSON.stringify(activeFinding))}`
+    : null
 
   return (
     <>
@@ -67,7 +79,10 @@ export function TelemetryView({
                 ))}
               </div>
             </div>
-            <EnergyChart points={data.points} />
+            <EnergyChart
+              points={data.points}
+              anomalyTime={activeFinding?.metric === 'coolingPower' ? anomalyTimeLabel : null}
+            />
           </section>
 
           <section className="p-[20px_17px_12px] min-w-0 border border-surface-line bg-surface-panel rounded-lg flex flex-col">
@@ -78,13 +93,29 @@ export function TelemetryView({
               </div>
               <Pill tone={overThreshold ? 'critical' : 'healthy'}>{latest.serverTempC.toFixed(1)}°C current</Pill>
             </div>
-            <ThermalChart points={data.points} />
+            <ThermalChart
+              points={data.points}
+              anomalyTime={activeFinding?.metric === 'serverTemperature' ? anomalyTimeLabel : null}
+            />
             <div className="mt-auto p-[9px_2px_0] border-t border-surface-line text-content-muted flex gap-[6px] items-center text-[11px]">
               <Thermometer size={15} /> Thermal reliability threshold{' '}
               <strong className="ml-auto text-amber-500 dark:text-[#f2c97c]">{MAX_SAFE_SERVER_TEMP_C.toFixed(1)}°C</strong>
             </div>
           </section>
         </div>
+
+        {activeFinding && anomalyHref && (
+          <Link
+            className="mt-[14px] p-[13px_18px] flex items-center gap-[10px] border border-surface-line bg-surface-panel rounded-lg text-[12px] hover:bg-slate-50 dark:hover:bg-[#182023] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal"
+            href={anomalyHref}
+          >
+            <Pill tone={severityTone(activeFinding.severity)}>{severityLabel(activeFinding.severity)}</Pill>
+            <span className="text-content-muted">{summarizeFinding(activeFinding)}</span>
+            <span className="ml-auto shrink-0 text-teal-600 dark:text-[#9be0d6] font-bold flex items-center gap-[6px]">
+              View anomaly details <ExternalLink size={14} />
+            </span>
+          </Link>
+        )}
 
         <section className="mt-[14px] p-[18px] flex flex-col sm:flex-row sm:items-center justify-between border border-surface-line bg-surface-panel rounded-lg items-start">
           <div>

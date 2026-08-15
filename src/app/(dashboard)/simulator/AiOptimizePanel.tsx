@@ -1,6 +1,6 @@
 'use client'
 
-import { Bot, CheckCircle2, FlaskConical, Sparkles } from 'lucide-react'
+import { Bot, CheckCircle2, FlaskConical, PowerOff, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { renderAiMarkdown } from '@/components/ai-markdown'
 import { ErrorState, LoadingState, Pill } from '@/components/ui'
@@ -17,7 +17,13 @@ export function AiOptimizePanel({
   input,
   result,
   finding,
-}: Readonly<{ input: SimulationInput; result: SimulationResult; finding: Finding | null }>) {
+  geminiConfigured,
+}: Readonly<{
+  input: SimulationInput
+  result: SimulationResult
+  finding: Finding | null
+  geminiConfigured: boolean
+}>) {
   const [state, setState] = useState<Status>({ status: 'idle' })
 
   async function handleGenerate() {
@@ -46,9 +52,14 @@ export function AiOptimizePanel({
           <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">COOLARA AI PERSPECTIVE</p>
           <h2 className="m-0 text-[18px]">Points for review</h2>
         </div>
-        {state.status === 'done' && (
+        {state.status === 'done' ? (
           <Pill tone="healthy">
             <CheckCircle2 size={14} /> {state.result.source === 'gemini' ? (state.result.model ?? 'Gemini') : 'Rule-based fallback'}
+          </Pill>
+        ) : (
+          <Pill tone={geminiConfigured ? 'healthy' : 'neutral'}>
+            {geminiConfigured ? <CheckCircle2 size={14} /> : <PowerOff size={14} />}
+            {geminiConfigured ? 'Gemini ready' : 'Gemini unavailable'}
           </Pill>
         )}
       </div>
@@ -57,9 +68,15 @@ export function AiOptimizePanel({
         <div className="mt-[20px] p-[23px] bg-slate-50 dark:bg-[#121719] border border-dashed border-slate-300 dark:border-[#425157] flex flex-col sm:flex-row sm:items-start md:items-center gap-[13px] rounded-lg">
           <Sparkles className="text-status-teal shrink-0" size={22} />
           <div>
-            <strong className="text-[13px]">Run analysis for Gemini&apos;s qualitative perspective.</strong>
+            <strong className="text-[13px]">
+              {geminiConfigured
+                ? "Run analysis for Gemini's qualitative perspective."
+                : 'Gemini is not configured — this will use a rule-based fallback.'}
+            </strong>
             <p className="text-content-muted m-[5px_0_0] text-[12px]">
-              The model receives the simulated deltas and safety outcomes, but does not invent numbers.
+              {geminiConfigured
+                ? 'The model receives the simulated deltas and safety outcomes, but does not invent numbers.'
+                : 'Set GEMINI_API_KEY on the server to enable a Gemini-generated perspective.'}
             </p>
           </div>
           <button

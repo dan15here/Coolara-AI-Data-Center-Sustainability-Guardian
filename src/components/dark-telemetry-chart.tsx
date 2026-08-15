@@ -1,6 +1,6 @@
 'use client'
 
-import { Area, AreaChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Area, AreaChart, CartesianGrid, Legend, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { useTheme } from 'next-themes'
 import { useSyncExternalStore } from 'react'
 import { formatJakartaTime } from '@/lib/format/time'
@@ -18,7 +18,11 @@ function toChartData(points: TelemetryPoint[]) {
   }))
 }
 
-function Chart({ points, type }: Readonly<{ points: TelemetryPoint[]; type: 'energy' | 'thermal' }>) {
+function Chart({
+  points,
+  type,
+  anomalyTime,
+}: Readonly<{ points: TelemetryPoint[]; type: 'energy' | 'thermal'; anomalyTime?: string | null }>) {
   const energy = type === 'energy'
   const data = toChartData(points)
   const { theme, systemTheme } = useTheme()
@@ -32,6 +36,7 @@ function Chart({ points, type }: Readonly<{ points: TelemetryPoint[]; type: 'ene
   const tooltipBg = isDark ? '#171d21' : '#ffffff'
   const tooltipBorder = isDark ? '#303c43' : '#cbd5e1'
   const tooltipText = isDark ? '#eef3f1' : '#0f172a'
+  const anomalyColor = isDark ? '#ee7168' : '#e11d48'
 
   return (
     <ResponsiveContainer width="100%" height={280}>
@@ -67,15 +72,30 @@ function Chart({ points, type }: Readonly<{ points: TelemetryPoint[]; type: 'ene
           fill="url(#amber)"
           strokeWidth={2}
         />
+        {anomalyTime && (
+          <ReferenceLine
+            x={anomalyTime}
+            stroke={anomalyColor}
+            strokeWidth={2}
+            strokeDasharray="4 3"
+            label={{ value: 'Anomaly', position: 'insideTopRight', fill: anomalyColor, fontSize: 11 }}
+          />
+        )}
       </AreaChart>
     </ResponsiveContainer>
   )
 }
 
-export function EnergyChart({ points }: Readonly<{ points: TelemetryPoint[] }>) {
-  return <Chart points={points} type="energy" />
+export function EnergyChart({
+  points,
+  anomalyTime,
+}: Readonly<{ points: TelemetryPoint[]; anomalyTime?: string | null }>) {
+  return <Chart points={points} type="energy" anomalyTime={anomalyTime} />
 }
 
-export function ThermalChart({ points }: Readonly<{ points: TelemetryPoint[] }>) {
-  return <Chart points={points} type="thermal" />
+export function ThermalChart({
+  points,
+  anomalyTime,
+}: Readonly<{ points: TelemetryPoint[]; anomalyTime?: string | null }>) {
+  return <Chart points={points} type="thermal" anomalyTime={anomalyTime} />
 }

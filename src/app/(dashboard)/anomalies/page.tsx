@@ -1,5 +1,6 @@
 import { generateTelemetryPoint, scenarioPresets, type ScenarioId } from '@/lib/telemetry/generator'
 import { detectFindings } from '@/lib/anomaly/rules'
+import { isGeminiConfigured } from '@/lib/ai/gemini'
 import { isValidFinding } from '@/lib/validation/finding'
 import { PageIntro } from '@/components/ui'
 import { AnomaliesView } from './AnomaliesView'
@@ -39,7 +40,7 @@ export default async function AnomaliesPage({
       <PageIntro eyebrow="DETECTION & EXPLANATION" title="Anomaly detection">
         Findings requiring operational review. All measurements are synthetic.
       </PageIntro>
-      <AnomaliesView initialData={{ scenario, findings }} />
+      <AnomaliesView initialData={{ scenario, findings }} geminiConfigured={isGeminiConfigured()} />
     </>
   )
 }

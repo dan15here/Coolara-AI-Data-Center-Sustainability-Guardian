@@ -26,7 +26,10 @@ async function fetchAnomaliesScenario(scenario: ScenarioId): Promise<AnomaliesDa
   return { scenario, findings: body.findings }
 }
 
-export function AnomaliesView({ initialData }: Readonly<{ initialData: AnomaliesData }>) {
+export function AnomaliesView({
+  initialData,
+  geminiConfigured,
+}: Readonly<{ initialData: AnomaliesData; geminiConfigured: boolean }>) {
   const { data, state, load, isLoading } = useScenarioFetch(initialData, fetchAnomaliesScenario)
   const [severityFilter, setSeverityFilter] = useState<SeverityFilter>('all')
 
@@ -132,7 +135,7 @@ export function AnomaliesView({ initialData }: Readonly<{ initialData: Anomalies
                   </Link>
                 </div>
               </section>
-              <AiExplainPanel finding={finding} />
+              <AiExplainPanel finding={finding} geminiConfigured={geminiConfigured} />
             </div>
           )
         })}

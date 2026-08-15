@@ -3,6 +3,7 @@ import { DEMO_DATA_CENTER_ID } from '@/lib/telemetry/generator'
 import { FACILITY_MAX_IT_LOAD_MW, REFERENCE_SETPOINT_C } from '@/lib/simulator/thresholds'
 import { deriveDashboardMetrics } from '@/lib/calculations/metrics'
 import { computeTypicalDailyOperatingCostIdr } from '@/lib/calculations/cost'
+import { isGeminiConfigured } from '@/lib/ai/gemini'
 import { isValidFinding } from '@/lib/validation/finding'
 import { PageIntro } from '@/components/ui'
 import { SimulatorView } from './SimulatorView'
@@ -45,6 +46,7 @@ export default async function SimulatorPage({
         currentMetrics={currentMetrics}
         typicalDailyOperatingCostIdr={typicalDailyOperatingCostIdr}
         originatingFinding={originatingFinding}
+        geminiConfigured={isGeminiConfigured()}
       />
     </>
   )
