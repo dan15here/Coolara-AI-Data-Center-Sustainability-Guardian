@@ -5,6 +5,11 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { type MouseEvent, type ReactNode, useEffect, useRef, useState } from 'react'
+import {
+  DASHBOARD_ACCESS_COOKIE,
+  DASHBOARD_ACCESS_MAX_AGE_SECONDS,
+  DASHBOARD_ACCESS_VALUE,
+} from '@/lib/dashboard-access'
 
 type LandingDashboardLinkProps = {
   children: ReactNode
@@ -31,6 +36,7 @@ export default function LandingDashboardLink({
     event.preventDefault()
     if (isLoading) return
 
+    document.cookie = `${DASHBOARD_ACCESS_COOKIE}=${DASHBOARD_ACCESS_VALUE}; Path=/; Max-Age=${DASHBOARD_ACCESS_MAX_AGE_SECONDS}; SameSite=Lax`
     setIsLoading(true)
     timeoutRef.current = window.setTimeout(() => {
       router.push(href)
