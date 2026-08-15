@@ -14,7 +14,7 @@ Monitor → Detect → Explain → Simulate → Optimize
 
 | Product | Technical | Submission |
 | --- | --- | --- |
-| [PRD](./PRD.md) · [UI specification](./COOLARA_UI_SPECIFICATION.md) · [Implementation plan](./COOLARA_IMPLEMENTATION_PLAN.md) | [Technical plan](./TECH.md) | [AI tools disclosure](./AI_TOOLS_DISCLOSURE.md) · [Pre-existing materials](./PRE_EXISTING_DISCLOSURE.md) |
+| [PRD](./PRD.md) · [UI specification](./COOLARA_UI_SPECIFICATION.md) · [Implementation plan](./COOLARA_IMPLEMENTATION_PLAN.md) | [Technical plan](./TECH.md) · [API specification](./API_SPEC.md) | [AI tools disclosure](./AI_TOOLS_DISCLOSURE.md) · [Pre-existing materials](./PRE_EXISTING_DISCLOSURE.md) |
 
 ## Problem
 
@@ -220,6 +220,7 @@ Live on Vercel: `https://coolara-ai-data-center-sustainabili.vercel.app`
 
 - `PRD.md` — MVP scope, features, non-goals, success criteria.
 - `TECH.md` — architecture and security limits.
+- `API_SPEC.md` — request, response, validation, and error contracts for application endpoints.
 - `COOLARA_UI_SPECIFICATION.md` — exact page layouts and the "one page = one primary job" rule.
 - `COOLARA_IMPLEMENTATION_PLAN.md` — build phases, team split, API contract, shared types.
 - `TASKLIST.md` — build-window checklist.
