@@ -27,17 +27,26 @@ function Hero() {
   return (
     <div className="w-full">
       <div className="container mx-auto px-4">
-        <div className="flex gap-8 py-20 lg:py-32 items-center justify-center flex-col">
-          <div>
+        <div className="flex gap-6 py-14 lg:py-20 items-center justify-center flex-col">
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
+          >
             <Button variant="secondary" size="sm" className="gap-2 bg-teal-500/10 text-teal-400 hover:bg-teal-500/20 border border-teal-500/20 rounded-full" asChild>
               <Link href="#features">
                 Sustainability decision support <MoveRight className="w-4 h-4" />
               </Link>
             </Button>
-          </div>
+          </motion.div>
           <div className="flex gap-4 flex-col">
-            <h1 className="text-5xl md:text-7xl max-w-3xl tracking-tighter text-center font-extrabold text-white">
-              <span className="text-white">Make every response</span>
+            <motion.h1
+              className="text-5xl md:text-6xl lg:text-7xl max-w-5xl tracking-tighter text-center font-extrabold text-white"
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
+            >
+              <span className="text-white">Coolara makes every response</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 {/* spacer so the h1 keeps its height */}
                 <span className="invisible">placeholder</span>
@@ -54,13 +63,23 @@ function Hero() {
                   </motion.span>
                 </AnimatePresence>
               </span>
-            </h1>
+            </motion.h1>
 
-            <p className="text-lg md:text-xl leading-relaxed tracking-tight text-[#91a0a3] max-w-2xl text-center mx-auto">
+            <motion.p
+              className="text-lg md:text-xl leading-relaxed tracking-tight text-[#91a0a3] max-w-2xl text-center mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.22, ease: 'easeOut' }}
+            >
               See energy, water, cooling, and thermal signals in one place. Coolara detects deviations, explains their context, and lets operators simulate a safety-gated response before they act.
-            </p>
+            </motion.p>
           </div>
-          <div className="flex flex-row gap-4 mt-4">
+          <motion.div
+            className="flex flex-col sm:flex-row gap-4 mt-3"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.34, ease: 'easeOut' }}
+          >
             <Button size="lg" className="gap-2 bg-[#171d21] border border-[#2b363c] hover:bg-[#20292d] text-white rounded-full transition-colors" variant="outline" asChild>
               <Link href="/simulator">
                 Run a what-if simulation <Play className="w-4 h-4" />
@@ -71,7 +90,7 @@ function Hero() {
                 Explore Command Center <MoveRight className="w-4 h-4" />
               </Link>
             </Button>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>

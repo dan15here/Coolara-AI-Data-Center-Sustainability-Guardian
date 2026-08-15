@@ -8,6 +8,11 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Coolara | Sustainability Guardian',
   description: 'Synthetic data-center sustainability decision support.',
+  icons: {
+    icon: '/logos/coolara-app-icon.svg',
+    shortcut: '/logos/coolara-app-icon.svg',
+    apple: '/logos/coolara-app-icon.png',
+  },
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
