@@ -4,13 +4,8 @@ import type { LucideIcon } from 'lucide-react'
 
 export function PageIntro({ eyebrow, title, children }: Readonly<{ eyebrow: string, title: string, children: React.ReactNode }>) { 
   return (
-    <div className="my-[28px] mb-[24px]">
+    <div className="mb-[24px]">
       <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">{eyebrow}</p>
-      <h1 className="text-[27px] tracking-[-0.7px] m-[0_0_7px]">{title}</h1>
-      <p className="m-0 text-content-muted">{children}</p>
-    </div>
-  ) 
-}
 
 export function MetricCard({ label, value, note, icon: Icon }: Readonly<{ label: string, value: string, note?: string, icon?: LucideIcon }>) { 
   return (
