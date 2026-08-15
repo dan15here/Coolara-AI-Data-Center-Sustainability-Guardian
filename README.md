@@ -187,7 +187,7 @@ Tests colocate with source or under `src/**/__tests__/`.
 | `SUPABASE_URL` | server-only | Supabase project URL |
 | `SUPABASE_SERVICE_ROLE_KEY` | server-only | Server-side database access |
 | `GEMINI_API_KEY` | server-only | Gemini API access |
-| `GEMINI_MODEL` | server-only | Code default `gemini-3.6-flash`; a deployment may pin a different model, and the UI shows whichever one answered |
+| `GEMINI_MODEL` | server-only | Code default `gemini-3.5-flash-lite`; a deployment may pin a different model, and the UI shows whichever one answered |
 
 Never commit real values. Server-only keys must never reach the browser.
 
