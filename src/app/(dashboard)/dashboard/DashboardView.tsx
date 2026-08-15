@@ -163,8 +163,12 @@ export function DashboardView({
               </div>
             </div>
             <div className="col-span-full p-[12px_22px] bg-slate-50 dark:bg-surface-subtle border-t border-surface-line flex flex-wrap gap-[25px]">
-              <TextLink href="/anomalies">View anomaly details</TextLink>
-              <TextLink href="/simulator">Simulate response</TextLink>
+              <TextLink href={`/anomalies?scenario=${data.scenario}&finding=${encodeURIComponent(JSON.stringify(activeFinding))}`}>
+                View anomaly details
+              </TextLink>
+              <TextLink href={`/simulator?finding=${encodeURIComponent(JSON.stringify(activeFinding))}`}>
+                Simulate response
+              </TextLink>
             </div>
           </section>
         ) : (
