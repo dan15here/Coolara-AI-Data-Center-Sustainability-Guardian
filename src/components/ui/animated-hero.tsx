@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import BlurText from "@/components/ui/blur-text";
 import Image from "next/image";
 import Link from "next/link";
+import LandingDashboardLink from "@/components/landing-dashboard-link";
 
 function Hero({ isHeaderBrandVisible }: { isHeaderBrandVisible: boolean }) {
   const [titleNumber, setTitleNumber] = useState(0);
@@ -106,9 +107,9 @@ function Hero({ isHeaderBrandVisible }: { isHeaderBrandVisible: boolean }) {
               </Link>
             </Button>
             <Button size="lg" className="gap-2 bg-teal-500 hover:bg-teal-400 text-[#042f2b] rounded-full font-bold shadow-[0_0_30px_rgba(20,184,166,0.3)]" asChild>
-              <Link href="/dashboard">
+              <LandingDashboardLink>
                 Explore Command Center <MoveRight className="w-4 h-4" />
-              </Link>
+              </LandingDashboardLink>
             </Button>
           </motion.div>
         </div>

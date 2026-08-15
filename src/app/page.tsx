@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown } from 'lucide-react'
@@ -9,6 +8,7 @@ import { Hero } from '@/components/ui/animated-hero'
 import AnimatedContent from '@/components/ui/animated-content'
 import LandingScrollTabs from '@/components/landing-scroll-tabs'
 import LandingWorkflow from '@/components/landing-workflow'
+import LandingDashboardLink from '@/components/landing-dashboard-link'
 
 const faqs = [
   {
@@ -125,12 +125,11 @@ export default function LandingPage() {
           <div className="absolute left-1/2 -translate-x-1/2">
             <LandingScrollTabs />
           </div>
-          <Link 
-            href="/dashboard"
+          <LandingDashboardLink
             className="flex items-center gap-[8px] bg-[#171d21] border border-[#2b363c] hover:bg-[#20292d] text-white px-[16px] py-[8px] rounded-full text-[13px] font-medium transition-colors"
           >
             Open Dashboard <ArrowRight size={14} />
-          </Link>
+          </LandingDashboardLink>
         </div>
       </nav>
 
