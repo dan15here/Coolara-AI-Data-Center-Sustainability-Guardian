@@ -15,6 +15,9 @@ type DateRange = (typeof DATE_RANGES)[number]
 const EVENT_TYPES = ['All events', 'Critical', 'High', 'Medium', 'Low', 'Safe', 'Rejected'] as const
 type EventType = (typeof EVENT_TYPES)[number]
 
+const EVENT_SOURCES = ['All history', 'Anomalies', 'What-if simulations'] as const
+type EventSource = (typeof EVENT_SOURCES)[number]
+
 type ReportEntry =
   | { kind: 'alert'; timestamp: string; finding: Finding }
   | { kind: 'simulation'; timestamp: string; simulation: StoredSimulation }
@@ -37,6 +40,11 @@ function matchesEventType(entry: ReportEntry, eventType: EventType): boolean {
   return false
 }
 
+function matchesEventSource(entry: ReportEntry, source: EventSource): boolean {
+  if (source === 'All history') return true
+  return source === 'Anomalies' ? entry.kind === 'alert' : entry.kind === 'simulation'
+}
+
 export function ReportsView({
   alerts,
   simulations,
@@ -52,6 +60,7 @@ export function ReportsView({
 }>) {
   const [range, setRange] = useState<DateRange>('Today')
   const [eventType, setEventType] = useState<EventType>('All events')
+  const [eventSource, setEventSource] = useState<EventSource>('All history')
 
   const entries: ReportEntry[] = useMemo(() => {
     const alertEntries: ReportEntry[] = alerts.map((finding) => ({
@@ -69,7 +78,12 @@ export function ReportsView({
     )
   }, [alerts, simulations])
 
-  const shown = entries.filter((entry) => withinRange(entry.timestamp, range) && matchesEventType(entry, eventType))
+  const shown = entries.filter(
+    (entry) =>
+      withinRange(entry.timestamp, range) &&
+      matchesEventSource(entry, eventSource) &&
+      matchesEventType(entry, eventType),
+  )
 
   return (
     <>
@@ -90,6 +104,19 @@ export function ReportsView({
             aria-pressed={range === item}
             className={`border-0 text-[11px] p-[6px_8px] rounded-[4px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${range === item ? 'text-white bg-slate-900 dark:bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}
             onClick={() => setRange(item)}
+          >
+            {item}
+          </button>
+        ))}
+        <span className="mx-[5px] hidden h-[20px] w-px bg-surface-line md:block" aria-hidden="true" />
+        <span className="ml-[10px] md:ml-0">Show</span>
+        {EVENT_SOURCES.map((item) => (
+          <button
+            key={item}
+            type="button"
+            aria-pressed={eventSource === item}
+            className={`border-0 text-[11px] p-[6px_8px] rounded-[4px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${eventSource === item ? 'text-white bg-slate-900 dark:bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}
+            onClick={() => setEventSource(item)}
           >
             {item}
           </button>
