@@ -1,5 +1,5 @@
 // Shared integration contract between frontend and backend.
-// Field names, casing, and units must match COOLARA_IMPLEMENTATION_PLAN.md section 4 exactly.
+// Field names, casing, and units follow the repository's application API contract.
 
 export type TelemetryPoint = {
   timestamp: string;

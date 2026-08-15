@@ -14,7 +14,7 @@ Monitor → Detect → Explain → Simulate → Optimize
 
 | Product | Technical | Submission |
 | --- | --- | --- |
-| [PRD](./PRD.md) · [UI specification](./COOLARA_UI_SPECIFICATION.md) · [Implementation plan](./COOLARA_IMPLEMENTATION_PLAN.md) · [Task list](./TASKLIST.md) | [Technical plan](./TECH.md) · [API specification](./API_SPEC.md) | [AI tools disclosure](./AI_TOOLS_DISCLOSURE.md) · [Pre-existing materials](./PRE_EXISTING_DISCLOSURE.md) |
+| [PRD](./PRD.md) | [Technical plan](./TECH.md) · [API specification](./API_SPEC.md) | [AI tools disclosure](./AI_TOOLS_DISCLOSURE.md) · [Pre-existing materials](./PRE_EXISTING_DISCLOSURE.md) |
 
 ## Problem
 
@@ -53,7 +53,7 @@ Data-centre teams must balance reliability, energy efficiency, and water use. Ra
 | Simulator | `/simulator` | "What if I change these parameters?" | Safety-gated result: energy/water/cost deltas, PUE/WUE, predicted temp |
 | Reports | `/reports` | "What has happened?" | Shift handoff summary, activity timeline, simulation history, and an A/B simulation comparison |
 
-Every page below `/` has one primary job and links to the others with smaller CTAs (per `COOLARA_UI_SPECIFICATION.md`).
+Every page below `/` has one primary job and links to the others with smaller CTAs.
 
 ## Architecture
 
@@ -221,7 +221,4 @@ Live on Vercel: `https://coolara-ai-data-center-sustainabili.vercel.app`
 - `PRD.md` — MVP scope, features, non-goals, success criteria.
 - `TECH.md` — architecture and security limits.
 - `API_SPEC.md` — request, response, validation, and error contracts for application endpoints.
-- `COOLARA_UI_SPECIFICATION.md` — exact page layouts and the "one page = one primary job" rule.
-- `COOLARA_IMPLEMENTATION_PLAN.md` — build phases, team split, API contract, shared types.
-- [`TASKLIST.md`](./TASKLIST.md) — build-window checklist.
 - `PRE_EXISTING_DISCLOSURE.md`, `AI_TOOLS_DISCLOSURE.md` — submission disclosures.
