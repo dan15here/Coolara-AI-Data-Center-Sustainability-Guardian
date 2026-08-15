@@ -46,3 +46,10 @@ create table if not exists simulations (
   result jsonb not null,
   created_at timestamptz not null default now()
 );
+
+-- The prototype accesses these tables only through server-side service-role code.
+-- Keep the public Data API closed by default.
+alter table data_centers enable row level security;
+alter table telemetry enable row level security;
+alter table alerts enable row level security;
+alter table simulations enable row level security;
