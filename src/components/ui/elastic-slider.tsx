@@ -84,7 +84,6 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
   const [region, setRegion] = useState<'left' | 'middle' | 'right'>('middle')
   const clientX = useMotionValue(0)
   const overflow = useMotionValue(0)
-  const scale = useMotionValue(1)
 
   useMotionValueEvent(clientX, 'change', (latest) => {
     if (sliderRef.current) {
@@ -156,17 +155,10 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
 
   return (
     <>
-      <motion.div
-        onHoverStart={() => animate(scale, 1.2)}
-        onHoverEnd={() => animate(scale, 1)}
-        onTouchStart={() => animate(scale, 1.2)}
-        onTouchEnd={() => animate(scale, 1)}
-        style={{ scale, opacity: useTransform(scale, [1, 1.2], [0.7, 1]) }}
-        className="flex w-full touch-none items-center gap-[10px] select-none"
-      >
+      <div className="flex w-full touch-none items-center gap-[10px] select-none">
         <motion.div
           animate={{ scale: region === 'left' ? [1, 1.4, 1] : 1, transition: { duration: 0.25 } }}
-          style={{ x: useTransform(() => (region === 'left' ? -overflow.get() / scale.get() : 0)) }}
+          style={{ x: useTransform(() => (region === 'left' ? -overflow.get() : 0)) }}
           className="text-content-muted shrink-0 [&>svg]:h-[18px] [&>svg]:w-[18px]"
         >
           {leftIcon}
@@ -201,11 +193,8 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
                 const { left, width } = sliderRef.current.getBoundingClientRect()
                 return clientX.get() < left + width / 2 ? 'right' : 'left'
               }),
-              height: useTransform(scale, [1, 1.2], [8, 14]),
-              marginTop: useTransform(scale, [1, 1.2], [0, -3]),
-              marginBottom: useTransform(scale, [1, 1.2], [0, -3]),
             }}
-            className="flex flex-1"
+            className="flex flex-1 h-[8px]"
           >
             <div className="relative h-full flex-1 overflow-hidden rounded-full bg-[var(--color-gauge-track)]">
               <div className="bg-status-teal absolute h-full rounded-full" style={{ width: `${getRangePercentage()}%` }} />
@@ -215,12 +204,12 @@ function Slider({ defaultValue, startingValue, maxValue, isStepped, stepSize, le
 
         <motion.div
           animate={{ scale: region === 'right' ? [1, 1.4, 1] : 1, transition: { duration: 0.25 } }}
-          style={{ x: useTransform(() => (region === 'right' ? overflow.get() / scale.get() : 0)) }}
+          style={{ x: useTransform(() => (region === 'right' ? overflow.get() : 0)) }}
           className="text-content-muted shrink-0 [&>svg]:h-[18px] [&>svg]:w-[18px]"
         >
           {rightIcon}
         </motion.div>
-      </motion.div>
+      </div>
       {showValue && <p className="text-content-muted text-[12px] font-medium tracking-[0.05em]">{Math.round(value)}</p>}
     </>
   )
