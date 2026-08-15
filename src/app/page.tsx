@@ -18,6 +18,14 @@ const faqs = [
   {
     question: "What happens if the primary database goes down?",
     answer: "Coolara features a robust local fallback mechanism. If the main Supabase instance is unreachable, it seamlessly switches to a synthetic telemetry generator, ensuring operations teams always have a functional dashboard for drills and demos."
+  },
+  {
+    question: "How do you handle security and data privacy?",
+    answer: "All telemetry data is stored securely using row-level security (RLS). Server-side operations are handled via secure service roles, and no sensitive credentials are ever shipped to the browser. Your synthetic metrics remain entirely within your private environment."
+  },
+  {
+    question: "Can the AI optimize my power usage effectively?",
+    answer: "Absolutely! After running a simulation, the AI uses Gemini to provide actionable recommendations. It analyzes the deterministic results of the simulation and suggests practical ways to mitigate risks or reduce overall power and water consumption."
   }
 ]
 
@@ -125,6 +133,23 @@ export default function LandingPage() {
             >
               Go to Dashboard <ArrowRight size={18} />
             </Link>
+          </motion.div>
+
+          {/* App Preview Image */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mt-[60px] relative mx-auto max-w-[1000px] rounded-[16px] border border-[#2b363c] bg-[#171d21]/50 p-[8px] backdrop-blur-xl shadow-2xl"
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-[#101517] via-transparent to-transparent z-10 pointer-events-none rounded-[16px]"></div>
+            <Image 
+              src="/dashboard-preview.png" 
+              alt="Dashboard Preview" 
+              width={1000} 
+              height={600} 
+              className="rounded-[10px] w-full h-auto object-cover border border-[#2b363c]"
+            />
           </motion.div>
         </div>
       </section>
