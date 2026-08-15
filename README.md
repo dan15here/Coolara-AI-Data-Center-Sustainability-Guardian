@@ -118,10 +118,10 @@ src/
     simulator/         # safety-gated scenario engine and thresholds
     ai/                # server-only Gemini adapter + prompt
     telemetry/         # synthetic telemetry generator
-    supabase/          # server/client clients and repository
+    supabase/          # server client and persistence repository
   types/index.ts       # shared TypeScript contracts
 supabase/
-  migrations/          # schema, RLS, and activity-query trigger
+  migrations/          # schema, RLS, and activity-query indexes
   seed.sql             # demo facility seed data
 ```
 
@@ -193,7 +193,8 @@ Never commit real values. Server-only keys must never reach the browser.
 
 Migrations and seed data live under `supabase/`:
 
-- `supabase/migrations/0001_init.sql` — schema (`data_centers`, `telemetry`, `alerts`, `simulations`), indexes, row-level security, and the activity-query trigger.
+- `supabase/migrations/0001_init.sql` — schema (`data_centers`, `telemetry`, `alerts`, `simulations`) and row-level security.
+- `supabase/migrations/20260815084429_secure_and_index.sql` — activity-query indexes and hardened permissions for the automatic RLS helper.
 - `supabase/seed.sql` — demo facility seed data.
 
 Apply them manually via the Supabase SQL editor or CLI. Tables are accessed only through server-side service-role code; the public Data API is closed by default.
