@@ -8,6 +8,7 @@ const tabs = [
   { id: 'top', label: 'Home' },
   { id: 'features', label: 'Features' },
   { id: 'how-it-works', label: 'How it works' },
+  { id: 'faq', label: 'FAQ' },
 ] as const
 
 /** Landing-page quick access that follows the section currently in view. */
