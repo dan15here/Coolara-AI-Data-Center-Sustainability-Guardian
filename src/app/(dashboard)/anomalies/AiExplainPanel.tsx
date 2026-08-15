@@ -1,36 +1,21 @@
 'use client'
 
 import { Bot, CheckCircle2, Clock3, FlaskConical, PowerOff, Sparkles } from 'lucide-react'
-import { useState } from 'react'
 import { renderAiMarkdown } from '@/components/ai-markdown'
 import { ErrorState, LoadingState, Pill } from '@/components/ui'
 import type { ExplainFindingResponse } from '@/lib/ai/types'
-import type { Finding } from '@/types'
 
-type Status = { status: 'idle' } | { status: 'loading' } | { status: 'error' } | { status: 'done'; result: ExplainFindingResponse }
+export type ExplainStatus =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'error' }
+  | { status: 'done'; result: ExplainFindingResponse }
 
 export function AiExplainPanel({
-  finding,
   geminiConfigured,
-}: Readonly<{ finding: Finding; geminiConfigured: boolean }>) {
-  const [state, setState] = useState<Status>({ status: 'idle' })
-
-  async function handleExplain() {
-    setState({ status: 'loading' })
-    try {
-      const response = await fetch('/api/explain', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ finding }),
-      })
-      if (!response.ok) throw new Error('Request failed')
-      const result: ExplainFindingResponse = await response.json()
-      setState({ status: 'done', result })
-    } catch {
-      setState({ status: 'error' })
-    }
-  }
-
+  state,
+  onAnalyze,
+}: Readonly<{ geminiConfigured: boolean; state: ExplainStatus; onAnalyze: () => void }>) {
   return (
     <section className="p-[22px] border border-surface-line bg-surface-panel rounded-lg mt-0">
       <div className="flex justify-between gap-[15px] items-center">
@@ -72,8 +57,8 @@ export function AiExplainPanel({
           </div>
           <button 
             className="border-0 rounded-[6px] bg-status-teal text-white dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg sm:ml-[35px] md:ml-auto shrink-0" 
-            type="button" 
-            onClick={handleExplain}
+            type="button"
+            onClick={onAnalyze}
           >
             <Sparkles size={15} /> Analyze findings
           </button>
@@ -82,7 +67,7 @@ export function AiExplainPanel({
 
       {state.status === 'loading' && <LoadingState label="Generating explanation…" />}
 
-      {state.status === 'error' && <ErrorState label="Could not generate an explanation." onRetry={handleExplain} />}
+      {state.status === 'error' && <ErrorState label="Could not generate an explanation." onRetry={onAnalyze} />}
 
       {state.status === 'done' && (
         <div className="mt-[20px] p-[18px] bg-slate-50 dark:bg-[#121719] rounded-[7px] leading-[1.55] text-slate-700 dark:text-[#ccd5d4]">
