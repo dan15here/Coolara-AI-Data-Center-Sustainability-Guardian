@@ -57,7 +57,11 @@ export async function callGemini(prompt: string, model: string): Promise<string>
   });
 
   if (!response.ok) {
-    throw new Error(`Gemini API request failed with status ${response.status}`);
+    // Gemini's response body identifies actionable causes such as an invalid
+    // model ID or an unavailable model/API combination. Keep it server-side:
+    // it is logged for diagnosis but never returned to the browser.
+    const detail = (await response.text()).replace(/\s+/g, ' ').trim().slice(0, 1_000);
+    throw new Error(`Gemini API request failed with status ${response.status}: ${detail || 'no error detail returned'}`);
   }
 
   const data = await response.json();
