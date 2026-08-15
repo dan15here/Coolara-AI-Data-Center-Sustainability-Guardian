@@ -2,7 +2,7 @@
 
 import { GitCompare } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { EmptyState, Pill } from '@/components/ui'
+import { EmptyState, HelpTooltip, Pill } from '@/components/ui'
 import { formatJakartaDateTime } from '@/lib/format/time'
 import type { StoredSimulation } from '@/types'
 
@@ -91,12 +91,18 @@ export function SimulationComparisonPanel({ simulations }: Readonly<{ simulation
           </div>
 
           {simA && simB && (
-            <div className="mt-[20px] border border-surface-line rounded-[7px] overflow-hidden overflow-x-auto">
-              <div className="grid grid-cols-[1.4fr_1fr_1fr_0.8fr] gap-[10px] p-[11px_14px] border-b border-surface-line items-center text-[10px] uppercase tracking-[0.5px] text-content-muted bg-slate-100 dark:bg-[#121719] min-w-[480px]">
+            <div className="mt-[20px] border border-surface-line rounded-[7px] overflow-x-auto">
+              <div className="grid grid-cols-[1.4fr_1fr_1fr_0.8fr] gap-[10px] p-[11px_14px] border-b border-surface-line items-center text-[10px] uppercase tracking-[0.5px] text-content-muted bg-slate-100 dark:bg-[#121719] rounded-t-[7px] min-w-[480px]">
                 <span>Metric</span>
                 <span>A</span>
                 <span>B</span>
-                <span>Δ (B − A)</span>
+                <span className="flex items-center gap-[5px]">
+                  Δ (B − A)
+                  <HelpTooltip
+                    text="B minus A for each metric. Positive means B is higher than A; negative means B is lower."
+                    direction="down"
+                  />
+                </span>
               </div>
               <div className="grid grid-cols-[1.4fr_1fr_1fr_0.8fr] gap-[10px] p-[11px_14px] border-b border-surface-line items-center text-[12px] min-w-[480px]">
                 <span>Outcome</span>

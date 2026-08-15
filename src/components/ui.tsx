@@ -12,28 +12,40 @@ export function PageIntro({ eyebrow, title, children }: Readonly<{ eyebrow: stri
   )
 }
 
+/**
+ * Small hover/focus tooltip for a help icon — pure CSS (no client state), safe to use from
+ * server components. `direction="down"` opens the bubble below the icon instead of above —
+ * use it inside a container that scrolls horizontally (`overflow-x-auto`), since per the CSS
+ * overflow spec that also forces `overflow-y: auto` on the same box, which would otherwise
+ * clip an upward-opening tooltip that tries to render outside the container's own bounds.
+ */
+export function HelpTooltip({ text, className = '', direction = 'up' }: Readonly<{ text: string, className?: string, direction?: 'up' | 'down' }>) {
+  const isUp = direction === 'up'
+  return (
+    <span className={`relative inline-flex group ${className}`}>
+      <HelpCircle
+        size={13}
+        tabIndex={0}
+        className="text-content-muted/70 hover:text-status-teal focus-visible:text-status-teal cursor-help outline-none"
+        aria-label={text}
+      />
+      <span
+        role="tooltip"
+        className={`pointer-events-none absolute z-20 right-0 w-[200px] p-[10px_12px] rounded-[7px] bg-slate-900 dark:bg-[#20292d] border border-slate-700 dark:border-[#3a4a50] text-slate-50 dark:text-content-base text-[11px] leading-[1.5] font-normal normal-case tracking-normal opacity-0 scale-95 transition-all duration-150 group-hover:opacity-100 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:scale-100 shadow-lg ${isUp ? 'bottom-full mb-[8px] origin-bottom-right' : 'top-full mt-[8px] origin-top-right'}`}
+      >
+        {text}
+      </span>
+    </span>
+  )
+}
+
 export function MetricCard({ label, value, note, icon: Icon, help }: Readonly<{ label: string, value: string, note?: string, icon?: LucideIcon, help?: string }>) {
   return (
     <article className="p-[17px] min-h-[123px] border border-surface-line bg-surface-panel rounded-lg">
       <div className="text-content-muted flex gap-[7px] items-center text-[12px]">
         {Icon && <Icon size={16} className="text-status-teal" />}
         {label}
-        {help && (
-          <span className="relative inline-flex group ml-auto">
-            <HelpCircle
-              size={13}
-              tabIndex={0}
-              className="text-content-muted/70 hover:text-status-teal focus-visible:text-status-teal cursor-help outline-none"
-              aria-label={help}
-            />
-            <span
-              role="tooltip"
-              className="pointer-events-none absolute z-20 bottom-full right-0 mb-[8px] w-[200px] p-[10px_12px] rounded-[7px] bg-slate-900 dark:bg-[#20292d] border border-slate-700 dark:border-[#3a4a50] text-slate-50 dark:text-content-base text-[11px] leading-[1.5] font-normal normal-case tracking-normal opacity-0 scale-95 origin-bottom-right transition-all duration-150 group-hover:opacity-100 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:scale-100 shadow-lg"
-            >
-              {help}
-            </span>
-          </span>
-        )}
+        {help && <HelpTooltip text={help} className="ml-auto" />}
       </div>
       <strong className="block text-[25px] my-[16px] mb-[8px]">{value}</strong>
       {note && <span className="text-content-muted text-[11px]">{note}</span>}
