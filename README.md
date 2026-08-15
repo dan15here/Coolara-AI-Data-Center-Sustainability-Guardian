@@ -34,6 +34,8 @@ Data-centre teams must balance reliability, energy efficiency, and water use. Ra
 | --- | --- |
 | Web application | Next.js 16 (App Router), React 19, TypeScript |
 | UI | Tailwind CSS v4, reusable components, lucide-react icons |
+| Theming | `next-themes` (light/dark toggle, persisted per visitor) |
+| Motion | Framer Motion and GSAP (landing page animations) |
 | Charts | Recharts |
 | Database | Supabase (PostgreSQL) |
 | AI explanation | Google Gemini API (qualitative only) |
@@ -44,13 +46,14 @@ Data-centre teams must balance reliability, energy efficiency, and water use. Ra
 
 | Page | Route | Primary job | Key output |
 | --- | --- | --- | --- |
-| Command Center | `/dashboard` | "What needs attention right now?" | Metric cards (total power, PUE, WUE, peak temp), one priority finding, recent activity |
+| Landing | `/` | "What is Coolara?" | Animated hero, the three product pillars, the five-step workflow, FAQ |
+| Command Center | `/dashboard` | "What needs attention right now?" | Metric cards with help tooltips (total power, PUE, WUE, peak temp), reliability/energy/water gauges, one priority finding, recent activity |
 | Telemetry | `/telemetry` | "What is the data trend?" | Energy & thermal charts, 6h/24h/7d ranges, latest reading |
-| Anomalies | `/anomalies` | "Why is this abnormal?" | Finding detail, actual vs expected, likely factors, AI explanation panel |
+| Anomalies | `/anomalies` | "Why is this abnormal?" | Ranked finding list (All + per-scenario tabs, severity filter and sort), actual vs expected, likely factors, per-finding AI explanation and batch analysis |
 | Simulator | `/simulator` | "What if I change these parameters?" | Safety-gated result: energy/water/cost deltas, PUE/WUE, predicted temp |
-| Reports | `/reports` | "What has happened?" | Activity timeline and simulation history |
+| Reports | `/reports` | "What has happened?" | Shift handoff summary, activity timeline, simulation history, and an A/B simulation comparison |
 
-Each page has one primary job and links to the others with smaller CTAs (per `COOLARA_UI_SPECIFICATION.md`).
+Every page below `/` has one primary job and links to the others with smaller CTAs (per `COOLARA_UI_SPECIFICATION.md`).
 
 ## Architecture
 
@@ -90,6 +93,7 @@ Each page has one primary job and links to the others with smaller CTAs (per `CO
 
 - `calculations/metrics.ts` — PUE, WUE, total power, dashboard metrics.
 - `calculations/baseline.ts` — expected cooling, water, and server temperature as a pure function of ambient temperature and IT load.
+- `calculations/cost.ts` — energy cost estimates in IDR, and a simulated delta expressed against a typical day's operating cost.
 - `anomaly/rules.ts` — adverse deviation bands (15/30/50/80%) map to `low`/`medium`/`high`/`critical`; emits structured `Finding` objects.
 - `simulator/engine.ts` + `simulator/thresholds.ts` — projects the facility state from input assumptions and rejects any scenario outside safe thresholds (e.g. max server temp `32°C`).
 
@@ -116,15 +120,24 @@ Each page has one primary job and links to the others with smaller CTAs (per `CO
 ```text
 src/
   app/                 # routes, page components, and API routes
+    page.tsx           # public landing page
+    (dashboard)/       # operator pages behind the app shell
     api/               # dashboard, telemetry, explain, simulate, optimize, reports
   components/          # shared visual components (shell, charts, controls)
+    landing-*.tsx      # landing scroll tabs, workflow, and dashboard preview
+    ui/                # primitives: animated hero/content, elastic slider, button
+  hooks/               # client data hooks (scenario fetching)
   lib/
-    calculations/      # deterministic metrics and baselines
+    calculations/      # deterministic metrics, baselines, and costs
     anomaly/           # deterministic anomaly rules
     simulator/         # safety-gated scenario engine and thresholds
     ai/                # server-only Gemini adapter + prompt
     telemetry/         # synthetic telemetry generator
     supabase/          # server client and persistence repository
+    format/            # finding and Jakarta-time display formatting
+    validation/        # server-side payload guards
+    dashboard.ts       # shared facility-snapshot source of truth
+    utils.ts           # small shared helpers
   types/index.ts       # shared TypeScript contracts
 supabase/
   migrations/          # schema, RLS, and activity-query indexes
@@ -174,7 +187,7 @@ Tests colocate with source or under `src/**/__tests__/`.
 | `SUPABASE_URL` | server-only | Supabase project URL |
 | `SUPABASE_SERVICE_ROLE_KEY` | server-only | Server-side database access |
 | `GEMINI_API_KEY` | server-only | Gemini API access |
-| `GEMINI_MODEL` | server-only | Default `gemini-3.6-flash` |
+| `GEMINI_MODEL` | server-only | Code default `gemini-3.6-flash`; a deployment may pin a different model, and the UI shows whichever one answered |
 
 Never commit real values. Server-only keys must never reach the browser.
 
@@ -192,7 +205,7 @@ Never commit real values. Server-only keys must never reach the browser.
 ## Three-minute demo runbook
 
 1. **Monitor (0:00–0:30)** — Open the Command Center; show facility health, PUE/WUE, and synthetic telemetry.
-2. **Detect (0:30–1:05)** — Open the active cooling anomaly; compare actual vs expected values.
+2. **Detect (0:30–1:05)** — Follow "View anomaly details" through to the Cooling inefficiency tab; compare actual vs expected values.
 3. **Explain (1:05–1:35)** — Run the AI analysis; emphasise that metrics/rules are deterministic and Gemini is qualitative only.
 4. **Simulate (1:35–2:30)** — Adjust workload/cooling/ambient. Show a safe scenario, then an unsafe rejection.
 5. **Optimize (2:30–3:00)** — Summarise the recommended review action and the safety guardrail.
