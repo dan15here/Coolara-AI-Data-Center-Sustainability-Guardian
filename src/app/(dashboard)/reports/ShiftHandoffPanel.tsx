@@ -1,13 +1,15 @@
 'use client'
 
-import { Check, ClipboardList, Copy } from 'lucide-react'
+import { Check, ClipboardList, Copy, Eye } from 'lucide-react'
 import { useState } from 'react'
+import { Modal } from '@/components/modal'
 import { Pill } from '@/components/ui'
 import { METRIC_LABELS, severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
 import { formatJakartaDateTime } from '@/lib/format/time'
 import type { DashboardMetrics, Finding, FindingSeverity, StoredSimulation, TelemetryPoint } from '@/types'
 
 const SHIFT_WINDOW_HOURS = 12
+const SIM_DISPLAY_LIMIT = 12
 
 function withinWindow(timestamp: string, hours: number): boolean {
   return new Date(timestamp).getTime() >= Date.now() - hours * 60 * 60 * 1000
@@ -63,11 +65,14 @@ export function ShiftHandoffPanel({
   simulations: StoredSimulation[]
 }>) {
   const [copied, setCopied] = useState(false)
+  const [detailsOpen, setDetailsOpen] = useState(false)
 
   const alertsInWindow = alerts
     .filter((alert) => withinWindow(alert.detectedAt, SHIFT_WINDOW_HOURS))
     .sort((a, b) => new Date(b.detectedAt).getTime() - new Date(a.detectedAt).getTime())
-  const simulationsInWindow = simulations.filter((sim) => withinWindow(sim.createdAt, SHIFT_WINDOW_HOURS))
+  const simulationsInWindow = simulations
+    .filter((sim) => withinWindow(sim.createdAt, SHIFT_WINDOW_HOURS))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
   const safeCount = simulationsInWindow.filter((sim) => sim.safe).length
   const rejectedCount = simulationsInWindow.length - safeCount
 
@@ -104,10 +109,10 @@ export function ShiftHandoffPanel({
         </div>
         <button
           type="button"
-          onClick={handleCopy}
+          onClick={() => setDetailsOpen(true)}
           className="border-0 rounded-[6px] bg-slate-100 dark:bg-[#273237] text-slate-700 dark:text-[#d6dfdd] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[11px] text-[12px] hover:bg-slate-200 dark:hover:bg-[#344249] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg shrink-0"
         >
-          {copied ? <Check size={15} /> : <Copy size={15} />} {copied ? 'Copied' : 'Copy summary'}
+          <Eye size={15} /> View details
         </button>
       </div>
 
@@ -154,6 +159,123 @@ export function ShiftHandoffPanel({
           </Pill>
         ))}
       </div>
+
+      {detailsOpen && (
+        <Modal
+          eyebrow="OPERATIONAL HANDOFF"
+          title="Shift handoff summary"
+          onClose={() => setDetailsOpen(false)}
+          footer={
+            <>
+              <button
+                type="button"
+                onClick={() => setDetailsOpen(false)}
+                className="border border-surface-line rounded-[6px] bg-transparent text-content-base font-bold inline-flex items-center justify-center px-[14px] py-[10px] text-[12px] hover:bg-slate-100 dark:hover:bg-[#1a2226] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal"
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className="border-0 rounded-[6px] bg-status-teal text-slate-50 dark:text-[#10201f] font-bold inline-flex items-center justify-center gap-[7px] px-[14px] py-[10px] text-[12px] hover:bg-teal-700 dark:hover:bg-[#5bd5c6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal focus-visible:ring-offset-2 focus-visible:ring-offset-surface-bg"
+              >
+                {copied ? <Check size={15} /> : <Copy size={15} />} {copied ? 'Copied' : 'Copy summary'}
+              </button>
+            </>
+          }
+        >
+          <p className="text-content-muted m-[0_0_16px] text-[12px]">
+            Last {SHIFT_WINDOW_HOURS} hours, DC-01 · Generated {formatJakartaDateTime(new Date().toISOString())}
+          </p>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-[10px]">
+            <div className="p-[12px] bg-slate-50 dark:bg-[#121719] border border-surface-line rounded-[7px]">
+              <span className="block text-content-muted text-[11px]">Posture</span>
+              <div className="mt-[7px]">
+                <Pill tone={activeFinding ? severityTone(activeFinding.severity) : 'healthy'}>
+                  {activeFinding ? 'Attention required' : 'Nominal'}
+                </Pill>
+              </div>
+            </div>
+            <div className="p-[12px] bg-slate-50 dark:bg-[#121719] border border-surface-line rounded-[7px]">
+              <span className="block text-content-muted text-[11px]">Total power</span>
+              <strong className="block mt-[7px] text-[14px]">{metrics.totalPowerMw.toFixed(2)} MW</strong>
+            </div>
+            <div className="p-[12px] bg-slate-50 dark:bg-[#121719] border border-surface-line rounded-[7px]">
+              <span className="block text-content-muted text-[11px]">PUE / WUE</span>
+              <strong className="block mt-[7px] text-[14px]">
+                {metrics.pue.toFixed(2)} / {metrics.wue.toFixed(2)}
+              </strong>
+            </div>
+            <div className="p-[12px] bg-slate-50 dark:bg-[#121719] border border-surface-line rounded-[7px]">
+              <span className="block text-content-muted text-[11px]">Peak server temp</span>
+              <strong className="block mt-[7px] text-[14px]">{metrics.peakServerTempC.toFixed(1)}°C</strong>
+            </div>
+          </div>
+
+          <div className="mt-[16px] p-[14px] bg-slate-50 dark:bg-[#121719] border border-surface-line rounded-[7px]">
+            <span className="block text-content-muted text-[11px] mb-[6px]">Active finding</span>
+            <p className="m-0 text-[13px]">
+              {activeFinding ? summarizeFinding(activeFinding) : 'None — all monitored metrics within expected baseline.'}
+            </p>
+          </div>
+
+          <div className="mt-[20px]">
+            <h3 className="m-[0_0_10px] text-[13px]">
+              Alerts ({alertsInWindow.length})
+            </h3>
+            {alertsInWindow.length > 0 ? (
+              <ul className="grid gap-[8px] list-none p-0 m-0">
+                {alertsInWindow.map((alert) => (
+                  <li
+                    key={alert.id}
+                    className="p-[10px_12px] bg-slate-50 dark:bg-[#121719] border border-surface-line rounded-[6px] flex items-start gap-[10px]"
+                  >
+                    <Pill tone={severityTone(alert.severity)}>{severityLabel(alert.severity)}</Pill>
+                    <div className="min-w-0">
+                      <p className="m-0 text-[12px]">{summarizeFinding(alert)}</p>
+                      <span className="text-content-muted text-[11px]">{formatJakartaDateTime(alert.detectedAt)}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-content-muted text-[12px] m-0">No alerts in this window.</p>
+            )}
+          </div>
+
+          <div className="mt-[20px]">
+            <h3 className="m-[0_0_10px] text-[13px]">
+              Simulations ({simulationsInWindow.length} · {safeCount} safe / {rejectedCount} rejected)
+            </h3>
+            {simulationsInWindow.length > 0 ? (
+              <ul className="grid gap-[8px] list-none p-0 m-0">
+                {simulationsInWindow.slice(0, SIM_DISPLAY_LIMIT).map((sim) => (
+                  <li
+                    key={sim.id}
+                    className="p-[10px_12px] bg-slate-50 dark:bg-[#121719] border border-surface-line rounded-[6px] flex items-start gap-[10px]"
+                  >
+                    <Pill tone={sim.safe ? 'healthy' : 'critical'}>{sim.safe ? 'Safe' : 'Rejected'}</Pill>
+                    <div className="min-w-0">
+                      <p className="m-0 text-[12px]">{sim.reason}</p>
+                      <span className="text-content-muted text-[11px]">
+                        {formatJakartaDateTime(sim.createdAt)} · Predicted {sim.predictedServerTempC.toFixed(1)}°C
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-content-muted text-[12px] m-0">No simulations in this window.</p>
+            )}
+            {simulationsInWindow.length > SIM_DISPLAY_LIMIT && (
+              <p className="text-content-muted text-[11px] mt-[8px] m-0">
+                +{simulationsInWindow.length - SIM_DISPLAY_LIMIT} more not shown.
+              </p>
+            )}
+          </div>
+        </Modal>
+      )}
     </section>
   )
 }
