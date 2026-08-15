@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown, Bot, FlaskConical, ScanSearch } from 'lucide-react'
+import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown, Bot, FlaskConical, ScanSearch, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import { Hero } from '@/components/ui/animated-hero'
 import AnimatedContent from '@/components/ui/animated-content'
@@ -176,17 +176,18 @@ export default function LandingPage() {
         >
           <p className="text-teal-400 text-[12px] uppercase tracking-[0.16em] font-bold mb-[12px]">Monitor → Detect → Explain → Simulate → Optimize</p>
           <h2 className="text-[36px] md:text-[44px] font-bold text-white mb-[14px]">How Coolara works</h2>
-          <p className="text-[#91a0a3] text-[16px] leading-relaxed">Four deliberate steps from synthetic telemetry to a safer, decision-ready response.</p>
+          <p className="text-[#91a0a3] text-[16px] leading-relaxed">Five deliberate steps from synthetic telemetry to a safer, decision-ready response.</p>
         </motion.div>
 
         <div className="relative">
-          <div className="hidden md:block absolute h-px bg-[#2b363c] left-[12.5%] right-[12.5%] top-[70px]" aria-hidden="true" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-[40px] gap-x-[24px] relative">
+          <div className="hidden lg:block absolute h-px bg-[#2b363c] left-[10%] right-[10%] top-[70px]" aria-hidden="true" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-y-[40px] gap-x-[16px] relative">
           {[
             { number: '01', icon: Activity, title: 'Monitor signals', description: 'See synthetic energy, water, cooling, and thermal telemetry in one command centre.' },
             { number: '02', icon: ScanSearch, title: 'Detect deviations', description: 'Compare actual conditions against deterministic expected baselines and severity.' },
             { number: '03', icon: Bot, title: 'Explain context', description: 'Use Gemini for qualitative context while all measurements stay deterministic.' },
             { number: '04', icon: FlaskConical, title: 'Simulate safely', description: 'Test a response before acting; the thermal gate rejects unsafe scenarios.' },
+            { number: '05', icon: Sparkles, title: 'Optimize with context', description: 'Weigh safe trade-offs with deterministic results and a qualitative AI perspective.' },
           ].map((step, i) => (
             <motion.article
               key={step.number}
