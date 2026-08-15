@@ -46,7 +46,7 @@ function Hero({ isHeaderBrandVisible }: { isHeaderBrandVisible: boolean }) {
                 {!isHeaderBrandVisible && (
                   <motion.div
                     layoutId="coolara-brand"
-                    className="w-[215px] translate-x-3 md:w-[270px] md:translate-x-4"
+                    className="w-[215px] translate-x-5 md:w-[270px] md:translate-x-6"
                     transition={{ type: 'spring', stiffness: 360, damping: 34, mass: 0.72 }}
                   >
                     <Image
