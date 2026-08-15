@@ -8,7 +8,7 @@ import BlurText from "@/components/ui/blur-text";
 import Image from "next/image";
 import Link from "next/link";
 
-function Hero() {
+function Hero({ isHeaderBrandVisible }: { isHeaderBrandVisible: boolean }) {
   const [titleNumber, setTitleNumber] = useState(0);
   const titles = useMemo(
     () => ["decision-ready", "resource-aware", "safety-gated", "explainable"],
@@ -43,20 +43,23 @@ function Hero() {
           </motion.div>
           <div className="flex gap-4 flex-col">
             <h1 className="text-5xl md:text-6xl lg:text-7xl max-w-5xl tracking-tighter text-center font-extrabold text-white">
-              <motion.div
-                className="mx-auto mb-2 w-[215px] md:mb-3 md:w-[270px]"
-                initial={{ opacity: 0, y: -12, filter: 'blur(8px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                transition={{ duration: 0.5, delay: 0.08, ease: 'easeOut' }}
-              >
-                <Image
-                  src="/logos/coolara-wordmark-c-icon.svg"
-                  alt="Coolara"
-                  width={560}
-                  height={150}
-                  priority
-                />
-              </motion.div>
+              <div className="mx-auto mb-2 h-[58px] md:mb-3 md:h-[73px]">
+                {!isHeaderBrandVisible && (
+                  <motion.div
+                    layoutId="coolara-brand"
+                    className="w-[215px] md:w-[270px]"
+                    transition={{ type: 'spring', stiffness: 360, damping: 34, mass: 0.72 }}
+                  >
+                    <Image
+                      src="/logos/coolara-wordmark-c-icon.svg"
+                      alt="Coolara"
+                      width={560}
+                      height={150}
+                      priority
+                    />
+                  </motion.div>
+                )}
+              </div>
               <BlurText
                 text="makes every response"
                 animateBy="words"

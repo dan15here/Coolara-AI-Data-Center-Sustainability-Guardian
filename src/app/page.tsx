@@ -2,9 +2,9 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown, Bot, FlaskConical, ScanSearch, Sparkles } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Hero } from '@/components/ui/animated-hero'
 import AnimatedContent from '@/components/ui/animated-content'
 import LandingScrollTabs from '@/components/landing-scroll-tabs'
@@ -68,15 +68,58 @@ function FAQItem({ question, answer }: { question: string, answer: string }) {
 }
 
 export default function LandingPage() {
+  const [isHeaderBrandVisible, setIsHeaderBrandVisible] = useState(false)
+
+  useEffect(() => {
+    let frameId = 0
+
+    const updateBrandPosition = () => {
+      const shouldShowInHeader = window.scrollY > 56
+      setIsHeaderBrandVisible((current) =>
+        current === shouldShowInHeader ? current : shouldShowInHeader,
+      )
+    }
+
+    const scheduleUpdate = () => {
+      if (frameId) return
+      frameId = window.requestAnimationFrame(() => {
+        frameId = 0
+        updateBrandPosition()
+      })
+    }
+
+    updateBrandPosition()
+    window.addEventListener('scroll', scheduleUpdate, { passive: true })
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      window.removeEventListener('scroll', scheduleUpdate)
+    }
+  }, [])
+
   return (
-    <main id="top" className="dark min-h-screen bg-[#101517] text-[#eef3f1] font-sans selection:bg-teal-500/30">
+    <LayoutGroup id="landing-brand">
+      <main id="top" className="dark min-h-screen bg-[#101517] text-[#eef3f1] font-sans selection:bg-teal-500/30">
       
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#2b363c] bg-[#101517]/80 backdrop-blur-md">
         <div className="max-w-[1200px] mx-auto px-[24px] h-[72px] flex items-center justify-between relative">
-          <div className="flex items-center gap-[12px]">
-            <Image src="/logos/coolara-app-icon.svg" alt="Coolara Logo" width={32} height={32} />
-            <strong className="text-[18px] font-bold tracking-wide">Coolara</strong>
+          <div className="flex min-w-[150px] items-center">
+            {isHeaderBrandVisible && (
+              <motion.div
+                layoutId="coolara-brand"
+                className="w-[140px]"
+                transition={{ type: 'spring', stiffness: 360, damping: 34, mass: 0.72 }}
+              >
+                <Image
+                  src="/logos/coolara-wordmark-c-icon.svg"
+                  alt="Coolara"
+                  width={560}
+                  height={150}
+                  priority
+                />
+              </motion.div>
+            )}
           </div>
           <div className="absolute left-1/2 -translate-x-1/2">
             <LandingScrollTabs />
@@ -96,7 +139,7 @@ export default function LandingPage() {
         <div className="absolute top-[20%] left-[50%] -translate-x-1/2 w-[600px] h-[400px] bg-teal-500/20 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="mx-auto text-center relative z-10">
-          <Hero />
+          <Hero isHeaderBrandVisible={isHeaderBrandVisible} />
 
           {/* App Preview Image */}
           <AnimatedContent
@@ -233,6 +276,7 @@ export default function LandingPage() {
       <footer className="border-t border-[#2b363c] py-[40px] text-center text-[#64748b] text-[13px] relative z-10">
         <p>© 2026 Coolara. Engineered for sustainable data centers.</p>
       </footer>
-    </main>
+      </main>
+    </LayoutGroup>
   )
 }
