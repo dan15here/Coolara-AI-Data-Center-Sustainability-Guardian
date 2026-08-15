@@ -7,6 +7,7 @@ import { useScenarioFetch } from '@/hooks/useScenarioFetch'
 import { highestSeverityFinding } from '@/lib/anomaly/rules'
 import { METRIC_LABELS, severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
 import { formatJakartaTime } from '@/lib/format/time'
+import { MAX_SAFE_SERVER_TEMP_C } from '@/lib/simulator/thresholds'
 import type { ScenarioId } from '@/lib/telemetry/generator'
 import type { ActivityEvent, DashboardMetrics, Finding, FindingSeverity, TelemetryPoint } from '@/types'
 
@@ -103,20 +104,32 @@ export function DashboardView({
 
       <div className={dimClass}>
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-[12px] mt-6">
-          <MetricCard label="Total power" value={`${data.latestMetrics.totalPowerMw.toFixed(2)} MW`} icon={Zap} />
+          <MetricCard
+            label="Total power"
+            value={`${data.latestMetrics.totalPowerMw.toFixed(2)} MW`}
+            icon={Zap}
+            help="Combined power draw from IT equipment and cooling systems right now, in megawatts, for the selected scenario."
+          />
           <MetricCard
             label="PUE"
             value={data.latestMetrics.pue.toFixed(2)}
             note={`Target ≤ ${TARGET_PUE.toFixed(2)}`}
             icon={Gauge}
+            help="Power Usage Effectiveness: total facility power divided by IT power. Lower is more efficient — 1.00 would mean no overhead from cooling and other infrastructure."
           />
           <MetricCard
             label="WUE"
             value={`${data.latestMetrics.wue.toFixed(2)} L/MW`}
             note={`Target ≤ ${TARGET_WUE.toFixed(0)}`}
             icon={Droplets}
+            help="Water Usage Effectiveness: litres of water consumed per megawatt of IT power. Lower means the site uses less water to cool the same workload."
           />
-          <MetricCard label="Peak server temperature" value={`${data.latestMetrics.peakServerTempC.toFixed(1)}°C`} icon={Thermometer} />
+          <MetricCard
+            label="Peak server temperature"
+            value={`${data.latestMetrics.peakServerTempC.toFixed(1)}°C`}
+            icon={Thermometer}
+            help={`The highest server temperature recorded in this reading. Kept below ${MAX_SAFE_SERVER_TEMP_C}°C to avoid thermal stress on hardware.`}
+          />
         </section>
 
         <section className="mt-[38px] mb-[13px] flex items-end justify-between">

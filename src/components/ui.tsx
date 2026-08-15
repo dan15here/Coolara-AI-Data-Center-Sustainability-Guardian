@@ -1,28 +1,44 @@
 import Link from 'next/link'
-import { FolderOpen, Loader2 } from 'lucide-react'
+import { FolderOpen, HelpCircle, Loader2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
-export function PageIntro({ eyebrow, title, children }: Readonly<{ eyebrow: string, title: string, children: React.ReactNode }>) { 
+export function PageIntro({ eyebrow, title, children }: Readonly<{ eyebrow: string, title: string, children: React.ReactNode }>) {
   return (
     <div className="mb-[24px]">
       <p className="text-teal-700 dark:text-[#8fa29f] tracking-[1.25px] font-bold text-[10px] m-[0_0_8px] uppercase">{eyebrow}</p>
       <h1 className="text-[27px] tracking-[-0.7px] m-[0_0_7px]">{title}</h1>
       <p className="m-0 text-content-muted">{children}</p>
     </div>
-  ) 
+  )
 }
 
-export function MetricCard({ label, value, note, icon: Icon }: Readonly<{ label: string, value: string, note?: string, icon?: LucideIcon }>) { 
+export function MetricCard({ label, value, note, icon: Icon, help }: Readonly<{ label: string, value: string, note?: string, icon?: LucideIcon, help?: string }>) {
   return (
     <article className="p-[17px] min-h-[123px] border border-surface-line bg-surface-panel rounded-lg">
       <div className="text-content-muted flex gap-[7px] items-center text-[12px]">
         {Icon && <Icon size={16} className="text-status-teal" />}
         {label}
+        {help && (
+          <span className="relative inline-flex group ml-auto">
+            <HelpCircle
+              size={13}
+              tabIndex={0}
+              className="text-content-muted/70 hover:text-status-teal focus-visible:text-status-teal cursor-help outline-none"
+              aria-label={help}
+            />
+            <span
+              role="tooltip"
+              className="pointer-events-none absolute z-20 bottom-full right-0 mb-[8px] w-[200px] p-[10px_12px] rounded-[7px] bg-slate-900 dark:bg-[#20292d] border border-slate-700 dark:border-[#3a4a50] text-slate-50 dark:text-content-base text-[11px] leading-[1.5] font-normal normal-case tracking-normal opacity-0 scale-95 origin-bottom-right transition-all duration-150 group-hover:opacity-100 group-hover:scale-100 group-focus-within:opacity-100 group-focus-within:scale-100 shadow-lg"
+            >
+              {help}
+            </span>
+          </span>
+        )}
       </div>
       <strong className="block text-[25px] my-[16px] mb-[8px]">{value}</strong>
       {note && <span className="text-content-muted text-[11px]">{note}</span>}
     </article>
-  ) 
+  )
 }
 
 const TONES = {
