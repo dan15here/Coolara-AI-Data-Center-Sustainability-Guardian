@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MoveRight, Play } from "lucide-react";
@@ -36,16 +38,17 @@ function Hero() {
           <div className="flex gap-4 flex-col">
             <h1 className="text-5xl md:text-7xl max-w-3xl tracking-tighter text-center font-extrabold text-white">
               <span className="text-white">This data center is</span>
-              <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1 text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-300">
-                &nbsp;
+              <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
+                {/* spacer so the h1 keeps its height */}
+                <span className="invisible">placeholder</span>
                 <AnimatePresence mode="popLayout">
                   <motion.span
                     key={titleNumber}
-                    className="absolute font-bold left-0 right-0 mx-auto w-full text-center"
-                    initial={{ opacity: 0, y: 150 }}
+                    className="absolute inset-x-0 text-center font-bold text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-300"
+                    initial={{ opacity: 0, y: 80 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -150 }}
-                    transition={{ type: "spring", stiffness: 50 }}
+                    exit={{ opacity: 0, y: -80 }}
+                    transition={{ type: "spring", stiffness: 80, damping: 18 }}
                   >
                     {titles[titleNumber]}
                   </motion.span>
