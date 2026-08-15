@@ -153,14 +153,20 @@ export default function LandingPage() {
             delay={0.12}
             className="mt-[60px] relative mx-auto max-w-[1000px] rounded-[16px] border border-[#2b363c] bg-[#171d21]/50 p-[8px] backdrop-blur-xl shadow-2xl"
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-[#101517] via-transparent to-transparent z-10 pointer-events-none rounded-[16px]"></div>
-            <Image 
-              src="/dashboard-preview-v2.png" 
-              alt="Coolara Command Center Preview" 
-              width={1000} 
-              height={600} 
-              className="rounded-[10px] w-full h-auto object-cover border border-[#2b363c]"
-            />
+            <motion.div
+              className="relative overflow-hidden rounded-[10px]"
+              whileHover={{ y: -7, scale: 1.012 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 22 }}
+            >
+              <Image
+                src="/dashboard-preview-command-center.png"
+                alt="Coolara Command Center Preview"
+                width={1919}
+                height={1199}
+                className="w-full h-auto rounded-[10px] border border-[#2b363c] object-cover transition-[filter] duration-300 motion-reduce:transform-none"
+              />
+            </motion.div>
+            <div className="absolute inset-0 z-10 pointer-events-none rounded-[16px] bg-gradient-to-t from-[#101517]/30 via-transparent to-transparent"></div>
           </AnimatedContent>
         </div>
       </section>
