@@ -46,7 +46,8 @@ function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1, ease: 'easeOut' }}
             >
-              <span className="text-white">Coolara makes every response</span>
+              <span className="block text-teal-400 text-[0.42em] tracking-[0.2em] mb-2 md:mb-3">COOLARA</span>
+              <span className="block text-white">makes every response</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 {/* spacer so the h1 keeps its height */}
                 <span className="invisible">placeholder</span>
