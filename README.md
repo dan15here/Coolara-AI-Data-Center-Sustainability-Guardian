@@ -10,6 +10,12 @@ Monitor → Detect → Explain → Simulate → Optimize
 
 > All telemetry is synthetic demo data and is clearly labelled as such in the UI. Numerical results — including PUE, WUE, deviations, savings, costs, and safety verdicts — come exclusively from deterministic TypeScript logic, never from the LLM.
 
+## Documentation
+
+| Product | Technical | Submission |
+| --- | --- | --- |
+| [PRD](./PRD.md) · [UI specification](./COOLARA_UI_SPECIFICATION.md) · [Implementation plan](./COOLARA_IMPLEMENTATION_PLAN.md) | [Technical plan](./TECH.md) | [AI tools disclosure](./AI_TOOLS_DISCLOSURE.md) · [Pre-existing materials](./PRE_EXISTING_DISCLOSURE.md) |
+
 ## Problem
 
 Data-centre teams must balance reliability, energy efficiency, and water use. Raw telemetry alone does not tell an operator which deviation deserves attention, why it is happening, or whether a proposed operational response is actually safe.
