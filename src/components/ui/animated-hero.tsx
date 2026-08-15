@@ -35,11 +35,9 @@ function Hero({ isHeaderBrandVisible }: { isHeaderBrandVisible: boolean }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: 'easeOut' }}
           >
-            <Button variant="secondary" size="sm" className="gap-2 bg-teal-500/10 text-teal-400 hover:bg-teal-500/20 border border-teal-500/20 rounded-full" asChild>
-              <Link href="#features">
-                Sustainability decision support <MoveRight className="w-4 h-4" />
-              </Link>
-            </Button>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-300">
+              AI Data-Center Sustainability Guardian
+            </p>
           </motion.div>
           <div className="flex gap-4 flex-col">
             <h1 className="text-5xl md:text-6xl lg:text-7xl max-w-5xl tracking-tighter text-center font-extrabold text-white">
@@ -47,7 +45,7 @@ function Hero({ isHeaderBrandVisible }: { isHeaderBrandVisible: boolean }) {
                 {!isHeaderBrandVisible && (
                   <motion.div
                     layoutId="coolara-brand"
-                    className="w-[215px] md:w-[270px]"
+                    className="w-[215px] translate-x-3 md:w-[270px] md:translate-x-4"
                     transition={{ type: 'spring', stiffness: 360, damping: 34, mass: 0.72 }}
                   >
                     <Image
