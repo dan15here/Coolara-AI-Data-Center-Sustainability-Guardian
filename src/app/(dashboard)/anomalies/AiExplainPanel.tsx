@@ -1,6 +1,6 @@
 'use client'
 
-import { Bot, CheckCircle2, FlaskConical, Sparkles } from 'lucide-react'
+import { Bot, CheckCircle2, Clock3, FlaskConical, Sparkles } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { ErrorState, LoadingState, Pill } from '@/components/ui'
 import type { ExplainFindingResponse } from '@/lib/ai/types'
@@ -59,7 +59,9 @@ export function AiExplainPanel({ finding }: Readonly<{ finding: Finding }>) {
         </div>
         {state.status === 'done' && (
           <Pill tone="healthy">
-            <CheckCircle2 size={14} /> {state.result.source === 'gemini' ? (state.result.model ?? 'Gemini') : 'Rule-based fallback'}
+            {state.result.cached ? <Clock3 size={14} /> : <CheckCircle2 size={14} />}{' '}
+            {state.result.cached ? 'Cached · ' : ''}
+            {state.result.source === 'gemini' ? (state.result.model ?? 'Gemini') : 'Rule-based fallback'}
           </Pill>
         )}
       </div>
