@@ -44,13 +44,28 @@ export function AppShell({
       
       <aside className={`w-[264px] min-h-screen shrink-0 p-[26px_15px_16px] bg-slate-50 dark:bg-[#12181b] border-r border-surface-line fixed inset-y-0 left-0 flex flex-col z-10 transition-transform duration-200 ${open ? 'translate-x-0 shadow-[8px_0_30px_#0008]' : '-translate-x-full'} lg:translate-x-0 lg:shadow-none`}>
         <div className="flex items-center gap-[11px] px-[10px] pb-[30px]">
-          <div className="w-[35px] h-[35px] shrink-0">
-            <Image src="/logos/coolara-app-icon.svg" alt="Coolara Logo" width={35} height={35} />
-          </div>
-          <div>
-            <strong className="block text-[17px]">Coolara</strong>
-            <span className="block text-content-muted text-[11px] mt-[2px]">Sustainability Guardian</span>
-          </div>
+          <Link
+            href="/"
+            onClick={() => setOpen(false)}
+            aria-label="Return to the Coolara landing page"
+            className="group min-w-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal"
+          >
+            <Image
+              src="/logos/coolara-wordmark-c-icon-light.svg"
+              alt="Coolara"
+              width={560}
+              height={150}
+              className="block w-[136px] dark:hidden"
+            />
+            <Image
+              src="/logos/coolara-wordmark-c-icon.svg"
+              alt=""
+              width={560}
+              height={150}
+              className="hidden w-[136px] dark:block"
+            />
+            <span className="mt-[3px] block text-[11px] text-content-muted transition-colors group-hover:text-content-base">Sustainability Guardian</span>
+          </Link>
           <button 
             className="ml-auto bg-transparent border-0 text-content-base p-1 lg:hidden rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors hover:text-content-base"
             aria-label="Close sidebar" 

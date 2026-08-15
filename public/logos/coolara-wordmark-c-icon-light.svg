@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 150" role="img" aria-labelledby="title">
+  <title id="title">Coolara</title>
+  <g transform="translate(0 15)">
+    <path d="M 98.85 80.66 A 44 44 0 1 1 98.85 39.34" fill="none" stroke="#0B2B33" stroke-width="10" stroke-linecap="round"/>
+    <path d="M 85.61 73.62 A 29 29 0 1 1 85.61 46.38" fill="none" stroke="#3FA79E" stroke-width="10" stroke-linecap="round"/>
+    <circle cx="60" cy="60" r="8.5" fill="#E8763E"/>
+  </g>
+  <text x="126" y="112" fill="#0B2B33" font-family="'Century Gothic','Avenir Next',Futura,'Segoe UI',sans-serif" font-size="108" font-weight="700">oolara</text>
+</svg>
