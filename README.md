@@ -168,8 +168,6 @@ Tests colocate with source or under `src/**/__tests__/`.
 | `SUPABASE_SERVICE_ROLE_KEY` | server-only | Server-side database access |
 | `GEMINI_API_KEY` | server-only | Gemini API access |
 | `GEMINI_MODEL` | server-only | Default `gemini-3.6-flash` |
-| `NEXT_PUBLIC_SUPABASE_URL` | browser | Supabase browser client URL |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | browser | Supabase browser anon key |
 
 Never commit real values. Server-only keys must never reach the browser.
 
