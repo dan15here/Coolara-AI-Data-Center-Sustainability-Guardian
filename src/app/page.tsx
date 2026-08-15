@@ -10,23 +10,23 @@ import { Hero } from '@/components/ui/animated-hero'
 const faqs = [
   {
     question: "What is Coolara?",
-    answer: "Coolara is an AI-powered sustainability decision-support system for data-center operators. It helps monitor real-time operations, detects anomalies, explains underlying issues using AI, and simulates \"what-if\" scenarios to proactively optimize power, water, and cooling efficiency."
+    answer: "Coolara is a sustainability decision-support prototype for data-centre operators. It brings synthetic telemetry, deterministic anomaly detection, qualitative AI context, and safety-gated what-if simulations into one operator workflow."
   },
   {
-    question: "Can I simulate different disaster scenarios?",
-    answer: "Yes, our built-in Simulator engine allows you to inject synthetic workloads, cooling inefficiencies, and ambient temperature spikes to see how the system predicts downstream effects before they occur in the real world."
+    question: "What can I simulate?",
+    answer: "The simulator explores cooling setpoint, workload, and ambient-temperature assumptions. It calculates deterministic energy, water, cost, PUE, WUE, and thermal impacts, then rejects scenarios that cross the configured safety threshold."
   },
   {
-    question: "What happens if the primary database goes down?",
-    answer: "Coolara features a robust local fallback mechanism. If the main Supabase instance is unreachable, it seamlessly switches to a synthetic telemetry generator, ensuring operations teams always have a functional dashboard for drills and demos."
+    question: "Is this connected to a live data centre?",
+    answer: "No. This MVP uses clearly labelled synthetic demo telemetry. It is built to demonstrate a responsible decision workflow, not to control equipment or make claims about a live facility."
   },
   {
     question: "How do you handle security and data privacy?",
-    answer: "All telemetry data is stored securely using row-level security (RLS). Server-side operations are handled via secure service roles, and no sensitive credentials are ever shipped to the browser. Your synthetic metrics remain entirely within your private environment."
+    answer: "Supabase access and Gemini calls happen only on the server. Service-role and Gemini API credentials are kept in deployment environment variables and are never sent to the browser. Database tables use row-level security and have no public policies."
   },
   {
-    question: "Can the AI optimize my power usage effectively?",
-    answer: "Absolutely! After running a simulation, the AI uses Gemini to provide actionable recommendations. It analyzes the deterministic results of the simulation and suggests practical ways to mitigate risks or reduce overall power and water consumption."
+    question: "What role does AI play?",
+    answer: "Gemini adds qualitative context to a deterministic finding or simulation. It does not generate measurements, savings, PUE/WUE values, safety approvals, or operating setpoints; those remain deterministic application outputs."
   }
 ]
 
@@ -118,18 +118,18 @@ export default function LandingPage() {
           {[
             {
               icon: Activity,
-              title: "Real-time Telemetry",
-              description: "Monitor Total Power, PUE, WUE, and Server Temperatures with deterministic precision. Zero hallucination guarantee."
+              title: "Operational signals, made legible",
+              description: "Follow synthetic power, water, cooling, and thermal telemetry alongside deterministic PUE, WUE, and temperature indicators."
             },
             {
               icon: ShieldCheck,
-              title: "Anomaly Detection",
-              description: "Instantly detect when metrics deviate from the expected baseline. Get AI-powered explanations for likely factors."
+              title: "Decision-ready anomalies",
+              description: "Compare actual conditions against expected baselines, see the severity, and add qualitative AI context without surrendering numerical control."
             },
             {
               icon: Zap,
-              title: "Scenario Simulator",
-              description: "Inject synthetic workloads or cooling inefficiencies to simulate disaster recovery and optimize resource allocation."
+              title: "Simulate before acting",
+              description: "Explore operational trade-offs for cooling, workload, and ambient conditions. A deterministic safety gate rejects unsafe scenarios."
             }
           ].map((feature, i) => (
             <motion.div 

@@ -9,7 +9,7 @@ import Link from "next/link";
 function Hero() {
   const [titleNumber, setTitleNumber] = useState(0);
   const titles = useMemo(
-    () => ["efficient", "sustainable", "reliable", "secure", "intelligent"],
+    () => ["decision-ready", "resource-aware", "safety-gated", "explainable"],
     []
   );
 
@@ -31,13 +31,13 @@ function Hero() {
           <div>
             <Button variant="secondary" size="sm" className="gap-2 bg-teal-500/10 text-teal-400 hover:bg-teal-500/20 border border-teal-500/20 rounded-full" asChild>
               <Link href="#features">
-                Next-Gen Data Center Operations <MoveRight className="w-4 h-4" />
+                Sustainability decision support <MoveRight className="w-4 h-4" />
               </Link>
             </Button>
           </div>
           <div className="flex gap-4 flex-col">
             <h1 className="text-5xl md:text-7xl max-w-3xl tracking-tighter text-center font-extrabold text-white">
-              <span className="text-white">This data center is</span>
+              <span className="text-white">Make every response</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1">
                 {/* spacer so the h1 keeps its height */}
                 <span className="invisible">placeholder</span>
@@ -57,18 +57,18 @@ function Hero() {
             </h1>
 
             <p className="text-lg md:text-xl leading-relaxed tracking-tight text-[#91a0a3] max-w-2xl text-center mx-auto">
-              Managing a data center today is complex. Coolara prevents incidents with AI-powered anomaly detection and deterministic rules. Avoid further complications by ditching outdated, tedious methods.
+              See energy, water, cooling, and thermal signals in one place. Coolara detects deviations, explains their context, and lets operators simulate a safety-gated response before they act.
             </p>
           </div>
           <div className="flex flex-row gap-4 mt-4">
             <Button size="lg" className="gap-2 bg-[#171d21] border border-[#2b363c] hover:bg-[#20292d] text-white rounded-full transition-colors" variant="outline" asChild>
               <Link href="/simulator">
-                Simulate Scenario <Play className="w-4 h-4" />
+                Run a what-if simulation <Play className="w-4 h-4" />
               </Link>
             </Button>
             <Button size="lg" className="gap-2 bg-teal-500 hover:bg-teal-400 text-[#042f2b] rounded-full font-bold shadow-[0_0_30px_rgba(20,184,166,0.3)]" asChild>
               <Link href="/dashboard">
-                Open Dashboard <MoveRight className="w-4 h-4" />
+                Explore Command Center <MoveRight className="w-4 h-4" />
               </Link>
             </Button>
           </div>
