@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, Activity, ShieldCheck, Zap, ChevronDown } from 'lucide-react'
 import { useState } from 'react'
 import { Hero } from '@/components/ui/animated-hero'
+import AnimatedContent from '@/components/ui/animated-content'
 
 const faqs = [
   {
@@ -105,10 +106,14 @@ export default function LandingPage() {
           <Hero />
 
           {/* App Preview Image */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+          <AnimatedContent
+            distance={42}
+            duration={0.9}
+            ease="power3.out"
+            initialOpacity={0}
+            scale={0.97}
+            threshold={0.12}
+            delay={0.12}
             className="mt-[60px] relative mx-auto max-w-[1000px] rounded-[16px] border border-[#2b363c] bg-[#171d21]/50 p-[8px] backdrop-blur-xl shadow-2xl"
           >
             <div className="absolute inset-0 bg-gradient-to-t from-[#101517] via-transparent to-transparent z-10 pointer-events-none rounded-[16px]"></div>
@@ -119,7 +124,7 @@ export default function LandingPage() {
               height={600} 
               className="rounded-[10px] w-full h-auto object-cover border border-[#2b363c]"
             />
-          </motion.div>
+          </AnimatedContent>
         </div>
       </section>
 
