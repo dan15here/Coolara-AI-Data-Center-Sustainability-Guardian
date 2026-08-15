@@ -65,7 +65,7 @@ function Hero({ isHeaderBrandVisible }: { isHeaderBrandVisible: boolean }) {
                 stepDuration={0.32}
                 className="justify-center text-white"
               />
-              <span className="relative flex min-h-[1.3em] w-full justify-center overflow-visible text-center leading-[1.15] md:pb-4 md:pt-1">
+              <span className="relative flex h-[1.3em] w-full justify-center overflow-hidden text-center leading-[1.15] md:mt-1">
                 <AnimatePresence mode="popLayout">
                   <motion.span
                     key={titleNumber}
