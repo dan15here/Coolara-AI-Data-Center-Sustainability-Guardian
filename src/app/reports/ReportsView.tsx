@@ -5,7 +5,9 @@ import { useMemo, useState } from 'react'
 import { EmptyState, Pill } from '@/components/ui'
 import { severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
 import { formatJakartaDateTime } from '@/lib/format/time'
-import type { Finding, StoredSimulation } from '@/types'
+import type { DashboardMetrics, Finding, StoredSimulation, TelemetryPoint } from '@/types'
+import { ShiftHandoffPanel } from './ShiftHandoffPanel'
+import { SimulationComparisonPanel } from './SimulationComparisonPanel'
 
 const DATE_RANGES = ['Today', 'Last 7 days'] as const
 type DateRange = (typeof DATE_RANGES)[number]
@@ -38,7 +40,16 @@ function matchesEventType(entry: ReportEntry, eventType: EventType): boolean {
 export function ReportsView({
   alerts,
   simulations,
-}: Readonly<{ alerts: Finding[]; simulations: StoredSimulation[] }>) {
+  point,
+  metrics,
+  activeFinding,
+}: Readonly<{
+  alerts: Finding[]
+  simulations: StoredSimulation[]
+  point: TelemetryPoint
+  metrics: DashboardMetrics
+  activeFinding: Finding | null
+}>) {
   const [range, setRange] = useState<DateRange>('Today')
   const [eventType, setEventType] = useState<EventType>('All events')
 
@@ -62,6 +73,14 @@ export function ReportsView({
 
   return (
     <>
+      <ShiftHandoffPanel
+        point={point}
+        metrics={metrics}
+        activeFinding={activeFinding}
+        alerts={alerts}
+        simulations={simulations}
+      />
+
       <section className="flex flex-wrap md:flex-nowrap items-center gap-[5px] p-[9px] text-content-muted text-[11px] border border-surface-line bg-surface-panel rounded-lg">
         <span>Date range</span>
         {DATE_RANGES.map((item) => (
@@ -128,6 +147,8 @@ export function ReportsView({
           <EmptyState message="No stored alerts or simulations yet. Reports require Supabase persistence — visit Dashboard, Telemetry, or Simulator to generate activity, or configure Supabase to retain history." />
         )}
       </section>
+
+      <SimulationComparisonPanel simulations={simulations} />
     </>
   )
 }

@@ -2,16 +2,20 @@
 
 import { Droplets, ExternalLink, Gauge, Play, Thermometer } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
 import { EmptyState, ErrorState, LoadingState, Pill } from '@/components/ui'
 import { ScenarioControl } from '@/components/scenario-control'
 import { useScenarioFetch } from '@/hooks/useScenarioFetch'
 import { formatFindingValue, METRIC_LABELS, severityLabel, severityTone, summarizeFinding } from '@/lib/format/finding'
 import { formatJakartaTime } from '@/lib/format/time'
 import type { ScenarioId } from '@/lib/telemetry/generator'
-import type { Finding } from '@/types'
+import type { Finding, FindingSeverity } from '@/types'
 import { AiExplainPanel } from './AiExplainPanel'
 
 const METRIC_ICONS = { coolingPower: Gauge, waterUsage: Droplets, serverTemperature: Thermometer }
+
+const SEVERITY_FILTERS = ['all', 'critical', 'high', 'medium', 'low'] as const
+type SeverityFilter = (typeof SEVERITY_FILTERS)[number]
 
 type AnomaliesData = { scenario: ScenarioId; findings: Finding[] }
 
@@ -24,20 +28,43 @@ async function fetchAnomaliesScenario(scenario: ScenarioId): Promise<AnomaliesDa
 
 export function AnomaliesView({ initialData }: Readonly<{ initialData: AnomaliesData }>) {
   const { data, state, load, isLoading } = useScenarioFetch(initialData, fetchAnomaliesScenario)
+  const [severityFilter, setSeverityFilter] = useState<SeverityFilter>('all')
+
+  const findings =
+    severityFilter === 'all' ? data.findings : data.findings.filter((f) => f.severity === severityFilter)
 
   return (
     <>
       <ScenarioControl scenario={data.scenario} onChange={load} disabled={isLoading} />
 
+      <section className="flex flex-wrap items-center gap-[5px] p-[9px] mt-[14px] text-content-muted text-[11px] border border-surface-line bg-surface-panel rounded-lg">
+        <span>Severity</span>
+        {SEVERITY_FILTERS.map((filterOption) => (
+          <button
+            key={filterOption}
+            type="button"
+            aria-pressed={severityFilter === filterOption}
+            className={`border-0 text-[11px] p-[6px_8px] rounded-[4px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${severityFilter === filterOption ? 'text-white bg-slate-900 dark:bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}
+            onClick={() => setSeverityFilter(filterOption)}
+          >
+            {filterOption === 'all' ? 'All' : severityLabel(filterOption as FindingSeverity)}
+          </button>
+        ))}
+      </section>
+
       {state.status === 'loading' && <LoadingState label="Loading scenario…" />}
       {state.status === 'error' && <ErrorState label="Could not load findings." onRetry={() => load(data.scenario)} />}
 
-      <div className={`transition-opacity ${isLoading ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
+      <div className={`mt-[16px] transition-opacity ${isLoading ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
         {data.findings.length === 0 && (
           <EmptyState message="No findings for this scenario. Try “Cooling inefficiency” or “Water stress” to see example findings." />
         )}
 
-        {data.findings.map((finding) => {
+        {data.findings.length > 0 && findings.length === 0 && (
+          <EmptyState message={`No ${severityLabel(severityFilter as FindingSeverity).toLowerCase()} severity findings for this scenario. Try a different filter.`} />
+        )}
+
+        {findings.map((finding) => {
           const Icon = METRIC_ICONS[finding.metric]
           return (
             <div key={finding.id} className="flex flex-col gap-[16px] mb-[24px]">

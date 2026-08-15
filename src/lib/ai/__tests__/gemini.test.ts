@@ -57,6 +57,36 @@ describe('explainFinding without GEMINI_API_KEY', () => {
   });
 });
 
+describe('explainFinding caching', () => {
+  // Distinct actual/expected/deviationPercent from every other finding fixture in this
+  // file, so the cache-key match here can't accidentally hit a row another test warmed.
+  const uniqueSubstance = { actual: 5.55, expected: 3.02, deviationPercent: 83.8 };
+
+  it('marks a fresh finding as not cached, then a repeat of the same finding content as cached', async () => {
+    const uncached = await explainFinding({
+      finding: { ...request.finding, ...uniqueSubstance, id: crypto.randomUUID(), detectedAt: new Date().toISOString() },
+    });
+    expect(uncached.cached).toBe(false);
+
+    const repeat = await explainFinding({
+      finding: { ...request.finding, ...uniqueSubstance, id: crypto.randomUUID(), detectedAt: new Date().toISOString() },
+    });
+    expect(repeat.cached).toBe(true);
+    expect(repeat.explanation).toBe(uncached.explanation);
+  });
+
+  it('does not treat findings with different substance as a cache hit', async () => {
+    const a = await explainFinding({
+      finding: { ...request.finding, id: crypto.randomUUID(), deviationPercent: 40.2, actual: 4.9 },
+    });
+    const b = await explainFinding({
+      finding: { ...request.finding, id: crypto.randomUUID(), deviationPercent: 91.7, actual: 6.7 },
+    });
+    expect(a.cached).toBe(false);
+    expect(b.cached).toBe(false);
+  });
+});
+
 const optimizeRequest: OptimizeSimulationRequest = {
   input: { coolingSetpointC: 27, workloadPercent: 100, ambientTempC: 40 },
   result: {

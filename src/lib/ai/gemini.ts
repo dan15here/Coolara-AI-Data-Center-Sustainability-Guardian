@@ -1,4 +1,5 @@
 import 'server-only';
+import { TtlCache } from './cache';
 import { buildExplanationPrompt, buildOptimizationPrompt } from './prompt';
 import { METRIC_LABELS } from '@/lib/format/finding';
 import type {
@@ -7,9 +8,24 @@ import type {
   OptimizeSimulationRequest,
   OptimizeSimulationResponse,
 } from './types';
-import type { FindingSeverity } from '@/types';
+import type { Finding, FindingSeverity } from '@/types';
 
 const DEFAULT_MODEL = 'gemini-3.6-flash';
+
+const explanationCache = new TtlCache<ExplainFindingResponse>();
+
+// finding.id and detectedAt are regenerated on every synthetic telemetry read, even for what
+// reads as "the same" anomaly, so they'd defeat caching entirely — key on the finding's
+// substance instead (rounded to the precision the UI actually displays).
+function explanationCacheKey(finding: Finding): string {
+  return [
+    finding.metric,
+    finding.severity,
+    finding.actual.toFixed(2),
+    finding.expected.toFixed(2),
+    finding.deviationPercent.toFixed(1),
+  ].join('|');
+}
 
 export function isGeminiConfigured(): boolean {
   return Boolean(process.env.GEMINI_API_KEY);
@@ -24,6 +40,7 @@ function buildFallbackExplanation(req: ExplainFindingRequest): ExplainFindingRes
   return {
     explanation: `${summary}\n\nPossible contributing factors:\n${factors}\n\n_Rule-based summary — enable the Gemini integration for a richer explanation._`,
     source: 'fallback',
+    cached: false,
   };
 }
 
@@ -53,7 +70,7 @@ export async function callGemini(prompt: string, model: string): Promise<string>
   return text.trim();
 }
 
-export async function explainFinding(req: ExplainFindingRequest): Promise<ExplainFindingResponse> {
+async function computeExplanation(req: ExplainFindingRequest): Promise<ExplainFindingResponse> {
   if (!isGeminiConfigured()) {
     return buildFallbackExplanation(req);
   }
@@ -63,11 +80,21 @@ export async function explainFinding(req: ExplainFindingRequest): Promise<Explai
   try {
     const prompt = buildExplanationPrompt(req);
     const explanation = await callGemini(prompt, model);
-    return { explanation, source: 'gemini', model };
+    return { explanation, source: 'gemini', model, cached: false };
   } catch (error) {
     console.warn('Gemini explanation failed, falling back to rule-based message.', error);
     return buildFallbackExplanation(req);
   }
+}
+
+export async function explainFinding(req: ExplainFindingRequest): Promise<ExplainFindingResponse> {
+  const cacheKey = explanationCacheKey(req.finding);
+  const cached = explanationCache.get(cacheKey);
+  if (cached) return { ...cached, cached: true };
+
+  const result = await computeExplanation(req);
+  explanationCache.set(cacheKey, result);
+  return result;
 }
 
 const REGISTER_BY_SEVERITY: Record<FindingSeverity | 'none', string> = {
