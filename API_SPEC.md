@@ -12,7 +12,9 @@ No endpoint accepts or exposes Supabase or Gemini credentials. Numerical metrics
 
 - Timestamps are ISO 8601 strings.
 - Power values use megawatts (`MW`); energy deltas use megawatt-hours (`MWh`).
-- Water values use litres (`L`); WUE uses `L/kWh`.
+- Water values use litres (`L`). In this synthetic MVP, the dashboard's WUE
+  indicator is a water-intensity proxy expressed as `L/MW` (litres per MW of
+  IT power), not a standards-grade `L/kWh` measurement.
 - A successful request returns `200 OK`.
 - Invalid request input returns `400 Bad Request` with `{ "error": "..." }`.
 - The demo data center identifier is `dc-01`.
@@ -121,6 +123,48 @@ Response fields:
 | `pue`, `wue` | Deterministic efficiency metrics for the scenario. |
 
 All three request fields must be finite numbers. Invalid JSON or input returns `400`.
+
+### `POST /api/optimize`
+
+Returns a qualitative AI perspective on an already-computed, safety-gated
+simulation. It does not calculate, approve, or apply any operating change.
+Gemini receives only the supplied deterministic input, result, and optional
+originating finding. If Gemini is unavailable, the endpoint returns a
+rule-based fallback.
+
+Request body:
+
+```json
+{
+  "input": {
+    "coolingSetpointC": 22,
+    "workloadPercent": 30,
+    "ambientTempC": 24
+  },
+  "result": {
+    "safe": true,
+    "reason": "All parameters are within safe operating thresholds.",
+    "predictedServerTempC": 31.2,
+    "estimatedEnergyDeltaMwh": -2.9,
+    "estimatedWaterDeltaLiters": -2388,
+    "estimatedCostDeltaIdr": -4392760,
+    "pue": 1.54,
+    "wue": 1007.84
+  },
+  "finding": null
+}
+```
+
+`finding` may instead contain a valid `Finding` when the simulation began from
+an anomaly page. `input` and `result` must contain finite numerical values.
+
+Response fields:
+
+| Field | Description |
+| --- | --- |
+| `narrative` | Qualitative Markdown context; no new numerical claims or operating setpoints. |
+| `source` | `gemini` when the model returned a response; otherwise `fallback`. |
+| `model` | Present only when Gemini returned the response. |
 
 ### `GET /api/reports`
 

@@ -116,7 +116,7 @@ Each page has one primary job and links to the others with smaller CTAs (per `CO
 ```text
 src/
   app/                 # routes, page components, and API routes
-    api/               # dashboard, telemetry, explain, simulate, reports
+    api/               # dashboard, telemetry, explain, simulate, optimize, reports
   components/          # shared visual components (shell, charts, controls)
   lib/
     calculations/      # deterministic metrics and baselines
@@ -139,6 +139,7 @@ supabase/
 | `GET /api/telemetry?scenario=&points=` | Synthetic telemetry series | `points`, plus `latestMetrics` and `findings` for the scenario |
 | `POST /api/explain` | Gemini qualitative explanation of a finding | `explanation`, `source` (`gemini` \| `fallback`) |
 | `POST /api/simulate` | Deterministic what-if result with safety gate | `safe`, `reason`, deltas, `pue`, `wue` |
+| `POST /api/optimize` | Qualitative AI perspective on a safety-gated simulation | `narrative`, `source` (`gemini` \| `fallback`) |
 | `GET /api/reports?limit=` | Alert and simulation history | `alerts`, `simulations` |
 
 Shared TypeScript contracts live in `src/types/index.ts`.
@@ -180,6 +181,7 @@ Never commit real values. Server-only keys must never reach the browser.
 ## Security & limitations
 
 - **Numbers are deterministic only.** The LLM never produces measurements, PUE/WUE, savings, costs, or safety approvals.
+- **WUE demo unit.** The displayed WUE is a synthetic water-intensity proxy in `L/MW`, not a standards-grade `L/kWh` measurement.
 - **Safety gate.** The simulator rejects any scenario outside the configured thermal/reliability thresholds and never presents an unsafe result as a recommendation.
 - **Server-only secrets.** Supabase service-role key and Gemini key are used only server-side (`server-only`).
 - **Input validation.** Simulation and explain endpoints validate payloads server-side.

@@ -2,7 +2,7 @@ import type { ExplainFindingRequest, OptimizeSimulationRequest } from './types';
 import type { FindingMetric, FindingSeverity } from '@/types';
 
 const METRIC_LABELS: Record<FindingMetric, string> = {
-  coolingPower: 'Cooling power (Mw)',
+  coolingPower: 'Cooling power (MW)',
   waterUsage: 'Water usage (liters)',
   serverTemperature: 'Server temperature (C)',
 };

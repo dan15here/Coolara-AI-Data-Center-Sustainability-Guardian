@@ -84,7 +84,7 @@ export function AiOptimizePanel({
         <div className="mt-[20px] p-[23px] bg-slate-50 dark:bg-[#121719] border border-dashed border-slate-300 dark:border-[#425157] flex flex-col sm:flex-row sm:items-start md:items-center gap-[13px] rounded-lg">
           <Sparkles className="text-status-teal shrink-0" size={22} />
           <div>
-            <strong className="text-[13px]">Run analysis to ask Gemini for a recommendation.</strong>
+            <strong className="text-[13px]">Run analysis for Gemini&apos;s qualitative perspective.</strong>
             <p className="text-content-muted m-[5px_0_0] text-[12px]">
               The model receives the simulated deltas and safety outcomes, but does not invent numbers.
             </p>
