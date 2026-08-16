@@ -2,7 +2,6 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { type MouseEvent, type ReactNode, useEffect, useRef, useState } from 'react'
 import {
@@ -22,7 +21,6 @@ export default function LandingDashboardLink({
   className,
   href = '/dashboard',
 }: LandingDashboardLinkProps) {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const timeoutRef = useRef<number | null>(null)
 
@@ -39,13 +37,13 @@ export default function LandingDashboardLink({
     document.cookie = `${DASHBOARD_ACCESS_COOKIE}=${DASHBOARD_ACCESS_VALUE}; Path=/; Max-Age=${DASHBOARD_ACCESS_MAX_AGE_SECONDS}; SameSite=Lax`
     setIsLoading(true)
     timeoutRef.current = window.setTimeout(() => {
-      router.push(href)
+      window.location.assign(href)
     }, 460)
   }
 
   return (
     <>
-      <Link href={href} onClick={handleClick} className={className} aria-busy={isLoading}>
+      <Link href={href} prefetch={false} onClick={handleClick} className={className} aria-busy={isLoading}>
         {children}
       </Link>
 
