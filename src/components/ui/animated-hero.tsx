@@ -36,7 +36,7 @@ function Hero({ isHeaderBrandVisible }: { isHeaderBrandVisible: boolean }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, ease: 'easeOut' }}
           >
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-300">
+            <p className="translate-x-2 text-xs font-bold uppercase tracking-[0.16em] text-teal-300">
               AI Data-Center Sustainability Guardian
             </p>
           </motion.div>
