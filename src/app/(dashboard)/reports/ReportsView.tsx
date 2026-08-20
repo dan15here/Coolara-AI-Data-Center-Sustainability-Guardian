@@ -10,6 +10,7 @@ import { ShiftHandoffPanel } from './ShiftHandoffPanel'
 import { SimulationComparisonPanel } from './SimulationComparisonPanel'
 
 const DATE_RANGES = ['Today', 'Last 7 days'] as const
+const HISTORY_PREVIEW_LIMIT = 5
 type DateRange = (typeof DATE_RANGES)[number]
 
 const EVENT_TYPES = ['All events', 'Critical', 'High', 'Medium', 'Low', 'Safe', 'Rejected'] as const
@@ -61,6 +62,7 @@ export function ReportsView({
   const [range, setRange] = useState<DateRange>('Today')
   const [eventType, setEventType] = useState<EventType>('All events')
   const [eventSource, setEventSource] = useState<EventSource>('All history')
+  const [isHistoryExpanded, setIsHistoryExpanded] = useState(false)
 
   const entries: ReportEntry[] = useMemo(() => {
     const alertEntries: ReportEntry[] = alerts.map((finding) => ({
@@ -84,6 +86,7 @@ export function ReportsView({
       matchesEventSource(entry, eventSource) &&
       matchesEventType(entry, eventType),
   )
+  const visibleEntries = isHistoryExpanded ? shown : shown.slice(0, HISTORY_PREVIEW_LIMIT)
 
   return (
     <>
@@ -102,7 +105,10 @@ export function ReportsView({
             type="button"
             aria-pressed={range === item}
             className={`border-0 text-[11px] p-[6px_8px] rounded-[4px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${range === item ? 'text-white bg-slate-900 dark:bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}
-            onClick={() => setRange(item)}
+            onClick={() => {
+              setRange(item)
+              setIsHistoryExpanded(false)
+            }}
           >
             {item}
           </button>
@@ -114,7 +120,10 @@ export function ReportsView({
             type="button"
             aria-pressed={eventSource === item}
             className={`border-0 text-[11px] p-[6px_8px] rounded-[4px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal transition-colors ${eventSource === item ? 'text-white bg-slate-900 dark:bg-[#2a3539]' : 'text-content-muted bg-transparent hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'}`}
-            onClick={() => setEventSource(item)}
+            onClick={() => {
+              setEventSource(item)
+              setIsHistoryExpanded(false)
+            }}
           >
             {item}
           </button>
@@ -125,7 +134,10 @@ export function ReportsView({
           className="border border-surface-line rounded-[4px] bg-white dark:bg-[#20292d] text-slate-700 dark:text-[#d9e2e0] p-[6px_8px] text-[11px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-status-teal cursor-pointer"
           aria-label="Event type" 
           value={eventType} 
-          onChange={(event) => setEventType(event.target.value as EventType)}
+          onChange={(event) => {
+            setEventType(event.target.value as EventType)
+            setIsHistoryExpanded(false)
+          }}
         >
           {EVENT_TYPES.map((item) => (
             <option key={item}>{item}</option>
@@ -135,7 +147,7 @@ export function ReportsView({
 
       <section className="mt-[14px] p-[5px_13px] md:p-[5px_20px] border border-surface-line bg-surface-panel rounded-lg">
         {shown.length > 0 ? (
-          shown.map((entry) =>
+          visibleEntries.map((entry) =>
             entry.kind === 'alert' ? (
               <article className="flex items-center gap-[9px] md:gap-[15px] py-[18px] border-b border-surface-line last:border-b-0" key={entry.finding.id}>
                 <div className="w-[35px] h-[35px] grid place-items-center rounded-[9px] bg-status-teal/20 text-status-teal shrink-0">
@@ -171,6 +183,18 @@ export function ReportsView({
         ) : (
           <EmptyState message="No stored alerts or simulations yet. Reports require Supabase persistence — visit Dashboard, Telemetry, or Simulator to generate activity, or configure Supabase to retain history." />
         )}
+        {shown.length > HISTORY_PREVIEW_LIMIT ? (
+          <div className="flex justify-center border-t border-surface-line px-[16px] py-[12px]">
+            <button
+              type="button"
+              className="rounded-[8px] border border-surface-line bg-surface-raised px-[14px] py-[8px] text-sm font-semibold text-teal-200 transition-colors hover:border-teal-400/40 hover:text-teal-100"
+              aria-expanded={isHistoryExpanded}
+              onClick={() => setIsHistoryExpanded((expanded) => !expanded)}
+            >
+              {isHistoryExpanded ? `Show ${HISTORY_PREVIEW_LIMIT} latest events` : `Show all ${shown.length} events`}
+            </button>
+          </div>
+        ) : null}
       </section>
 
       <SimulationComparisonPanel simulations={simulations} />
